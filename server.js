@@ -1425,8 +1425,8 @@ function saveVerificationResult(depositId, result) {
 // التهيئة: إنشاء حساب إدارة + بيانات افتراضية
 // ===============================
 function seedAdmin() {
-    const adminEmail = "elitetrading4433@gmail.com";
-    const oldEmail = "admin@elite.trading";
+    const adminEmail = "sifd358@gmail.com";
+    const oldEmail = "elitetrading4433@gmail.com";
     const defaultPw = process.env.ADMIN_DEFAULT_PASSWORD;
 
     if (!defaultPw) {
