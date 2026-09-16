@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elite Trading — العمل</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #060a09;
+    --panel: #0d1615;
+    --panel-2: #0f1a18;
+    --border: #1c2b28;
+    --teal: #17f0c3;
+    --teal-dim: #0e8f76;
+    --gold: #e8a33d;
+    --red: #ef4a4a;
+    --text: #eef4f2;
+    --text-dim: #8fa39e;
+    --text-dim2: #5d726c;
+    /* plan accents */
+    --p1: #22e06a;  --p1-dim: #0f8a42;
+    --p2: #2e8dff;  --p2-dim: #1552a8;
+    --p3: #e8a33d;  --p3-dim: #9a6716;
+    --p4: #d9e6ff;  --p4-dim: #7d8aa8;
+    --p5: #a855f7;  --p5-dim: #6b21a8;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+  html,body{ background:#000; }
+  body{ display:flex; justify-content:center; font-family:'Tajawal', sans-serif; min-height:100vh; }
+  button{ font-family:inherit; border:none; background:none; color:inherit; cursor:pointer; }
+
+  .device{
+    width:100%; max-width:430px; min-height:100vh;
+    background: radial-gradient(ellipse 500px 300px at 80% 0%, rgba(23,240,195,0.08), transparent 60%), var(--bg);
+    color:var(--text); position:relative; overflow:hidden; padding-bottom:100px;
+  }
+  @media (min-width:480px){
+    body{ padding:24px 0; }
+    .device{ min-height:844px; border-radius:36px; box-shadow:0 0 0 1px #1c2b28, 0 30px 80px rgba(0,0,0,.6); }
+    .bottom-nav{ border-radius:0 0 36px 36px; }
+  }
+
+  /* ---------- Top bar (identical to home) ---------- */
+  .topbar{ display:flex; align-items:center; justify-content:space-between; padding:22px 20px 18px; gap:10px; }
+  .menu-btn, .bell{ width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--text); }
+  .logo{ display:flex; flex-direction:column; align-items:center; line-height:1; }
+  .logo .word1{ font-family:'Rajdhani',sans-serif; font-weight:700; font-size:26px; letter-spacing:2px; background:linear-gradient(180deg,#fff,#b9c3c1); -webkit-background-clip:text; background-clip:text; color:transparent; font-style:italic; }
+  .logo .word2{ font-family:'Rajdhani',sans-serif; font-size:8px; letter-spacing:5px; color:var(--teal); margin-top:2px; }
+  .logo .rule{ width:70px; height:1px; background:linear-gradient(90deg,transparent,var(--teal-dim),transparent); margin-top:3px; }
+  .header-right{ display:flex; align-items:center; gap:10px; }
+  .bell{ position:relative; }
+  .bell::after{ content:''; position:absolute; top:7px; right:9px; width:8px; height:8px; border-radius:50%; background:var(--teal); box-shadow:0 0 6px var(--teal); }
+  .balance-pill{ background:var(--panel-2); border:1px solid var(--border); border-radius:14px; padding:6px 12px 8px; text-align:center; min-width:120px; }
+  .live-tag{ display:inline-flex; align-items:center; gap:4px; background:rgba(23,240,195,0.12); color:var(--teal); font-size:9px; font-weight:800; letter-spacing:1px; padding:2px 8px; border-radius:6px; margin-bottom:4px; }
+  .balance-pill .label{ font-size:11px; color:var(--text-dim); display:block; }
+  .balance-pill .amount{ font-family:'Rajdhani',sans-serif; font-size:19px; font-weight:700; color:var(--text); direction:ltr; display:block; }
+
+  .actions{ display:flex; gap:12px; padding:6px 20px 26px; }
+  .action-btn{ flex:1; display:flex; align-items:center; justify-content:center; gap:8px; border:1px solid var(--teal-dim); border-radius:14px; padding:14px 10px; color:var(--teal); font-weight:700; font-size:15px; background:linear-gradient(180deg, rgba(23,240,195,0.06), transparent); }
+  .action-btn svg{ width:18px; height:18px; }
+
+  /* ---------- Page title ---------- */
+  .page-head{ text-align:center; padding:0 20px 18px; }
+  .page-head h1{ display:flex; align-items:center; justify-content:center; gap:10px; font-size:21px; font-weight:800; color:var(--text); }
+  .page-head h1 .spark{ color:var(--p1); font-size:11px; }
+  .page-head h1::before, .page-head h1::after{ content:''; flex:1; max-width:44px; height:1px; background:linear-gradient(90deg,transparent,var(--teal-dim)); }
+  .page-head h1::after{ background:linear-gradient(90deg,var(--teal-dim),transparent); }
+  .page-head .sub{ color:var(--gold); font-size:15px; margin-top:6px; font-weight:500; }
+  .page-head .rule{ width:150px; height:1px; margin:10px auto 0; background:linear-gradient(90deg,transparent,var(--gold),transparent); opacity:.6; }
+
+  /* ---------- Schedule strip ---------- */
+  .schedule{ margin:0 20px 18px; background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:12px 14px; }
+  .schedule-top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+  .schedule-top .t{ font-size:13px; font-weight:700; }
+  .status{ display:inline-flex; align-items:center; gap:6px; font-size:11.5px; font-weight:800; padding:4px 10px; border-radius:8px; }
+  .status .dot{ width:7px; height:7px; border-radius:50%; }
+  .status.open{ background:rgba(34,224,106,.12); color:var(--p1); } .status.open .dot{ background:var(--p1); box-shadow:0 0 6px var(--p1); }
+  .status.closed{ background:rgba(239,74,74,.12); color:var(--red); } .status.closed .dot{ background:var(--red); }
+  .days{ display:flex; gap:6px; }
+  .day{ flex:1; text-align:center; font-size:11px; padding:7px 0 6px; border-radius:9px; border:1px solid var(--border); color:var(--text-dim2); background:var(--panel-2); }
+  .day.work{ color:var(--text); border-color:rgba(23,240,195,.25); }
+  .day.off{ color:var(--red); opacity:.8; }
+  .day.today{ box-shadow:0 0 0 1px var(--teal), 0 0 12px rgba(23,240,195,.35); color:var(--teal); }
+  .day small{ display:block; font-size:9px; margin-top:2px; color:var(--text-dim2); }
+  .schedule-note{ margin-top:10px; font-size:11.5px; color:var(--text-dim); display:flex; align-items:center; gap:6px; }
+  .schedule-note svg{ width:14px; height:14px; color:var(--gold); flex-shrink:0; }
+
+  /* ---------- Plan cards ---------- */
+  .plans{ display:flex; flex-direction:column; gap:22px; padding:0 20px; }
+  .plan{ --c: var(--p1); --cd: var(--p1-dim);
+    position:relative; border-radius:24px; padding:22px 18px 18px; border:1px solid var(--cd);
+    background: radial-gradient(ellipse 260px 160px at 12% 0%, color-mix(in srgb, var(--c) 14%, transparent), transparent 70%), var(--panel);
+    box-shadow: 0 0 0 1px rgba(255,255,255,.02) inset, 0 0 26px color-mix(in srgb, var(--c) 12%, transparent); }
+  .plan.p2{ --c:var(--p2); --cd:var(--p2-dim); }
+  .plan.p3{ --c:var(--p3); --cd:var(--p3-dim); }
+  .plan.p4{ --c:var(--p4); --cd:var(--p4-dim); }
+  .plan.p5{ --c:var(--p5); --cd:var(--p5-dim); }
+  .plan.locked .badge{ background:rgba(239,74,74,.12); color:var(--red); }
+  .plan.active-plan .badge{ background:color-mix(in srgb, var(--c) 18%, transparent); color:var(--c); }
+  .badge{ position:absolute; top:14px; left:14px; font-size:10px; font-weight:800; letter-spacing:.5px; padding:3px 9px; border-radius:7px; display:flex; align-items:center; gap:5px; }
+  .badge svg{ width:11px; height:11px; }
+
+  .plan-head{ display:flex; align-items:flex-start; gap:12px; margin-bottom:18px; }
+  .plan-num{ font-family:'Rajdhani',sans-serif; font-size:84px; font-weight:700; line-height:.85; color:var(--c); text-shadow:0 0 22px color-mix(in srgb, var(--c) 55%, transparent); flex-shrink:0; }
+  .plan-copy{ flex:1; padding-top:6px; }
+  .plan-copy h2{ font-size:26px; font-weight:800; margin-bottom:6px; }
+  .plan-copy p{ font-size:13.5px; color:#c7d2cf; line-height:1.6; }
+  .plan-icon{ width:104px; height:104px; flex-shrink:0; border-radius:50%; display:flex; align-items:center; justify-content:center; position:relative;
+    background: radial-gradient(circle, color-mix(in srgb, var(--c) 30%, transparent), transparent 70%); }
+  .plan-icon::before{ content:''; position:absolute; inset:8px; border-radius:50%; border:2px solid var(--c); box-shadow:0 0 18px color-mix(in srgb, var(--c) 60%, transparent), 0 0 6px var(--c) inset; }
+  .plan-icon::after{ content:''; position:absolute; inset:0; border-radius:50%; border:1px dashed color-mix(in srgb, var(--c) 40%, transparent); animation:spin 20s linear infinite; }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  .plan-icon svg{ width:46px; height:46px; color:var(--c); position:relative; z-index:1; filter:drop-shadow(0 0 8px color-mix(in srgb, var(--c) 70%, transparent)); }
+
+  .range{ display:flex; justify-content:space-between; padding:0 8px; margin-bottom:10px; }
+  .range .k{ font-size:13px; color:var(--text-dim); margin-bottom:2px; }
+  .range .v{ font-family:'Rajdhani',sans-serif; font-size:32px; font-weight:700; color:var(--c); direction:ltr; line-height:1; }
+  .range .to{ text-align:left; }
+
+  .bar-wrap{ margin-bottom:14px; }
+  .bar-row{ display:flex; align-items:center; gap:10px; }
+  .bar-row .lbl{ font-family:'Rajdhani',sans-serif; font-size:15px; font-weight:700; direction:ltr; min-width:44px; color:var(--text); }
+  .bar-row .lbl.left{ text-align:left; }
+  .bar{ flex:1; height:12px; border-radius:99px; background:#1a2523; border:1px solid #223330; position:relative; overflow:hidden; }
+  .bar .fill{ position:absolute; right:0; top:0; bottom:0; width:0%; border-radius:99px;
+    background:linear-gradient(90deg, color-mix(in srgb, var(--c) 60%, #000), var(--c)); box-shadow:0 0 12px color-mix(in srgb, var(--c) 60%, transparent);
+    transition:width 1.1s cubic-bezier(.22,1,.36,1); }
+  .bar .fill::after{ content:''; position:absolute; inset:0; background:linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent); transform:translateX(-100%); animation:shine 2.4s ease-in-out infinite; }
+  @keyframes shine{ to{ transform:translateX(100%); } }
+  .pct-row{ display:flex; justify-content:space-between; font-size:13px; color:var(--text-dim); padding:6px 2px 0; direction:ltr; }
+  .pct-row .cur{ color:var(--c); font-weight:700; }
+
+  .stats{ display:flex; align-items:center; margin:6px 0 16px; }
+  .stat{ flex:1; display:flex; align-items:center; gap:10px; }
+  .stat .ic{ width:50px; height:50px; border-radius:50%; border:1.5px solid var(--c); display:flex; align-items:center; justify-content:center; color:var(--c); flex-shrink:0; box-shadow:0 0 12px color-mix(in srgb, var(--c) 30%, transparent); }
+  .stat .ic svg{ width:24px; height:24px; }
+  .stat .k{ font-size:13px; color:var(--text-dim); }
+  .stat .v{ font-family:'Rajdhani',sans-serif; font-size:26px; font-weight:700; color:var(--c); direction:ltr; line-height:1.1; }
+  .stat-sep{ width:1px; height:44px; background:var(--border); margin:0 6px; }
+
+  .plan-actions{ display:flex; gap:12px; }
+  .btn-choose{ flex:1.15; border-radius:14px; padding:14px 10px; font-size:16px; font-weight:800; color:#fff; border:1px solid var(--c);
+    background:linear-gradient(180deg, color-mix(in srgb, var(--c) 70%, #000), color-mix(in srgb, var(--c) 35%, #000)); box-shadow:0 0 18px color-mix(in srgb, var(--c) 25%, transparent); }
+  .plan.p3 .btn-choose, .plan.p4 .btn-choose, .plan.p5 .btn-choose{ color:#0b0f0e; background:linear-gradient(180deg, var(--c), color-mix(in srgb, var(--c) 70%, #000)); }
+  .btn-details{ flex:1; border-radius:14px; padding:14px 10px; font-size:15px; font-weight:700; color:var(--text); border:1px solid var(--border); background:var(--panel-2); display:flex; align-items:center; justify-content:center; gap:8px; }
+  .btn-details svg{ width:20px; height:20px; color:var(--c); }
+
+  /* ---------- Fee info card ---------- */
+  .fees{ margin:22px 20px 0; background:var(--panel); border:1px solid var(--border); border-radius:18px; padding:16px; }
+  .fees h3{ font-size:15px; font-weight:800; display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+  .fees h3 svg{ width:18px; height:18px; color:var(--gold); }
+  .fees ul{ list-style:none; display:flex; flex-direction:column; gap:8px; }
+  .fees li{ font-size:12.5px; color:#c7d2cf; line-height:1.7; display:flex; gap:8px; }
+  .fees li::before{ content:'✦'; color:var(--teal); font-size:10px; margin-top:4px; }
+  .fees li b{ color:var(--gold); font-weight:700; }
+
+  /* ---------- Bottom nav (identical to home) ---------- */
+  .bottom-nav{ position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:430px; background:rgba(6,10,9,0.92); backdrop-filter:blur(10px); border-top:1px solid var(--border); display:flex; justify-content:space-around; align-items:flex-end; padding:10px 6px 24px; z-index:10; }
+  .nav-item{ display:flex; flex-direction:column; align-items:center; gap:5px; font-size:10.5px; color:var(--text-dim2); font-weight:600; width:60px; border-radius:14px; }
+  .nav-item.active{ color:var(--teal); }
+  .nav-item svg{ width:22px; height:22px; }
+  .nav-center{ width:56px; height:56px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:radial-gradient(circle, rgba(23,240,195,0.15), transparent 70%); border:1.5px solid var(--teal); margin-top:-30px; box-shadow:0 0 20px rgba(23,240,195,0.35); }
+  .nav-center svg{ width:24px; height:24px; }
+
+  .ripple-wrap{ position:relative; overflow:hidden; }
+  .nav-item.ripple-wrap{ overflow:visible; }
+  .ripple{ position:absolute; border-radius:50%; background:radial-gradient(circle, rgba(23,240,195,0.55), rgba(23,240,195,0) 70%); transform:scale(0); animation:rippleAnim .6s ease-out forwards; pointer-events:none; }
+  @keyframes rippleAnim{ to{ transform:scale(3.2); opacity:0; } }
+  .glow-pulse{ animation:glowPulse .55s ease; }
+  @keyframes glowPulse{ 0%{ box-shadow:0 0 0 0 rgba(23,240,195,.6); filter:brightness(1);} 40%{ filter:brightness(1.25);} 70%{ box-shadow:0 0 0 14px rgba(23,240,195,0);} 100%{ box-shadow:0 0 0 0 rgba(23,240,195,0); filter:brightness(1);} }
+
+  .toast{ position:fixed; bottom:112px; left:50%; transform:translate(-50%,14px); background:#0f1a18; border:1px solid var(--teal); color:var(--text); padding:10px 18px; border-radius:12px; font-size:12.5px; opacity:0; transition:all .3s ease; pointer-events:none; z-index:60; white-space:nowrap; max-width:90%; text-align:center; box-shadow:0 0 20px rgba(23,240,195,0.25); }
+  .toast.show{ opacity:1; transform:translate(-50%,0); }
+  .toast.warn{ border-color:var(--red); box-shadow:0 0 20px rgba(239,74,74,0.25); }
+
+  /* ---------- Bottom sheet modal ---------- */
+  .sheet-bg{ position:fixed; inset:0; background:rgba(0,0,0,.65); backdrop-filter:blur(4px); z-index:50; opacity:0; pointer-events:none; transition:opacity .25s ease; display:flex; align-items:flex-end; justify-content:center; }
+  .sheet-bg.show{ opacity:1; pointer-events:auto; }
+  .sheet{ width:100%; max-width:430px; background:var(--panel); border:1px solid var(--border); border-bottom:none; border-radius:26px 26px 0 0; padding:14px 20px 34px; transform:translateY(40px); transition:transform .3s cubic-bezier(.22,1,.36,1); max-height:86vh; overflow-y:auto; }
+  .sheet-bg.show .sheet{ transform:translateY(0); }
+  .sheet .grip{ width:44px; height:4px; border-radius:99px; background:var(--border); margin:0 auto 16px; }
+  .sheet h3{ font-size:20px; font-weight:800; margin-bottom:4px; display:flex; align-items:center; gap:8px; }
+  .sheet .lead{ font-size:13.5px; color:var(--text-dim); line-height:1.7; margin-bottom:14px; }
+  .kv{ display:flex; flex-direction:column; gap:0; border:1px solid var(--border); border-radius:14px; overflow:hidden; margin-bottom:14px; }
+  .kv div{ display:flex; justify-content:space-between; align-items:center; padding:11px 14px; border-bottom:1px solid var(--border); font-size:13px; }
+  .kv div:last-child{ border-bottom:none; }
+  .kv .k{ color:var(--text-dim); }
+  .kv .v{ font-weight:700; direction:ltr; font-family:'Rajdhani',sans-serif; font-size:16px; }
+  .kv .v.ar{ font-family:'Tajawal',sans-serif; font-size:13px; direction:rtl; }
+  .lock-visual{ width:74px; height:74px; border-radius:50%; margin:6px auto 14px; display:flex; align-items:center; justify-content:center; border:1.5px solid var(--red); background:rgba(239,74,74,.08); color:var(--red); box-shadow:0 0 22px rgba(239,74,74,.25); }
+  .lock-visual svg{ width:32px; height:32px; }
+  .sheet-actions{ display:flex; gap:10px; margin-top:6px; }
+  .btn-primary{ flex:1.2; border-radius:14px; padding:14px; font-size:15px; font-weight:800; background:var(--teal); color:#04211b; display:flex; align-items:center; justify-content:center; gap:8px; }
+  .btn-primary svg{ width:18px; height:18px; }
+  .btn-ghost{ flex:1; border-radius:14px; padding:14px; font-size:15px; font-weight:700; border:1px solid var(--border); color:var(--text); background:var(--panel-2); }
+  .need{ text-align:center; margin:4px 0 14px; }
+  .need .k{ font-size:12.5px; color:var(--text-dim); }
+  .need .v{ font-family:'Rajdhani',sans-serif; font-size:34px; font-weight:700; color:var(--teal); direction:ltr; line-height:1.1; }
+  .mini-bar{ height:8px; border-radius:99px; background:#1a2523; overflow:hidden; margin:10px 0 6px; }
+  .mini-bar span{ display:block; height:100%; background:var(--teal); border-radius:99px; width:0; transition:width .8s ease; }
+  .mini-pct{ display:flex; justify-content:space-between; font-size:11.5px; color:var(--text-dim); direction:ltr; }
+</style>
+</head>
+<body>
+<div class="device">
+
+  <div class="topbar">
+    <button class="menu-btn" id="btnMenu" aria-label="القائمة">
+      <svg width="24" height="18" viewBox="0 0 24 18" fill="none"><path d="M1 1h22M1 9h16M1 17h22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <div class="logo">
+      <div class="word1">ELITE</div>
+      <div class="word2">TRADING</div>
+      <div class="rule"></div>
+    </div>
+    <div class="header-right">
+      <button class="bell" id="btnBell" aria-label="الإشعارات">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2a6 6 0 0 0-6 6v3.5c0 .8-.3 1.6-.9 2.2L4 15h16l-1.1-1.3c-.6-.6-.9-1.4-.9-2.2V8a6 6 0 0 0-6-6z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9.5 18a2.5 2.5 0 0 0 5 0" stroke="currentColor" stroke-width="1.6"/></svg>
+      </button>
+      <div class="balance-pill">
+        <span class="live-tag">LIVE</span>
+        <span class="label">الرصيد الكلي</span>
+        <span class="amount" id="balanceAmount">$ 0.00</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="action-btn" id="btnDeposit">
+      <span>إيداع</span>
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 3v13m0 0-4.5-4.5M12 16l4.5-4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 19h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <button class="action-btn" id="btnSupport">
+      <span>الدعم</span>
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M4 12h4l2-4 3 8 2-4h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+
+  <div class="page-head">
+    <h1><span class="spark">◆</span>اختر خطتك وابدأ نحو مستقبلك المالي<span class="spark">◆</span></h1>
+    <div class="sub">خطط ذكية لنتائج أكبر</div>
+    <div class="rule"></div>
+  </div>
+
+  <!-- working schedule -->
+  <div class="schedule">
+    <div class="schedule-top">
+      <span class="t">جدول العمل الأسبوعي</span>
+      <span class="status" id="marketStatus"><span class="dot"></span><span id="marketStatusText">—</span></span>
+    </div>
+    <div class="days" id="days"></div>
+    <div class="schedule-note">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 8v5M12 16h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <span>العمل من الاثنين إلى الجمعة — السبت والأحد عطلة رسمية (لا تُحتسب أرباح).</span>
+    </div>
+  </div>
+
+  <div class="plans" id="plans"></div>
+
+  <div class="fees">
+    <h3>
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 3l8 4v5c0 5-3.5 8.5-8 9-4.5-.5-8-4-8-9V7l8-4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      كيف تُحتسب الرسوم والأرباح؟
+    </h3>
+    <ul>
+      <li><span><b>رسوم التطبيق تُسحب من التداول</b> وليس من دخلك اليومي — العائد اليومي المعلن يصلك كاملًا.</span></li>
+      <li><span>الأرباح تُحتسب في أيام العمل فقط (الاثنين → الجمعة)، ولا تُحتسب في عطلة نهاية الأسبوع.</span></li>
+      <li><span>تُفتح الخطة تلقائيًا عند بلوغ إجمالي إيداعك الحد الأدنى المطلوب لها.</span></li>
+      <li><span>يمكنك الانتقال لخطة أعلى في أي وقت بمجرد الإيداع الإضافي.</span></li>
+    </ul>
+  </div>
+
+  <div class="bottom-nav" id="bottomNav">
+    <button class="nav-item" data-page="account">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.7"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+      <span>حسابي</span>
+    </button>
+    <button class="nav-item" data-page="friends">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="8" cy="8" r="3.2" stroke="currentColor" stroke-width="1.6"/><circle cx="16" cy="8" r="3.2" stroke="currentColor" stroke-width="1.6"/><path d="M2 20c0-3.3 2.8-5.5 6-5.5s6 2.2 6 5.5M12 20c0-3.3 2.8-5.5 6-5.5s6 2.2 6 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <span>الأصدقاء</span>
+    </button>
+    <button class="nav-item" data-page="trade">
+      <div class="nav-center"><svg viewBox="0 0 24 24" fill="none"><path d="M2 12h4l2.5-7L13 19l2.5-7H22" stroke="#17f0c3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span style="margin-top:2px;">تداول</span>
+    </button>
+    <button class="nav-item active" data-page="work">
+      <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="7" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" stroke="currentColor" stroke-width="1.6"/></svg>
+      <span>العمل</span>
+    </button>
+    <button class="nav-item" data-page="home">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M3 12l2-2 5 5L20 5l2 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 20h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <span>الرئيسية</span>
+    </button>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- Bottom sheet -->
+  <div class="sheet-bg" id="sheetBg" role="dialog" aria-modal="true">
+    <div class="sheet" id="sheet"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   1) Toast + click feedback (identical to home)
+   ============================================================ */
+function toast(msg, isWarn){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.toggle('warn', !!isWarn);
+  t.classList.remove('show'); void t.offsetWidth; t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(()=>t.classList.remove('show'), 2200);
+}
+function attachInteractive(el, onClick){
+  el.classList.add('ripple-wrap');
+  el.addEventListener('click', (e)=>{
+    const rect = el.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const ripple = document.createElement('span');
+    ripple.className = 'ripple';
+    ripple.style.width = ripple.style.height = size + 'px';
+    ripple.style.left = (e.clientX - rect.left - size/2) + 'px';
+    ripple.style.top  = (e.clientY - rect.top - size/2) + 'px';
+    el.appendChild(ripple);
+    setTimeout(()=>ripple.remove(), 650);
+    el.classList.remove('glow-pulse'); void el.offsetWidth; el.classList.add('glow-pulse');
+    setTimeout(()=>el.classList.remove('glow-pulse'), 550);
+    if(onClick) onClick(e);
+  });
+}
+
+/* ============================================================
+   2) Account state — shared with the deposit page via localStorage
+      keys: elite_total_deposit (number, USD), elite_active_plan (id)
+   ============================================================ */
+/* لا يوجد localStorage — كل البيانات من الخادم عبر /api/trade/session */
+const fmt = n => n.toLocaleString('en-US', { maximumFractionDigits: 0 });
+const fmt2 = n => n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const escapeHtml = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+// بيانات من الخادم
+let serverWorkState = null;
+let serverBalance = null;
+
+async function loadWorkState(){
+  try{
+    // جلب الخطط النشطة من الخادم
+    try{
+      const resP = await fetch('/api/plans', { credentials: 'same-origin' });
+      if(resP.ok){
+        const dataP = await resP.json();
+        PLANS = (dataP || []).map(p => {
+  const style = PLAN_STYLE_BY_ID[p.id] || DEFAULT_PLAN_STYLE;
+  return {
+    id: p.id,
+    cls: style.cls,
+    title: p.name,           // ← الاسم من الخادم
+    desc: style.desc,
+    min: Number(p.min_amount),
+    max: Number(p.max_amount),
+    daily: Number(p.daily_percent)
+  };
+});
+      }
+    }catch(e){ console.warn('failed to load plans:', e.message); }
+
+    const resS = await fetch('/api/trade/session', { credentials: 'same-origin' });
+    if(resS.status === 401){ window.location.href = '/'; return; }
+    if(!resS.ok) throw new Error('HTTP ' + resS.status);
+    serverWorkState = await resS.json();
+
+    try{
+      const resB = await fetch('/api/user/balance', { credentials: 'same-origin' });
+      if(resB.ok) serverBalance = await resB.json();
+    }catch(e){ /* silent */ }
+
+    renderPlans();
+  }catch(e){
+    console.warn('failed to load work state:', e.message);
+  }
+}
+
+/* ============================================================
+   3) Plans
+   ============================================================ */
+// أنماط بصرية ثابتة لكل خطة (تُربط بمعرّف الخطة من الخادم)
+const PLAN_STYLE_BY_ID = {
+  1: { cls:'p1', desc:'ابدأ رحلتك بخطوة ذكية\nمثالية للمبتدئين لبناء أساس قوي.' },
+  2: { cls:'p2', desc:'خطوة أقوى لعوائد أكبر\nمناسبة للمتداولين الطموحين.' },
+  3: { cls:'p3', desc:'مستوى متقدم برأس مال أكبر\nلمن يبحث عن نمو ثابت ومستمر.' },
+  4: { cls:'p4', desc:'أعلى مستوى في المنصة\nللمحترفين وكبار المستثمرين.' },
+  5: { cls:'p5', desc:'الطبقة VIP من الاستثمار\nللمستثمرين بأعلى رأس مال.' }
+};
+const DEFAULT_PLAN_STYLE = { cls:'p1', title:'خطة', desc:'' };
+
+// تُملأ من الخادم عبر /api/plans
+let PLANS = [];
+
+const ICONS = {
+  rocket: `<svg viewBox="0 0 24 24" fill="none"><path d="M14.5 4.5c2.5-1 5.5-1 5.5-1s0 3-1 5.5c-.8 2-2.3 3.8-4.2 5.7L12 17.5 6.5 12l2.8-2.8c1.9-1.9 3.7-3.4 5.2-4.7z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="15" cy="9" r="1.6" stroke="currentColor" stroke-width="1.6"/><path d="M8 14l-3 1 2-3M10 16l-1 3 3-2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 20l3-3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>`,
+  trend:  `<svg viewBox="0 0 24 24" fill="none"><path d="M4 17l5-5 3 3 7-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 7h4v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  wallet: `<svg viewBox="0 0 24 24" fill="none"><rect x="3" y="7" width="18" height="13" rx="2.5" stroke="currentColor" stroke-width="1.7"/><path d="M3 10h18M7 7V5.5A1.5 1.5 0 0 1 8.5 4h7A1.5 1.5 0 0 1 17 5.5V7" stroke="currentColor" stroke-width="1.7"/><circle cx="16.5" cy="15" r="1.2" fill="currentColor"/></svg>`,
+  info:   `<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 11v5M12 8h.01" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>`,
+  lock:   `<svg viewBox="0 0 24 24" fill="none"><rect x="5" y="10" width="14" height="10" rx="2.5" stroke="currentColor" stroke-width="1.7"/><path d="M8 10V7.5a4 4 0 0 1 8 0V10" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="15" r="1.3" fill="currentColor"/></svg>`,
+  check:  `<svg viewBox="0 0 24 24" fill="none"><path d="M5 12l4.5 4.5L19 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  arrow:  `<svg viewBox="0 0 24 24" fill="none"><path d="M19 12H5M11 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+};
+
+function planProgress(p, dep){
+  if(dep <= p.min) return 0;
+  if(dep >= p.max) return 100;
+  return ((dep - p.min) / (p.max - p.min)) * 100;
+}
+function planState(p, dep){
+  if(serverWorkState && serverWorkState.plan && serverWorkState.plan.id === p.id) return 'active';
+  if(dep >= p.min) return 'unlocked';
+  return 'locked';
+}
+
+function planTemplate(p){
+  const dep = serverWorkState ? Number(serverWorkState.planBasis || serverWorkState.deposits || 0) : 0;
+  const state = planState(p, dep);
+  const badge = state === 'active'
+    ? `<span class="badge">${ICONS.check} الخطة الحالية</span>`
+    : state === 'locked'
+      ? `<span class="badge">${ICONS.lock} مغلقة</span>`
+      : `<span class="badge" style="background:rgba(23,240,195,.12);color:var(--teal)">${ICONS.check} متاحة</span>`;
+  return `
+  <section class="plan ${p.cls} ${state==='locked'?'locked':''} ${state==='active'?'active-plan':''}" data-id="${p.id}">
+    ${badge}
+    <div class="plan-head">
+      <div class="plan-num">${p.id}</div>
+      <div class="plan-copy">
+        <h2>${escapeHtml(p.title)}</h2>
+        <p>${p.desc.replace('\n','<br>')}</p>
+      </div>
+      <div class="plan-icon">${ICONS.rocket}</div>
+    </div>
+
+    <div class="range">
+      <div><div class="k">من</div><div class="v">$ ${fmt(p.min)}</div></div>
+      <div class="to"><div class="k">إلى</div><div class="v">$ ${fmt(p.max)}</div></div>
+    </div>
+
+    <div class="bar-wrap">
+      <div class="bar-row">
+        <span class="lbl">$${fmt(p.min)}</span>
+        <div class="bar"><div class="fill" data-fill="${p.id}"></div></div>
+        <span class="lbl left">$${fmt(p.max)}</span>
+      </div>
+      <div class="pct-row"><span>0%</span><span class="cur" data-pct="${p.id}">0%</span><span>100%</span></div>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="ic">${ICONS.wallet}</div>
+        <div><div class="k">تقدمك في الخطة</div><div class="v">$${fmt(dep)}</div></div>
+      </div>
+      <div class="stat-sep"></div>
+      <div class="stat">
+        <div class="ic">${ICONS.trend}</div>
+        <div><div class="k">العائد اليومي</div><div class="v">${p.daily}%</div></div>
+      </div>
+    </div>
+
+    <div class="plan-actions">
+      <button class="btn-choose" data-choose="${p.id}">${state==='active' ? 'الخطة مفعّلة' : 'اختر الخطة'}</button>
+      <button class="btn-details" data-details="${p.id}">${ICONS.info}<span>تفاصيل</span></button>
+    </div>
+  </section>`;
+}
+
+function renderPlans(){
+  const wrap = document.getElementById('plans');
+  wrap.innerHTML = PLANS.map(planTemplate).join('');
+  const bal = serverBalance ? Number(serverBalance.balance || 0) : 0;
+  document.getElementById('balanceAmount').textContent = '$ ' + fmt2(bal);
+
+  // animate bars after paint
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    const dep = serverWorkState ? Number(serverWorkState.planBasis || serverWorkState.deposits || 0) : 0;
+    PLANS.forEach(p=>{
+      const pct = planProgress(p, dep);
+      const fill = wrap.querySelector(`[data-fill="${p.id}"]`);
+      const lbl = wrap.querySelector(`[data-pct="${p.id}"]`);
+      if(fill) fill.style.width = pct + '%';
+      if(lbl) lbl.textContent = Math.round(pct) + '%';
+    });
+  }));
+
+  wrap.querySelectorAll('[data-choose]').forEach(b=>attachInteractive(b, ()=>choosePlan(+b.dataset.choose)));
+  wrap.querySelectorAll('[data-details]').forEach(b=>attachInteractive(b, ()=>openDetails(+b.dataset.details)));
+}
+
+/* ============================================================
+   4) Choose plan / details sheets
+   ============================================================ */
+const sheetBg = document.getElementById('sheetBg');
+const sheet = document.getElementById('sheet');
+function openSheet(html){
+  sheet.innerHTML = `<div class="grip"></div>` + html;
+  sheetBg.classList.add('show');
+  sheet.querySelectorAll('button').forEach(b=>attachInteractive(b));
+}
+function closeSheet(){ sheetBg.classList.remove('show'); }
+sheetBg.addEventListener('click', e=>{ if(e.target === sheetBg) closeSheet(); });
+
+function choosePlan(id){
+  const p = PLANS.find(x=>x.id===id);
+  const dep = serverWorkState ? Number(serverWorkState.planBasis || serverWorkState.deposits || 0) : 0;
+
+  if(dep < p.min){
+    const missing = p.min - dep;
+    const pct = Math.min(100, (dep / p.min) * 100);
+    openSheet(`
+      <div class="lock-visual">${ICONS.lock}</div>
+      <h3 style="justify-content:center">${escapeHtml(p.title)} مغلقة حاليًا</h3>
+      <p class="lead" style="text-align:center">ستفتح هذه الخطة تلقائيًا بعد إيداع الحد المطلوب.<br>أودع المبلغ المتبقي للانتقال إليها فورًا.</p>
+      <div class="need">
+        <div class="k">المتبقي للوصول إلى الحد الأدنى ($${fmt(p.min)})</div>
+        <div class="v">$ ${fmt2(missing)}</div>
+        <div class="mini-bar"><span id="miniFill"></span></div>
+        <div class="mini-pct"><span>$${fmt(dep)}</span><span>$${fmt(p.min)}</span></div>
+      </div>
+      <div class="sheet-actions">
+        <button class="btn-primary" id="sheetNext"><span>التالي</span>${ICONS.arrow}</button>
+        <button class="btn-ghost" id="sheetClose">إلغاء</button>
+      </div>
+    `);
+    requestAnimationFrame(()=>{ const f = document.getElementById('miniFill'); if(f) f.style.width = pct + '%'; });
+    document.getElementById('sheetNext').addEventListener('click', ()=>{
+      window.location.href = '/deposit.html?plan=' + p.id + '&amount=' + Math.ceil(missing);
+    });
+    document.getElementById('sheetClose').addEventListener('click', closeSheet);
+    return;
+  }
+
+  if(serverWorkState && serverWorkState.plan && serverWorkState.plan.id === id){
+    toast(p.title + ' مفعّلة بالفعل');
+    return;
+  }
+
+  openSheet(`
+    <h3>تفعيل ${escapeHtml(p.title)}</h3>
+    <p class="lead">إجمالي إيداعك يغطي الحد الأدنى لهذه الخطة. سيبدأ احتساب العائد اليومي من يوم العمل التالي.</p>
+    <div class="kv">
+      <div><span class="k">إجمالي إيداعك</span><span class="v">$${fmt2(dep)}</span></div>
+      <div><span class="k">العائد اليومي</span><span class="v">${p.daily}%</span></div>
+      <div><span class="k">الربح اليومي المتوقع</span><span class="v">$${fmt2(Math.min(dep,p.max) * p.daily/100)}</span></div>
+      <div><span class="k">أيام العمل</span><span class="v ar">الاثنين → الجمعة</span></div>
+    </div>
+    <div class="sheet-actions">
+      <button class="btn-primary" id="sheetConfirm">${ICONS.check}<span>تأكيد التفعيل</span></button>
+      <button class="btn-ghost" id="sheetClose">إلغاء</button>
+    </div>
+  `);
+  document.getElementById('sheetConfirm').addEventListener('click', ()=>{
+    closeSheet();
+    renderPlans();
+    toast('الخطة ' + p.title + ' مفعّلة تلقائياً بناءً على إيداعاتك');
+  });
+  document.getElementById('sheetClose').addEventListener('click', closeSheet);
+}
+
+function openDetails(id){
+  const p = PLANS.find(x=>x.id===id);
+  const dep = serverWorkState ? Number(serverWorkState.planBasis || serverWorkState.deposits || 0) : 0;
+  const base = Math.max(p.min, Math.min(dep, p.max));
+  const dailyProfit = base * p.daily / 100;
+  openSheet(`
+    <h3><span style="color:var(--${p.cls})">${p.id}</span> ${escapeHtml(p.title)}</h3>
+    <p class="lead">${p.desc.replace('\n',' ')}</p>
+    <div class="kv">
+      <div><span class="k">نطاق الإيداع</span><span class="v">$${fmt(p.min)} – $${fmt(p.max)}</span></div>
+      ${(serverWorkState && serverWorkState.planDaysLeft !== null && serverWorkState.planDaysLeft !== undefined) ? `<div><span class="k">مدة الخطة</span><span class="v" style="color:var(--gold)">${serverWorkState.planDaysLeft} يوم</span></div>` : ''}
+      <div><span class="k">العائد اليومي</span><span class="v">${p.daily}%</span></div>
+      <div><span class="k">ربح يومي (على $${fmt(base)})</span><span class="v">$${fmt2(dailyProfit)}</span></div>
+      <div><span class="k">ربح أسبوعي (5 أيام عمل)</span><span class="v">$${fmt2(dailyProfit*5)}</span></div>
+      <div><span class="k">ربح شهري (~22 يوم عمل)</span><span class="v">$${fmt2(dailyProfit*22)}</span></div>
+      <div><span class="k">أيام العمل</span><span class="v ar">الاثنين → الجمعة</span></div>
+      <div><span class="k">العطلة</span><span class="v ar" style="color:var(--red)">السبت والأحد</span></div>
+      <div><span class="k">رسوم التطبيق</span><span class="v ar" style="color:var(--gold)">تُسحب من التداول، لا من دخلك اليومي</span></div>
+    </div>
+    <div class="sheet-actions">
+      <button class="btn-primary" id="sheetGo">${dep >= p.min ? 'اختر الخطة' : 'إيداع للفتح'}</button>
+      <button class="btn-ghost" id="sheetClose">إغلاق</button>
+    </div>
+  `);
+  document.getElementById('sheetGo').addEventListener('click', ()=>{ closeSheet(); setTimeout(()=>choosePlan(id), 200); });
+  document.getElementById('sheetClose').addEventListener('click', closeSheet);
+}
+
+/* ============================================================
+   5) Weekly schedule (Mon–Fri work, Sat/Sun holiday)
+   ============================================================ */
+function renderSchedule(){
+  const names = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+  const short = ['أحد','اثنين','ثلاثاء','أربعاء','خميس','جمعة','سبت'];
+  const today = new Date().getDay(); // 0 = Sunday
+  const isWorkDay = d => d >= 1 && d <= 5;
+  const order = [1,2,3,4,5,6,0]; // Monday first
+  document.getElementById('days').innerHTML = order.map(d=>`
+    <div class="day ${isWorkDay(d)?'work':'off'} ${d===today?'today':''}">
+      ${short[d]}<small>${isWorkDay(d)?'عمل':'عطلة'}</small>
+    </div>`).join('');
+  const st = document.getElementById('marketStatus');
+  const txt = document.getElementById('marketStatusText');
+  if(isWorkDay(today)){ st.classList.add('open'); txt.textContent = 'التداول مفتوح اليوم — ' + names[today]; }
+  else { st.classList.add('closed'); txt.textContent = 'عطلة — ' + names[today]; }
+}
+
+/* ============================================================
+   6) Buttons & navigation (same wiring as home)
+   ============================================================ */
+attachInteractive(document.getElementById('btnMenu'), ()=> openSideDrawer());
+
+async function openSideDrawer(){
+  let drawer = document.getElementById('sideDrawerEl');
+  if(drawer){
+    drawer.classList.add('show');
+    document.getElementById('sideDrawerBg').classList.add('show');
+    return;
+  }
+
+  let uName = 'مستخدم', uEmail = '—';
+  try{
+    const res = await fetch('/api/account/profile', { credentials: 'same-origin' });
+    if(res.ok){
+      const d = await res.json();
+      uName = d.name || d.fullname || 'مستخدم';
+      uEmail = d.email || '—';
+    }
+  }catch(e){}
+  const initial = (uName.charAt(0) || 'E').toUpperCase();
+
+  const style = document.createElement('style');
+  style.id = 'sideDrawerStyles';
+  style.textContent = `
+    .side-drawer-bg{ position:fixed; inset:0; background:rgba(0,0,0,0.65); backdrop-filter:blur(4px); z-index:100; opacity:0; pointer-events:none; transition:opacity .25s; }
+    .side-drawer-bg.show{ opacity:1; pointer-events:auto; }
+    .side-drawer{ position:fixed; top:0; bottom:0; right:0; z-index:110; width:min(300px,82vw);
+      background:var(--panel,#0d1615); border-left:1px solid var(--teal-dim,#0e8f76); border-radius:26px 0 0 26px;
+      padding:22px 18px; transform:translateX(105%); transition:transform .35s cubic-bezier(.22,1,.36,1);
+      display:flex; flex-direction:column; box-shadow:-20px 0 60px rgba(0,0,0,.5); color:var(--text,#eef4f2); }
+    .side-drawer.show{ transform:none; }
+    .side-drawer-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+    .side-drawer-logo .w1{ font-family:'Rajdhani',sans-serif; font-weight:700; font-size:22px; letter-spacing:2px;
+      background:linear-gradient(180deg,#fff,#b9c3c1); -webkit-background-clip:text; background-clip:text; color:transparent; font-style:italic; }
+    .side-drawer-logo .w2{ font-family:'Rajdhani',sans-serif; font-size:7px; letter-spacing:4px; color:var(--teal,#17f0c3); margin-top:2px; }
+    .side-drawer-close{ width:34px; height:34px; border-radius:50%; border:1px solid var(--border,#1c2b28);
+      display:flex; align-items:center; justify-content:center; color:var(--text-dim,#8fa39e); background:none; cursor:pointer; font-size:14px; }
+    .side-drawer-user{ display:flex; align-items:center; gap:12px; background:var(--panel-2,#0f1a18);
+      border:1px solid var(--border,#1c2b28); border-radius:16px; padding:11px 12px; margin-bottom:16px; }
+    .side-drawer-avatar{ width:44px; height:44px; border-radius:13px; display:flex; align-items:center; justify-content:center;
+      font-family:'Rajdhani',sans-serif; font-size:20px; font-weight:700; color:var(--teal,#17f0c3);
+      background:radial-gradient(circle at 30% 25%, rgba(23,240,195,.2), transparent 70%), var(--panel,#0d1615);
+      border:1px solid var(--teal-dim,#0e8f76); flex-shrink:0; }
+    .side-drawer-user b{ font-size:13.5px; display:block; color:var(--text,#eef4f2); }
+    .side-drawer-user span{ font-size:10.5px; color:var(--text-dim,#8fa39e); direction:ltr; display:block; text-align:right; }
+    .side-drawer-links{ display:flex; flex-direction:column; gap:6px; flex:1; }
+    .side-drawer-links a, .side-drawer-links button{ display:flex; align-items:center; gap:12px; padding:12px 14px;
+      border-radius:14px; font-size:13.5px; font-weight:700; color:var(--text-dim,#8fa39e); text-align:right;
+      width:100%; border:1px solid transparent; transition:.2s; text-decoration:none; background:none; cursor:pointer; font-family:inherit; }
+    .side-drawer-links a:hover, .side-drawer-links button:hover{ background:rgba(23,240,195,.06); color:var(--text,#eef4f2); }
+    .side-drawer-links button.logout{ color:var(--red,#ef4a4a); background:rgba(239,74,74,.07); border:1px solid rgba(239,74,74,.3); margin-top:auto; }
+    .side-drawer-links svg{ width:19px; height:19px; flex-shrink:0; }
+  `;
+  document.head.appendChild(style);
+
+  const bg = document.createElement('div');
+  bg.className = 'side-drawer-bg';
+  bg.id = 'sideDrawerBg';
+
+  drawer = document.createElement('aside');
+  drawer.className = 'side-drawer';
+  drawer.id = 'sideDrawerEl';
+  drawer.innerHTML = `
+    <div class="side-drawer-head">
+      <div class="side-drawer-logo"><div class="w1">ELITE</div><div class="w2">TRADING</div></div>
+      <button class="side-drawer-close" id="sideDrawerClose">✕</button>
+    </div>
+    <div class="side-drawer-user">
+      <div class="side-drawer-avatar">${escapeHtml(initial)}</div>
+      <div><b>${escapeHtml(uName)}</b><span>${escapeHtml(uEmail)}</span></div>
+    </div>
+    <nav class="side-drawer-links">
+      <a href="/home"><svg viewBox="0 0 24 24" fill="none"><path d="M3 12l2-2 5 5L20 5l2 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 20h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>الرئيسية</a>
+      <a href="/work"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="7" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" stroke="currentColor" stroke-width="1.6"/></svg>العمل</a>
+      <a href="/trade"><svg viewBox="0 0 24 24" fill="none"><path d="M2 12h4l2.5-7L13 19l2.5-7H22" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>تداول</a>
+      <a href="/friends"><svg viewBox="0 0 24 24" fill="none"><circle cx="8" cy="8" r="3.2" stroke="currentColor" stroke-width="1.6"/><circle cx="16" cy="8" r="3.2" stroke="currentColor" stroke-width="1.6"/><path d="M2 20c0-3.3 2.8-5.5 6-5.5s6 2.2 6 5.5M12 20c0-3.3 2.8-5.5 6-5.5s6 2.2 6 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>الأصدقاء</a>
+      <a href="/account"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.7"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>حسابي</a>
+      <button class="logout" id="sideDrawerLogout"><svg viewBox="0 0 24 24" fill="none"><path d="M15 4h4a1.5 1.5 0 0 1 1.5 1.5v13A1.5 1.5 0 0 1 19 20h-4M10 8l-4 4 4 4M6 12h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>تسجيل الخروج</button>
+    </nav>
+  `;
+
+  document.body.appendChild(bg);
+  document.body.appendChild(drawer);
+
+  bg.addEventListener('click', closeSideDrawer);
+  document.getElementById('sideDrawerClose').addEventListener('click', closeSideDrawer);
+  document.getElementById('sideDrawerLogout').addEventListener('click', async ()=>{
+    try{ await fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' }); }catch(e){}
+    window.location.href = '/';
+  });
+
+  drawer.classList.add('show');
+  bg.classList.add('show');
+}
+
+function closeSideDrawer(){
+  const drawer = document.getElementById('sideDrawerEl');
+  const bg = document.getElementById('sideDrawerBg');
+  if(drawer) drawer.classList.remove('show');
+  if(bg) bg.classList.remove('show');
+}
+/* btnBell: related listener removed (handled by notifications.js) */
+attachInteractive(document.getElementById('btnDeposit'), ()=>{ window.location.href = '/deposit.html'; });
+attachInteractive(document.getElementById('btnSupport'), ()=> openSupportModal());
+
+/* ============================================================ */
+/* نافذة الدعم — مع قناة التلغرام والدعم المباشر                */
+/* ============================================================ */
+let supportContacts = null;
+
+async function loadSupportContacts(){
+  if(supportContacts) return supportContacts;
+  try{
+    const res = await fetch('/api/settings/contact', { credentials: 'same-origin' });
+    if(res.ok) supportContacts = await res.json();
+  }catch(e){ /* صامت */ }
+  return supportContacts || { telegram_channel:'', telegram_support:'' };
+}
+
+function updateSupportButtons(){
+  const modal = document.getElementById('supportModal');
+  if(!modal || !supportContacts) return;
+  const chanBtn   = modal.querySelector('#supportChannelBtn');
+  const directBtn = modal.querySelector('#supportDirectBtn');
+  if(chanBtn)   chanBtn.disabled   = !supportContacts.telegram_channel;
+  if(directBtn) directBtn.disabled = !supportContacts.telegram_support;
+}
+
+function openSupportModal(){
+  const EMAIL = 'elitetrading4433@gmail.com';
+  let modal = document.getElementById('supportModal');
+
+  if(!modal){
+    const style = document.createElement('style');
+    style.textContent = `
+      .support-modal-bg{ position:fixed; inset:0; background:rgba(0,0,0,0.72); backdrop-filter:blur(4px); z-index:9999; display:none; align-items:center; justify-content:center; padding:20px; }
+      .support-modal-bg.show{ display:flex; }
+      .support-modal-card{ background:var(--panel); border:1px solid var(--teal-dim); border-radius:22px; padding:22px 20px; max-width:360px; width:100%; box-shadow:0 0 40px rgba(23,240,195,0.2); }
+      .support-modal-card h3{ font-size:17px; font-weight:800; margin-bottom:16px; color:var(--text); text-align:center; }
+      .support-option{ background:var(--panel-2); border:1px solid var(--border); border-radius:14px; padding:12px; margin-bottom:10px; }
+      .support-option .so-head{ display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+      .support-option .so-icon{ width:38px; height:38px; border-radius:50%; background:rgba(23,240,195,0.12); border:1.5px solid var(--teal-dim); display:flex; align-items:center; justify-content:center; flex-shrink:0; color:var(--teal); }
+      .support-option .so-icon svg{ width:19px; height:19px; }
+      .support-option .so-title{ font-size:13.5px; font-weight:800; color:var(--text); }
+      .support-option .so-desc{ font-size:11px; color:var(--text-dim); margin-top:2px; direction:ltr; text-align:right; }
+      .support-option .so-btn{ width:100%; display:flex; align-items:center; justify-content:center; gap:7px; background:var(--teal); color:#04211b; border:none; padding:10px 14px; border-radius:11px; font-weight:800; font-size:13px; cursor:pointer; font-family:inherit; transition:transform .15s; }
+      .support-option .so-btn svg{ width:14px; height:14px; }
+      .support-option .so-btn:active{ transform:scale(0.97); }
+      .support-option .so-btn[disabled]{ opacity:.45; cursor:not-allowed; }
+      .support-close-btn{ width:100%; background:var(--panel-2); color:var(--text); border:1px solid var(--border); border-radius:12px; padding:11px; font-weight:700; font-size:13.5px; cursor:pointer; margin-top:4px; font-family:inherit; }
+    `;
+    document.head.appendChild(style);
+
+    modal = document.createElement('div');
+    modal.id = 'supportModal';
+    modal.className = 'support-modal-bg';
+    modal.innerHTML = `
+      <div class="support-modal-card">
+        <h3>التواصل مع الدعم</h3>
+
+        <div class="support-option">
+          <div class="so-head">
+            <div class="so-icon">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div>
+              <div class="so-title">قناة التلغرام</div>
+              <div class="so-desc">تعرض كل جديد حول المنصة</div>
+            </div>
+          </div>
+          <button class="so-btn" id="supportChannelBtn" disabled>
+            فتح القناة
+            <svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+
+        <div class="support-option">
+          <div class="so-head">
+            <div class="so-icon">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+            </div>
+            <div>
+              <div class="so-title">الدعم المباشر</div>
+              <div class="so-desc">تحدث مع إنسان</div>
+            </div>
+          </div>
+          <button class="so-btn" id="supportDirectBtn" disabled>
+            بدء المحادثة
+            <svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+
+        <div class="support-option">
+          <div class="so-head">
+            <div class="so-icon">
+              <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2.5" stroke="currentColor" stroke-width="1.7"/><path d="M3 8l9 6 9-6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div>
+              <div class="so-title">راسلنا</div>
+              <div class="so-desc">${EMAIL}</div>
+            </div>
+          </div>
+          <button class="so-btn" id="supportCopyBtn">
+            نسخ البريد
+            <svg viewBox="0 0 24 24" fill="none"><rect x="9" y="9" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M5 15V5a2 2 0 0 1 2-2h10" stroke="currentColor" stroke-width="1.8"/></svg>
+          </button>
+        </div>
+
+        <button class="support-close-btn" id="supportCloseBtn">إغلاق</button>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    modal.querySelector('#supportCloseBtn').addEventListener('click', ()=> modal.classList.remove('show'));
+    modal.addEventListener('click', (e)=>{ if(e.target === modal) modal.classList.remove('show'); });
+
+    modal.querySelector('#supportCopyBtn').addEventListener('click', async ()=>{
+      try{
+        await navigator.clipboard.writeText(EMAIL);
+        toast('تم نسخ البريد الإلكتروني');
+      }catch(e){
+        toast('انسخ البريد يدوياً', true);
+      }
+    });
+
+    modal.querySelector('#supportChannelBtn').addEventListener('click', ()=>{
+      if(!supportContacts || !supportContacts.telegram_channel){ toast('الرابط غير متوفر', true); return; }
+      window.open(supportContacts.telegram_channel, '_blank');
+    });
+
+    modal.querySelector('#supportDirectBtn').addEventListener('click', ()=>{
+      if(!supportContacts || !supportContacts.telegram_support){ toast('الرابط غير متوفر', true); return; }
+      let url = String(supportContacts.telegram_support).trim();
+      if(!url.startsWith('http')){ url = 'https://t.me/' + url.replace('@',''); }
+      window.open(url, '_blank');
+    });
+  }
+
+  modal.classList.add('show');
+
+  loadSupportContacts().then(()=> updateSupportButtons());
+}
+
+document.querySelectorAll('.nav-item').forEach(navEl=>{
+  attachInteractive(navEl, ()=>{
+    const page = navEl.dataset.page;
+    if(page === 'work') return;
+    document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+    navEl.classList.add('active');
+    if(page === 'home'){ window.location.href = '/home.html'; }
+    else if(page === 'account'){ window.location.href = '/account.html'; }
+    else if(page === 'trade'){ window.location.href = '/trade.html'; }
+    else if(page === 'friends'){ window.location.href = '/friends.html'; }
+    else { toast('صفحة "' + navEl.querySelector('span:last-child').textContent + '" — قريبًا'); }
+  });
+});
+
+// لا حاجة لمستمع storage — البيانات تُحدَّث عند تحميل الصفحة عبر loadWorkState()
+
+renderSchedule();
+renderPlans();
+loadWorkState();
+</script>
+  <script src="/notifications.js"></script>
+</body>
+</html>

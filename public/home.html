@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elite Trading</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #060a09;
+    --panel: #0d1615;
+    --panel-2: #0f1a18;
+    --border: #1c2b28;
+    --teal: #17f0c3;
+    --teal-dim: #0e8f76;
+    --gold: #e8a33d;
+    --red: #ef4a4a;
+    --text: #eef4f2;
+    --text-dim: #8fa39e;
+    --text-dim2: #5d726c;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+  html,body{ background:#000; }
+  body{ display:flex; justify-content:center; font-family:'Tajawal', sans-serif; min-height:100vh; }
+  button{ font-family:inherit; border:none; background:none; color:inherit; cursor:pointer; }
+
+  .device{
+    width:100%; max-width:430px; min-height:100vh;
+    background: radial-gradient(ellipse 500px 300px at 80% 0%, rgba(23,240,195,0.08), transparent 60%), var(--bg);
+    color:var(--text); position:relative; overflow:hidden; padding-bottom:100px;
+  }
+  @media (min-width:480px){
+    body{ padding:24px 0; }
+    .device{ min-height:844px; border-radius:36px; box-shadow:0 0 0 1px #1c2b28, 0 30px 80px rgba(0,0,0,.6); }
+    .bottom-nav{ border-radius:0 0 36px 36px; }
+  }
+
+  .topbar{ display:flex; align-items:center; justify-content:space-between; padding:22px 20px 18px; gap:10px; }
+  .menu-btn, .bell{ width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--text); }
+  .logo{ display:flex; flex-direction:column; align-items:center; line-height:1; }
+  .logo .word1{ font-family:'Rajdhani',sans-serif; font-weight:700; font-size:26px; letter-spacing:2px; background:linear-gradient(180deg,#fff,#b9c3c1); -webkit-background-clip:text; background-clip:text; color:transparent; font-style:italic; }
+  .logo .word2{ font-family:'Rajdhani',sans-serif; font-size:8px; letter-spacing:5px; color:var(--teal); margin-top:2px; }
+  .logo .rule{ width:70px; height:1px; background:linear-gradient(90deg,transparent,var(--teal-dim),transparent); margin-top:3px; }
+  .header-right{ display:flex; align-items:center; gap:10px; }
+  .bell{ position:relative; }
+  .bell::after{ content:''; position:absolute; top:7px; right:9px; width:8px; height:8px; border-radius:50%; background:var(--teal); box-shadow:0 0 6px var(--teal); }
+  .balance-pill{ background:var(--panel-2); border:1px solid var(--border); border-radius:14px; padding:6px 12px 8px; text-align:center; min-width:120px; }
+  .live-tag{ display:inline-flex; align-items:center; gap:4px; background:rgba(23,240,195,0.12); color:var(--teal); font-size:9px; font-weight:800; letter-spacing:1px; padding:2px 8px; border-radius:6px; margin-bottom:4px; }
+  .balance-pill .label{ font-size:11px; color:var(--text-dim); display:block; }
+  .balance-pill .amount{ font-family:'Rajdhani',sans-serif; font-size:19px; font-weight:700; color:var(--text); direction:ltr; display:block; }
+
+  .actions{ display:flex; gap:12px; padding:6px 20px 26px; }
+  .action-btn{ flex:1; display:flex; align-items:center; justify-content:center; gap:8px; border:1px solid var(--teal-dim); border-radius:14px; padding:14px 10px; color:var(--teal); font-weight:700; font-size:15px; background:linear-gradient(180deg, rgba(23,240,195,0.06), transparent); }
+  .action-btn svg{ width:18px; height:18px; }
+
+  .hero{ position:relative; padding:6px 20px 26px; }
+  .hero-top{ display:flex; align-items:center; gap:8px; justify-content:center; font-size:15px; color:var(--text-dim); margin-bottom:14px; }
+  .hero-top .spark{ color:var(--gold); font-size:12px; }
+  .brand-line{ display:flex; align-items:baseline; gap:10px; margin-bottom:16px; position:relative; }
+  .brand-line .crown{ position:absolute; top:-20px; right:0; font-size:16px; }
+  .brand-line .elite{ font-family:'Rajdhani',sans-serif; font-weight:700; font-size:38px; font-style:italic; background:linear-gradient(180deg,#fff,#9aa6a3); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .brand-line .trading{ font-family:'Rajdhani',sans-serif; font-weight:700; font-size:38px; font-style:italic; color:var(--teal); text-shadow:0 0 18px rgba(23,240,195,0.5); }
+  .hero-grid{ display:flex; gap:14px; align-items:center; }
+  .hero-copy{ flex:1.1; font-size:14px; line-height:2; color:#c7d2cf; }
+  .hero-visual{ flex:1; display:flex; align-items:center; justify-content:center; position:relative; height:200px; }
+  .hero-visual .rings{ position:absolute; bottom:10px; left:50%; transform:translateX(-50%); width:150px; height:80px; }
+  .ring{ position:absolute; left:50%; transform:translateX(-50%); border-radius:50%; border:1px solid rgba(23,240,195,0.35); }
+  .ring1{ width:150px; height:26px; bottom:0; } .ring2{ width:120px; height:20px; bottom:14px; } .ring3{ width:90px; height:15px; bottom:26px; }
+  .hero-visual .glow-e{ font-family:'Rajdhani',sans-serif; font-weight:700; font-size:90px; font-style:italic; color:transparent; -webkit-text-stroke:1.5px #6ffce4; background:linear-gradient(180deg,#baffee,#12b79a 70%); -webkit-background-clip:text; background-clip:text; filter:drop-shadow(0 0 22px rgba(23,240,195,0.65)); position:relative; z-index:2; }
+  .cta-btn{ width:100%; margin-top:20px; display:flex; align-items:center; justify-content:center; gap:10px; border:1px solid var(--teal-dim); border-radius:14px; padding:14px; color:var(--teal); font-weight:700; font-size:14px; background:linear-gradient(180deg, rgba(23,240,195,0.05), transparent); }
+
+  .section-title{ display:flex; justify-content:space-between; align-items:baseline; padding:10px 20px 14px; }
+  .section-title h2{ font-size:22px; font-weight:800; }
+  .section-title .view-all{ color:var(--teal); font-size:13px; font-weight:600; }
+  .market-card{ margin:0 20px; background:var(--panel); border:1px solid var(--border); border-radius:18px; overflow:hidden; }
+  .tabs{ display:flex; border-bottom:1px solid var(--border); }
+  .tab{ flex:1; display:flex; align-items:center; justify-content:center; gap:6px; padding:14px 6px; font-size:14px; font-weight:600; color:var(--text-dim2); position:relative; }
+  .tab.active{ color:var(--text); }
+  .tab.active::after{ content:''; position:absolute; bottom:-1px; left:15%; right:15%; height:2px; background:var(--teal); border-radius:2px; }
+  .tab .icon-circle{ width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800; flex-shrink:0; }
+  .row{ display:flex; align-items:center; gap:12px; padding:14px 16px; border-bottom:1px solid var(--border); }
+  .row:last-child{ border-bottom:none; }
+  .flag{ width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:18px; overflow:hidden; flex-shrink:0; }
+  .row .name-col{ flex:1; min-width:0; }
+  .row .pair{ font-size:16px; font-weight:700; }
+  .row .market-name{ font-size:12px; color:var(--text-dim2); margin-top:2px; }
+  .sparkline{ width:78px; height:28px; flex-shrink:0; }
+  .price-col{ text-align:left; flex-shrink:0; border-radius:8px; min-width:78px; }
+  .price-col .price{ font-family:'Rajdhani',sans-serif; font-size:16px; font-weight:700; direction:ltr; transition:text-shadow .3s ease; }
+  .price-col .change{ font-size:12.5px; font-weight:700; margin-top:2px; direction:ltr; }
+  .change.up{ color:var(--teal); } .change.down{ color:var(--red); }
+  .price-flash .price{ text-shadow:0 0 10px rgba(23,240,195,0.9); }
+  .star{ width:30px; height:30px; flex-shrink:0; display:flex; align-items:center; justify-content:center; border-radius:50%; }
+  .star svg{ width:18px; height:18px; color:var(--text-dim2); transition:color .2s ease; }
+  .star.starred svg{ color:var(--gold); }
+  .star.starred svg path{ fill:var(--gold); }
+
+  .referral{ margin:22px 20px 0; background:var(--panel); border:1px solid var(--border); border-radius:18px; padding:18px 16px; display:flex; align-items:center; gap:12px; }
+  .cta-col{ display:flex; flex-direction:column; gap:8px; align-items:stretch; flex:1; }
+  .invite-btn{ background:var(--teal); color:#04211b; font-weight:800; font-size:12.5px; border-radius:10px; padding:9px 8px; text-align:center; width:100%; }
+  .copy-link{ display:flex; align-items:center; justify-content:center; gap:5px; color:var(--teal); font-size:11.5px; font-weight:600; width:100%; padding:4px; }
+  .referral .copy{ flex:1.4; }
+  .referral .copy .t1{ font-size:14.5px; font-weight:700; margin-bottom:4px; }
+  .referral .copy .t2{ font-size:12px; color:var(--text-dim); }
+  .icon-cluster{ position:relative; width:40px; height:44px; flex-shrink:0; }
+  .icon-cluster .avatar{ position:absolute; width:28px; height:28px; border-radius:50%; background:var(--panel-2); border:1px solid var(--teal-dim); display:flex; align-items:center; justify-content:center; color:var(--teal); }
+  .icon-cluster .avatar svg{ width:14px; height:14px; }
+  .icon-cluster .a1{ top:0; right:0; }
+  .icon-cluster .a2{ bottom:0; right:14px; }
+
+  .bottom-nav{ position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:430px; background:rgba(6,10,9,0.92); backdrop-filter:blur(10px); border-top:1px solid var(--border); display:flex; justify-content:space-around; align-items:flex-end; padding:10px 6px 24px; z-index:10; }
+  .nav-item{ display:flex; flex-direction:column; align-items:center; gap:5px; font-size:10.5px; color:var(--text-dim2); font-weight:600; width:60px; border-radius:14px; }
+  .nav-item.active{ color:var(--teal); }
+  .nav-item svg{ width:22px; height:22px; }
+  .nav-center{ width:56px; height:56px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:radial-gradient(circle, rgba(23,240,195,0.15), transparent 70%); border:1.5px solid var(--teal); margin-top:-30px; box-shadow:0 0 20px rgba(23,240,195,0.35); }
+  .nav-center svg{ width:24px; height:24px; }
+
+  .ripple-wrap{ position:relative; overflow:hidden; }
+  .nav-item.ripple-wrap{ overflow:visible; }
+  .ripple{ position:absolute; border-radius:50%; background:radial-gradient(circle, rgba(23,240,195,0.55), rgba(23,240,195,0) 70%); transform:scale(0); animation:rippleAnim .6s ease-out forwards; pointer-events:none; }
+  @keyframes rippleAnim{ to{ transform:scale(3.2); opacity:0; } }
+  .glow-pulse{ animation:glowPulse .55s ease; }
+  @keyframes glowPulse{ 0%{ box-shadow:0 0 0 0 rgba(23,240,195,.6); filter:brightness(1);} 40%{ filter:brightness(1.25);} 70%{ box-shadow:0 0 0 14px rgba(23,240,195,0);} 100%{ box-shadow:0 0 0 0 rgba(23,240,195,0); filter:brightness(1);} }
+  .star.glow-pulse{ animation:glowPulseSmall .55s ease; }
+  @keyframes glowPulseSmall{ 0%{ box-shadow:0 0 0 0 rgba(23,240,195,.6);} 70%{ box-shadow:0 0 0 9px rgba(23,240,195,0);} 100%{ box-shadow:0 0 0 0 rgba(23,240,195,0);} }
+
+  .toast{ position:absolute; bottom:112px; left:50%; transform:translate(-50%,14px); background:#0f1a18; border:1px solid var(--teal); color:var(--text); padding:10px 18px; border-radius:12px; font-size:12.5px; opacity:0; transition:all .3s ease; pointer-events:none; z-index:60; white-space:nowrap; max-width:90%; text-align:center; box-shadow:0 0 20px rgba(23,240,195,0.25); }
+  .toast.show{ opacity:1; transform:translate(-50%,0); }
+  .toast.warn{ border-color:var(--red); box-shadow:0 0 20px rgba(239,74,74,0.25); }
+  /* ============ About / Referral Modal ============ */
+.about-overlay{
+  position:fixed; inset:0; z-index:200;
+  background:rgba(0,0,0,.78); backdrop-filter:blur(6px);
+  display:flex; align-items:center; justify-content:center;
+  padding:16px; opacity:0; pointer-events:none;
+  transition:opacity .3s ease;
+}
+.about-overlay.show{ opacity:1; pointer-events:auto; }
+.about-card{
+  width:100%; max-width:420px; max-height:88vh;
+  background:linear-gradient(160deg,#0d1615,#060a09);
+  border:1.5px solid var(--teal-dim); border-radius:24px;
+  display:flex; flex-direction:column; overflow:hidden;
+  transform:scale(.85) translateY(20px);
+  transition:transform .4s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:0 0 0 1px rgba(23,240,195,.08),0 30px 80px rgba(0,0,0,.7),0 0 60px rgba(23,240,195,.15);
+}
+.about-overlay.show .about-card{ transform:scale(1) translateY(0); }
+.about-head{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 18px; border-bottom:1px solid var(--border);
+  background:rgba(6,10,9,.5);
+}
+.about-dots{ display:flex; gap:6px; }
+.about-dot{
+  width:8px; height:8px; border-radius:50%;
+  background:var(--border); transition:all .3s ease;
+}
+.about-dot.active{
+  background:var(--teal); width:24px; border-radius:4px;
+  box-shadow:0 0 8px rgba(23,240,195,.6);
+}
+.about-close{
+  width:32px; height:32px; border-radius:50%;
+  border:1px solid var(--border); color:var(--text-dim);
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(15,26,24,.8); cursor:pointer; transition:all .2s;
+}
+.about-close:hover{ color:var(--red); border-color:rgba(239,74,74,.4); }
+.about-body{
+  flex:1; overflow-y:auto; padding:22px 20px 8px;
+  scrollbar-width:thin; scrollbar-color:var(--border) transparent;
+}
+.about-body::-webkit-scrollbar{ width:5px; }
+.about-body::-webkit-scrollbar-thumb{ background:var(--border); border-radius:3px; }
+.about-page{ display:none; animation:fadeIn .35s ease; }
+.about-page.active{ display:block; }
+@keyframes fadeIn{ from{opacity:0;transform:translateY(8px);} to{opacity:1;transform:translateY(0);} }
+.about-logo{ display:flex; flex-direction:column; align-items:center; gap:4px; margin-bottom:18px; text-align:center; }
+.about-logo .icon{ font-size:42px; line-height:1; filter:drop-shadow(0 0 16px rgba(23,240,195,.5)); }
+.about-logo .name{
+  font-family:'Rajdhani',sans-serif; font-weight:700; font-size:22px;
+  letter-spacing:3px; font-style:italic;
+  background:linear-gradient(180deg,#fff,#9aa6a3);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.about-logo .rule{ width:80px; height:1px; margin-top:4px; background:linear-gradient(90deg,transparent,var(--gold),transparent); }
+.about-title{
+  display:flex; align-items:center; gap:10px;
+  font-size:18px; font-weight:800; color:var(--teal);
+  margin-bottom:14px; padding-bottom:10px;
+  border-bottom:1px solid var(--border);
+  text-shadow:0 0 20px rgba(23,240,195,.3);
+}
+.about-sec{
+  margin-bottom:14px; padding:12px 14px;
+  background:linear-gradient(180deg,rgba(23,240,195,.03),transparent);
+  border:1px solid var(--border); border-radius:14px;
+  border-right:3px solid var(--teal-dim);
+}
+.about-sec h4{ font-size:14px; font-weight:800; color:var(--gold); margin-bottom:6px; display:flex; align-items:center; gap:8px; }
+.about-sec p{ font-size:13px; line-height:1.85; color:#c7d2cf; }
+.about-list{ list-style:none; display:flex; flex-direction:column; gap:8px; }
+.about-list li{
+  display:flex; align-items:flex-start; gap:10px;
+  font-size:12.5px; line-height:1.7; color:#c7d2cf;
+  padding:6px 10px; background:rgba(15,26,24,.6);
+  border-radius:10px; border:1px solid var(--border);
+}
+.about-list li .tick{ color:var(--teal); font-weight:800; flex-shrink:0; }
+.about-contact{
+  display:flex; flex-direction:column; gap:8px; padding:12px;
+  background:linear-gradient(160deg,rgba(232,163,61,.08),transparent);
+  border:1px solid rgba(232,163,61,.3); border-radius:14px; margin-top:12px;
+}
+.about-contact .row{ display:flex; align-items:center; gap:10px; font-size:12.5px; color:#f5e2c2; }
+.about-contact .row .k{ font-family:'Rajdhani',sans-serif; direction:ltr; color:var(--gold); font-weight:700; }
+.about-contact .row.contact-link{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  text-decoration:none;
+  transition:all .2s ease;
+  cursor:pointer;
+  border-radius:10px;
+  padding:8px 10px;
+  margin:0 -10px;
+}
+.about-contact .row.contact-link:hover{
+  background:rgba(23,240,195,.06);
+}
+.about-contact .row.contact-link:hover .k{
+  color:var(--teal);
+}
+.about-contact .row.contact-link .arr{
+  margin-right:auto;
+  color:var(--text-dim2);
+  font-size:14px;
+  line-height:1;
+  transition:all .2s;
+  flex-shrink:0;
+}
+.about-contact .row.contact-link:hover .arr{
+  color:var(--teal);
+  transform:translate(2px, -2px);
+}
+.about-foot{ display:flex; gap:10px; padding:14px 18px 18px; border-top:1px solid var(--border); background:rgba(6,10,9,.5); }
+.about-btn{
+  flex:1; padding:13px 14px; border-radius:14px; font-weight:800; font-size:13.5px;
+  display:flex; align-items:center; justify-content:center; gap:6px; transition:all .2s;
+}
+.about-btn.ghost{ background:transparent; border:1px solid var(--border); color:var(--text-dim); }
+.about-btn.ghost:hover{ color:var(--text); border-color:var(--teal-dim); }
+.about-btn.primary{
+  background:linear-gradient(180deg,var(--teal),var(--teal-dim));
+  color:#04211b; box-shadow:0 0 20px rgba(23,240,195,.35);
+}
+.about-btn.primary:active{ transform:scale(.97); }
+.ref-table{
+  width:100%; border-collapse:separate; border-spacing:0;
+  border-radius:12px; overflow:hidden; border:1px solid var(--teal-dim);
+  font-size:12.5px; margin:8px 0 14px;
+}
+.ref-table th{ background:rgba(23,240,195,.14); color:var(--teal); font-weight:800; padding:10px 8px; font-size:11.5px; text-align:center; }
+.ref-table td{ padding:9px 8px; text-align:center; border-top:1px solid var(--border); background:rgba(15,26,24,.5); color:var(--text); }
+.ref-table td:first-child{ font-weight:700; color:var(--gold); background:rgba(232,163,61,.06); }
+.ref-table .pct-dep{ color:var(--teal); font-family:'Rajdhani',sans-serif; font-weight:700; font-size:14px; }
+.ref-table .pct-wd{ color:var(--gold); font-family:'Rajdhani',sans-serif; font-weight:700; font-size:14px; }
+.ref-steps{ list-style:none; counter-reset:step; padding:0; margin:6px 0 14px; }
+.ref-steps li{
+  counter-increment:step; display:flex; align-items:flex-start; gap:12px;
+  padding:10px 12px; margin-bottom:8px;
+  background:rgba(15,26,24,.6); border:1px solid var(--border); border-radius:12px;
+  font-size:12.5px; line-height:1.7; color:#c7d2cf;
+}
+.ref-steps li::before{
+  content:counter(step); min-width:26px; height:26px; border-radius:50%;
+  background:rgba(23,240,195,.15); border:1px solid var(--teal-dim); color:var(--teal);
+  font-family:'Rajdhani',sans-serif; font-weight:700; font-size:14px;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+/* أمثلة عملية على أرباح الإحالة */
+.ref-examples{ display:flex; flex-direction:column; gap:10px; margin:10px 0 14px; }
+.ref-example{
+  background:linear-gradient(160deg,rgba(23,240,195,.05),transparent);
+  border:1px solid var(--border); border-right:3px solid var(--teal-dim);
+  border-radius:12px; padding:11px 13px;
+}
+.ref-example-head{
+  display:flex; align-items:center; justify-content:space-between;
+  font-size:12.5px; font-weight:800; color:var(--text);
+}
+.ref-example-head .dep{
+  color:var(--teal); font-family:'Rajdhani',sans-serif;
+  font-size:15px; direction:ltr; font-weight:700;
+}
+.ref-example-rows{
+  margin-top:8px; padding-top:8px; border-top:1px dashed var(--border);
+  display:flex; flex-direction:column; gap:5px;
+}
+.ref-example-rows .row{
+  display:flex; justify-content:space-between; align-items:center;
+  font-size:11.5px; color:var(--text-dim);
+}
+.ref-example-rows .row .l{
+  font-family:'Rajdhani',sans-serif; direction:ltr; color:var(--text-dim);
+}
+.ref-example-rows .row .v{
+  font-family:'Rajdhani',sans-serif; font-weight:700; color:var(--teal);
+  direction:ltr;
+}
+.ref-example-foot{
+  display:flex; align-items:center; justify-content:space-between;
+  margin-top:8px; padding-top:8px; border-top:1px solid var(--teal-dim);
+}
+.ref-example-foot .k{
+  font-size:12px; font-weight:700; color:var(--text-dim);
+}
+.ref-example-foot .total{
+  font-family:'Rajdhani',sans-serif; font-size:17px; font-weight:700;
+  color:var(--gold); direction:ltr;
+  text-shadow:0 0 12px rgba(232,163,61,.4);
+}
+.ref-highlight{
+  display:flex; align-items:center; gap:10px; padding:12px 14px;
+  background:linear-gradient(160deg,rgba(23,240,195,.12),rgba(23,240,195,.03));
+  border:1px solid var(--teal-dim); border-radius:14px;
+  font-size:12.5px; font-weight:700; color:var(--teal); margin-top:6px;
+}
+.glow-e.clickable{
+  cursor:pointer;
+  transition:filter .3s ease, transform .3s ease;
+  position:relative;
+}
+.glow-e.clickable:hover{
+  filter:drop-shadow(0 0 30px rgba(23,240,195,.85)) brightness(1.15);
+  transform:scale(1.05);
+}
+/* حلقة نابضة حول E */
+.glow-e.clickable::after{
+  content:'';
+  position:absolute;
+  top:50%; left:50%;
+  width:130%; height:130%;
+  transform:translate(-50%,-50%);
+  border:1.5px dashed rgba(23,240,195,.35);
+  border-radius:50%;
+  animation:aboutPulse 2.4s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes aboutPulse{
+  0%,100%{ opacity:.4; transform:translate(-50%,-50%) scale(.95); }
+  50%{ opacity:.9; transform:translate(-50%,-50%) scale(1.05); }
+}
+/* شارة "من نحن" تظهر تحت E */
+.glow-e.clickable::before{
+  content:'من نحن';
+  position:absolute;
+  top:calc(100% + 14px);
+  left:50%; transform:translateX(-50%);
+  background:rgba(23,240,195,.14);
+  border:1px solid var(--teal-dim);
+  color:var(--teal);
+  font-size:11.5px;
+  font-weight:700;
+  padding:5px 12px;
+  border-radius:10px;
+  white-space:nowrap;
+  pointer-events:none;
+  font-family:'Tajawal',sans-serif;
+  letter-spacing:.3px;
+  box-shadow:0 0 18px rgba(23,240,195,.25);
+}
+.glow-e.clickable:hover{ filter:drop-shadow(0 0 30px rgba(23,240,195,.85)) brightness(1.15); }
+</style>
+</head>
+<body>
+<div class="device">
+
+  <div class="topbar">
+    <button class="menu-btn" id="btnMenu" aria-label="القائمة">
+      <svg width="24" height="18" viewBox="0 0 24 18" fill="none"><path d="M1 1h22M1 9h16M1 17h22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <div class="logo">
+      <div class="word1">ELITE</div>
+      <div class="word2">TRADING</div>
+      <div class="rule"></div>
+    </div>
+    <div class="header-right">
+      <button class="bell" id="btnBell" aria-label="الإشعارات">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2a6 6 0 0 0-6 6v3.5c0 .8-.3 1.6-.9 2.2L4 15h16l-1.1-1.3c-.6-.6-.9-1.4-.9-2.2V8a6 6 0 0 0-6-6z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9.5 18a2.5 2.5 0 0 0 5 0" stroke="currentColor" stroke-width="1.6"/></svg>
+      </button>
+      <div class="balance-pill">
+        <span class="live-tag">LIVE</span>
+        <span class="label">الرصيد الكلي</span>
+        <span class="amount" id="balance">$ 0.00</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="action-btn" id="btnDeposit">
+      <span>إيداع</span>
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 3v13m0 0-4.5-4.5M12 16l4.5-4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 19h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <button class="action-btn" id="btnSupport">
+      <span>الدعم</span>
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M4 12h4l2-4 3 8 2-4h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+
+  <div class="hero">
+    <div class="hero-top"><span class="spark">✦</span><span>مرحبا بك في</span><span class="spark">✦</span></div>
+    <div class="brand-line">
+      <span class="crown">👑</span>
+      <span class="elite">ELITE</span>
+      <span class="trading">TRADING</span>
+    </div>
+    <div class="hero-grid">
+      <div class="hero-copy">لمنحك تجربة تداول احترافية وآمنة بأحدث التقنيات وأسعار فورية ودعم على مدار الساعة لتحقيق أهدافك المالية بثقة ونجاح.</div>
+      <div class="hero-visual">
+        <div class="glow-e" id="btnAbout" role="button" tabindex="0" aria-label="من نحن">E</div>
+        <div class="rings"><div class="ring ring1"></div><div class="ring ring2"></div><div class="ring ring3"></div></div>
+      </div>
+    </div>
+    <button class="cta-btn" id="btnCta"><span>ابدأ رحلتك نحو  مستقبلك المالي </span><span>🚀</span></button>
+  </div>
+
+  <div class="section-title">
+    <span class="view-all" id="btnViewAll">عرض الكل</span>
+    <h2>الأسواق</h2>
+  </div>
+
+  <div class="market-card">
+    <div class="tabs" id="tabs">
+      <button class="tab" data-tab="gold">
+        <span class="icon-circle" style="background:#3a2a0f;color:#e8a33d;">🪙</span><span>الذهب</span>
+      </button>
+      <button class="tab active" data-tab="forex">
+        <span class="icon-circle" style="background:#0e2a24;color:#17f0c3;">$</span><span>Forex</span>
+      </button>
+    </div>
+    <div id="rows"></div>
+  </div>
+
+  <div class="referral">
+    <div class="cta-col">
+      <button class="invite-btn" id="btnInvite">دعوة الأصدقاء</button>
+      <button class="copy-link" id="btnCopyLink">
+        <span>رابط الإحالة الخاص بك</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><rect x="9" y="9" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M5 15V5a2 2 0 0 1 2-2h10" stroke="currentColor" stroke-width="1.8"/></svg>
+      </button>
+    </div>
+    <div class="copy">
+      <div class="t1">ادع أصدقائك واكسب المزيد!</div>
+      <div class="t2">اربح مع كل إحالة ناجحة.</div>
+    </div>
+    <div class="icon-cluster">
+      <div class="avatar a1"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+      <div class="avatar a2"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+    </div>
+  </div>
+
+  <div class="bottom-nav" id="bottomNav">
+    <button class="nav-item" data-page="account">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.7"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+      <span>حسابي</span>
+    </button>
+    <button class="nav-item" data-page="friends">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="8" cy="8" r="3.2" stroke="currentColor" stroke-width="1.6"/><circle cx="16" cy="8" r="3.2" stroke="currentColor" stroke-width="1.6"/><path d="M2 20c0-3.3 2.8-5.5 6-5.5s6 2.2 6 5.5M12 20c0-3.3 2.8-5.5 6-5.5s6 2.2 6 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <span>الأصدقاء</span>
+    </button>
+    <button class="nav-item" data-page="trade">
+      <div class="nav-center"><svg viewBox="0 0 24 24" fill="none"><path d="M2 12h4l2.5-7L13 19l2.5-7H22" stroke="#17f0c3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span style="margin-top:2px;">تداول</span>
+    </button>
+    <button class="nav-item" data-page="work">
+      <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="7" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" stroke="currentColor" stroke-width="1.6"/></svg>
+      <span>العمل</span>
+    </button>
+    <button class="nav-item active" data-page="home">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M3 12l2-2 5 5L20 5l2 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 20h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <span>الرئيسية</span>
+    </button>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+<!-- ============ About / Referral Modal ============ -->
+<div class="about-overlay" id="aboutOverlay" role="dialog" aria-modal="true">
+  <div class="about-card">
+    <div class="about-head">
+      <div class="about-dots">
+        <span class="about-dot active" data-page="1"></span>
+        <span class="about-dot" data-page="2"></span>
+      </div>
+      <button class="about-close" id="aboutClose" aria-label="إغلاق">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+
+    <div class="about-body" id="aboutBody">
+      <!-- ====== PAGE 1: من نحن ====== -->
+      <div class="about-page active" data-page="1">
+        <div class="about-logo">
+          <div class="icon">🐂</div>
+          <div class="name">ELITE TRADING</div>
+          <div class="rule"></div>
+        </div>
+        <h3 class="about-title">🚀 من نحن؟</h3>
+        <div class="about-sec"><p>منصة حديثة تم إنشاؤها بهدف توفير بيئة احترافية تساعد الأفراد على الاستفادة من الفرص المتاحة في الأسواق المالية العالمية من خلال نظام عمل متطور يجمع بين البساطة والاحترافية.</p></div>
+        <div class="about-sec"><h4>💼 فريقنا</h4><p>يضم فريقنا نخبة من المختصين ذوي الخبرة الطويلة في الأسواق المالية، وإدارة المخاطر، وتحليل حركة السوق — حيث وظّفنا هذه الخبرات لبناء منصة تمنح المستخدمين تجربة مميزة وسهلة الاستخدام مهما كان مستوى خبرتهم.</p></div>
+        <div class="about-sec"><h4>📈 رؤيتنا للنجاح</h4><p>نؤمن بأن النجاح المالي يحتاج إلى رؤية واضحة وخطة عمل مدروسة. لذلك نعمل باستمرار على تطوير أدواتنا وخدماتنا لتقديم أفضل تجربة لأعضائنا، مع التركيز على الجودة والشفافية والابتكار.</p></div>
+        <div class="about-sec"><h4>🌍 مجتمعنا</h4><p>هدفنا بناء مجتمع قوي من الأعضاء من مختلف الدول العربية والعالم، يجمع بين الطموح والرغبة في التطور والاستفادة من الفرص المالية الحديثة ضمن بيئة احترافية وآمنة.</p></div>
+        <div class="about-sec"><h4>🏆 التميّز</h4><p>نسعى لأن تكون Elite Trading من المنصات الرائدة في مجالها، من خلال خدمات متطورة ودعم فني مستمر وتجربة استخدام سلسة تلبي احتياجات المستخدمين في مختلف المراحل.</p></div>
+        <div class="about-sec"><h4>🔒 التزامنا</h4><p>نلتزم بالعمل وفق المعايير المهنية والتنظيمية المعمول بها، مع الحرص على تطبيق أفضل الممارسات التشغيلية لضمان تجربة موثوقة وعالية الجودة لجميع الأعضاء.</p></div>
+        <div class="about-sec">
+          <h4>✨ مميزات المنصة</h4>
+          <ul class="about-list">
+            <li><span class="tick">✓</span><span>واجهة حديثة وسهلة الاستخدام.</span></li>
+            <li><span class="tick">✓</span><span>تجربة أرباح سهلة وثابتة.</span></li>
+            <li><span class="tick">✓</span><span>نظام إيداع وسحب منظّم وسريع.</span></li>
+            <li><span class="tick">✓</span><span>متابعة الأرباح والأنشطة بشكل مباشر.</span></li>
+            <li><span class="tick">✓</span><span>فريق دعم متواجد للإجابة على الاستفسارات.</span></li>
+            <li><span class="tick">✓</span><span>تطوير مستمر للمنصة والخدمات.</span></li>
+            <li><span class="tick">✓</span><span>نظام إحالة ومكافآت لتحفيز النمو.</span></li>
+            <li><span class="tick">✓</span><span>بيئة احترافية مصممة لأفضل تجربة.</span></li>
+          </ul>
+        </div>
+        <div class="about-contact">
+          <div class="row">📍 <b>المقر الرئيسي:</b> الإمارات العربية المتحدة 🇦🇪</div>
+
+          <a class="row contact-link" href="mailto:elitetrading4433@gmail.com">
+            <span>📧</span>
+            <span class="k">elitetrading4433@gmail.com</span>
+            <span class="arr">↗</span>
+          </a>
+
+          <a class="row contact-link" href="https://t.me/elite_trading44" target="_blank" rel="noopener">
+            <span>📱</span>
+            <span class="k">@elite_trading44</span>
+            <span class="arr">↗</span>
+          </a>
+        </div>
+
+      <!-- ====== PAGE 2: نظام الإحالة ====== -->
+      <div class="about-page" data-page="2">
+        <div class="about-logo">
+          <div class="icon">🎁</div>
+          <div class="name">REFERRAL</div>
+          <div class="rule"></div>
+        </div>
+        <h3 class="about-title">🎁 نظام الإحالة</h3>
+        <div class="about-sec"><p>اربح من دعوة أصدقائك! نظام إحالة متكامل يمنحك عمولات فورية على <b style="color:var(--teal)">5 مستويات</b>، إضافة إلى عمولة على كل عملية سحب.</p></div>
+        <h4 style="font-size:13.5px; color:var(--gold); margin:14px 0 6px;">💰 جدول العمولات</h4>
+        <table class="ref-table">
+          <thead><tr><th>المستوى</th><th>عمولة الإيداع</th><th>عمولة السحب</th></tr></thead>
+          <tbody>
+            <tr><td>المستوى 1</td><td class="pct-dep">8.2%</td><td class="pct-wd">1%</td></tr>
+            <tr><td>المستوى 2</td><td class="pct-dep">4.5%</td><td class="pct-wd">1%</td></tr>
+            <tr><td>المستوى 3</td><td class="pct-dep">3.0%</td><td class="pct-wd">1%</td></tr>
+            <tr><td>المستوى 4</td><td class="pct-dep">2.8%</td><td class="pct-wd">1%</td></tr>
+            <tr><td>المستوى 5</td><td class="pct-dep">2.3%</td><td class="pct-wd">1%</td></tr>
+          </tbody>
+        </table>
+        <h4 style="font-size:13.5px; color:var(--gold); margin:14px 0 6px;">💡 أمثلة عملية على أرباحك</h4>
+
+<div class="ref-examples">
+
+  <!-- مثال 1: إيداع $50 -->
+  <div class="ref-example">
+    <div class="ref-example-head">
+      <span>📥 صديقك أودع</span>
+      <span class="dep">$50</span>
+    </div>
+    <div class="ref-example-rows">
+      <div class="row"><span class="l">$50 × 8.2%</span><span class="v">+$4.10</span></div>
+    </div>
+    <div class="ref-example-foot">
+      <span class="k">💰 ربحك الفوري</span>
+      <span class="total">$4.10</span>
+    </div>
+  </div>
+
+  <!-- مثال 2: إيداع $500 -->
+  <div class="ref-example">
+    <div class="ref-example-head">
+      <span>📥 صديقك أودع</span>
+      <span class="dep">$500</span>
+    </div>
+    <div class="ref-example-rows">
+      <div class="row"><span class="l">$500 × 8.2%</span><span class="v">+$41.00</span></div>
+    </div>
+    <div class="ref-example-foot">
+      <span class="k">💰 ربحك الفوري</span>
+      <span class="total">$41.00</span>
+    </div>
+  </div>
+
+</div>
+
+<h4 style="font-size:13.5px; color:var(--gold); margin:14px 0 6px;">💸 إضافة: عمولة السحب</h4>
+<div class="about-sec">
+  <p>كل عملية سحب يقوم بها صديقك، تحصل أنت على <b style="color:var(--teal)">1%</b> فوراً:</p>
+  <div class="ref-example-rows" style="margin-top:8px; padding-top:8px;">
+    <div class="row"><span class="l">سحب $50 × 1%</span><span class="v">+$0.50</span></div>
+    <div class="row"><span class="l">سحب $500 × 1%</span><span class="v">+$5.00</span></div>
+    <div class="row"><span class="l">سحب $1,000 × 1%</span><span class="v">+$10.00</span></div>
+  </div>
+</div>
+        <h4 style="font-size:13.5px; color:var(--gold); margin:14px 0 6px;">✦ كيف أبدأ؟</h4>
+        <ol class="ref-steps">
+          <li>افتح صفحة <b style="color:var(--teal)">الأصدقاء</b> وانسخ رابط الإحالة الخاص بك.</li>
+          <li>شارك الرابط مع أصدقائك عبر واتساب أو تيليجرام أو أي منصة.</li>
+          <li>عند تسجيل أي صديق عبر رابطك، يبدأ فوراً احتساب عمولاتك.</li>
+          <li>تُضاف العمولات تلقائياً إلى محفظتك في صفحة <b style="color:var(--teal)">حسابي</b>.</li>
+        </ol>
+        <div class="ref-highlight"><span>💎</span><span>عمولة فورية على كل عملية — بدون حد أدنى للدفع.</span></div>
+      </div>
+    </div>
+
+    <div class="about-foot">
+      <button class="about-btn ghost" id="aboutPrev" style="display:none;">→ السابق</button>
+      <button class="about-btn primary" id="aboutNext">التالي ←</button>
+      <button class="about-btn primary" id="aboutFinish" style="display:none;">✓ فهمت</button>
+    </div>
+  </div>
+</div>
+<script>
+/* ============================================================
+   1) Toast + click feedback (ripple/glow) — shared by all buttons
+   ============================================================ */
+function toast(msg, isWarn){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.toggle('warn', !!isWarn);
+  t.classList.remove('show'); void t.offsetWidth; t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(()=>t.classList.remove('show'), 2200);
+}
+const escapeHtml = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function attachInteractive(el, onClick){
+  el.classList.add('ripple-wrap');
+  el.addEventListener('click', (e)=>{
+    const rect = el.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const ripple = document.createElement('span');
+    ripple.className = 'ripple';
+    ripple.style.width = ripple.style.height = size + 'px';
+    ripple.style.left = (e.clientX - rect.left - size/2) + 'px';
+    ripple.style.top  = (e.clientY - rect.top - size/2) + 'px';
+    el.appendChild(ripple);
+    setTimeout(()=>ripple.remove(), 650);
+    el.classList.remove('glow-pulse'); void el.offsetWidth; el.classList.add('glow-pulse');
+    setTimeout(()=>el.classList.remove('glow-pulse'), 550);
+    if(onClick) onClick(e);
+  });
+}
+
+/* ============================================================
+   2) Market data — ONE consistent live-price engine
+      - Gold  & Bitcoin  -> Binance public API   (real price + real 24h % change)
+      - Forex pairs      -> Frankfurter (ECB) API (real published rate +
+                             real % change vs a few days ago)
+   ============================================================ */
+function seedHistory(base, volPct, n=12){
+  let h = [], p = base;
+  for(let i=0;i<n;i++){ p = p + (Math.random()-0.5)*2*(base*volPct); h.push(p); }
+  h[h.length-1] = base;
+  return h;
+}
+function buildSparklinePoints(history, w=78, h=28){
+  const min = Math.min(...history), max = Math.max(...history);
+  const range = (max-min) || (min*0.001) || 1;
+  const step = w/(history.length-1);
+  return history.map((v,i)=>{
+    const x = i*step;
+    const y = h - ((v-min)/range)*h;
+    return x.toFixed(1)+','+y.toFixed(1);
+  }).join(' ');
+}
+
+const ASSETS = [
+  { symbol:'PAXGUSDT', pair:'XAU/USD', market:'الذهب', flagBg:'#2a1f0a', flagEmoji:'🪙', tab:'gold',
+    source:'binance', price:2516.45, change:0, starred:false, history:seedHistory(2516.45,0.002) },
+
+  { symbol:'EURUSD', pair:'EUR/USD', market:'Forex', flagBg:'#0a2a6b', flagEmoji:'🇪🇺', tab:'forex',
+    source:'forex', from:'EUR', to:'USD', price:1.08245, change:0, starred:false, history:seedHistory(1.08245,0.0015) },
+
+  { symbol:'GBPUSD', pair:'GBP/USD', market:'Forex', flagBg:'#7a1620', flagEmoji:'🇬🇧', tab:'forex',
+    source:'forex', from:'GBP', to:'USD', price:1.26587, change:0, starred:false, history:seedHistory(1.26587,0.0015) },
+
+  { symbol:'USDJPY', pair:'USD/JPY', market:'Forex', flagBg:'#1a3765', flagEmoji:'🇺🇸', tab:'forex',
+    source:'forex', from:'USD', to:'JPY', price:147.325, change:0, starred:false, history:seedHistory(147.325,0.0015) },
+
+  { symbol:'USDCHF', pair:'USD/CHF', market:'Forex', flagBg:'#1a3765', flagEmoji:'🇺🇸', tab:'forex',
+    source:'forex', from:'USD', to:'CHF', price:0.905, change:0, starred:false, history:seedHistory(0.905,0.0015) },
+
+  { symbol:'AUDUSD', pair:'AUD/USD', market:'Forex', flagBg:'#154f7a', flagEmoji:'🇦🇺', tab:'forex',
+    source:'forex', from:'AUD', to:'USD', price:0.658, change:0, starred:false, history:seedHistory(0.658,0.0015) }
+];
+
+let activeTab = 'forex';
+let liveConnected = false; // becomes true once at least one real fetch succeeds
+
+function formatPrice(a){
+  if(a.source==='binance') return a.price.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+  return a.symbol==='USDJPY' ? a.price.toFixed(3) : a.price.toFixed(5);
+}
+function starIcon(){
+  return `<svg viewBox="0 0 24 24" fill="none"><path d="M12 2l3 6.5 7 .9-5 5 1.3 7-6.3-3.4L5.7 21.4 7 14.4l-5-5 7-.9L12 2z" stroke="currentColor" stroke-width="1.4"/></svg>`;
+}
+function rowTemplate(a){
+  const up = a.change >= 0;
+  const strokeColor = up ? '#17f0c3' : '#ef4a4a';
+  return `
+  <div class="row" data-symbol="${a.symbol}">
+    <div class="flag" style="background:${a.flagBg};">${a.flagEmoji}</div>
+    <div class="name-col">
+      <div class="pair">${a.pair}</div>
+      <div class="market-name">${a.market}</div>
+    </div>
+    <svg class="sparkline" viewBox="0 0 78 28"><polyline points="${buildSparklinePoints(a.history)}" fill="none" stroke="${strokeColor}" stroke-width="1.6"/></svg>
+    <div class="price-col">
+      <div class="price">${formatPrice(a)}</div>
+      <div class="change ${up?'up':'down'}">${up?'+':''}${a.change.toFixed(2)}%</div>
+    </div>
+    <button class="star ${a.starred?'starred':''}" data-symbol="${a.symbol}" aria-label="مفضلة">${starIcon()}</button>
+  </div>`;
+}
+function renderRows(){
+  const container = document.getElementById('rows');
+  const visible = ASSETS.filter(a => a.tab === activeTab);
+  container.innerHTML = visible.map(rowTemplate).join('');
+  container.querySelectorAll('.star').forEach(starEl=>{
+    attachInteractive(starEl, ()=>{
+      const asset = ASSETS.find(x=>x.symbol===starEl.dataset.symbol);
+      asset.starred = !asset.starred;
+      starEl.classList.toggle('starred', asset.starred);
+      toast(asset.starred ? `أُضيف ${asset.pair} إلى المفضلة` : `أُزيل ${asset.pair} من المفضلة`);
+    });
+  });
+}
+
+/* ---- real fetchers, each isolated with its own try/catch ---- */
+async function fetchBinanceTicker(symbol){
+  const res = await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbol=${symbol}`);
+  if(!res.ok) throw new Error('binance HTTP '+res.status);
+  const d = await res.json();
+  const price = parseFloat(d.lastPrice), change = parseFloat(d.priceChangePercent);
+  if(!Number.isFinite(price)) throw new Error('binance bad payload');
+  return { price, change };
+}
+
+// Frankfurter (ECB), with open.er-api.com as a fallback if the first one fails
+async function fetchForexPrice(from, to){
+  try{
+    const res = await fetch(`https://api.frankfurter.app/latest?from=${from}&to=${to}`);
+    if(!res.ok) throw new Error('frankfurter HTTP '+res.status);
+    const d = await res.json();
+    const price = d.rates && d.rates[to];
+    if(!Number.isFinite(price)) throw new Error('frankfurter bad payload');
+    return price;
+  }catch(e1){
+    const res = await fetch(`https://open.er-api.com/v6/latest/${from}`);
+    if(!res.ok) throw new Error('er-api HTTP '+res.status);
+    const d = await res.json();
+    const price = d.rates && d.rates[to];
+    if(!Number.isFinite(price)) throw new Error('er-api bad payload');
+    return price;
+  }
+}
+
+async function tickAsset(a){
+  try{
+    if(a.source==='binance'){
+      const r = await fetchBinanceTicker(a.symbol);
+      a.price = r.price; a.change = r.change;
+    } else {
+      const price = await fetchForexPrice(a.from, a.to);
+      if(a.baseline == null) a.baseline = price; // first real tick becomes the reference point
+      a.price = price;
+      a.change = a.baseline ? ((price - a.baseline) / a.baseline) * 100 : 0;
+    }
+    a.history.push(a.price);
+    if(a.history.length>12) a.history.shift();
+    return true;
+  }catch(e){
+    console.warn('تعذر جلب سعر حقيقي لـ '+a.pair+':', e.message);
+    return false;
+  }
+}
+
+function updateRowDOM(a){
+  const row = document.querySelector(`.row[data-symbol="${a.symbol}"]`);
+  if(!row) return;
+  const up = a.change >= 0;
+  row.querySelector('.price').textContent = formatPrice(a);
+  const changeEl = row.querySelector('.change');
+  changeEl.textContent = (up?'+':'') + a.change.toFixed(2) + '%';
+  changeEl.className = 'change ' + (up?'up':'down');
+  const poly = row.querySelector('polyline');
+  poly.setAttribute('points', buildSparklinePoints(a.history));
+  poly.setAttribute('stroke', up ? '#17f0c3' : '#ef4a4a');
+  const priceCol = row.querySelector('.price-col');
+  priceCol.classList.remove('price-flash'); void priceCol.offsetWidth; priceCol.classList.add('price-flash');
+  setTimeout(()=>priceCol.classList.remove('price-flash'), 600);
+}
+
+async function tickAll(){
+  const results = await Promise.all(ASSETS.map(tickAsset));
+  const anySuccess = results.some(Boolean);
+  if(anySuccess && !liveConnected){
+    liveConnected = true;
+    toast('تم الاتصال بالأسعار الحقيقية');
+  }
+  ASSETS.filter(a=>a.tab===activeTab).forEach(updateRowDOM);
+}
+
+/* ---- tabs (switch which real market is shown) ---- */
+document.querySelectorAll('.tab').forEach(tabEl=>{
+  attachInteractive(tabEl, ()=>{
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    tabEl.classList.add('active');
+    activeTab = tabEl.dataset.tab;
+    renderRows();
+  });
+});
+
+/* ---- real referral link from server ---- */
+let referralLink = null;
+
+async function loadReferralLink(){
+  try{
+    const res = await fetch('/api/user', { credentials: 'same-origin' });
+    if(res.status === 401){ window.location.href = '/'; return; }
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    const code = data.user && data.user.referralCode;
+    if(code && code !== 'لا يوجد'){
+      const base = (location.origin && location.protocol.startsWith('http')) ? location.origin : 'https://elitetrading.app';
+      referralLink = base + '/register?ref=' + code;
+    }
+  }catch(e){
+    console.warn('failed to load referral link:', e.message);
+  }
+}
+
+/* ---- every other button: wired with feedback ---- */
+attachInteractive(document.getElementById('btnMenu'), ()=> openSideDrawer());
+
+async function openSideDrawer(){
+  let drawer = document.getElementById('sideDrawerEl');
+  if(drawer){
+    drawer.classList.add('show');
+    document.getElementById('sideDrawerBg').classList.add('show');
+    return;
+  }
+
+  let uName = 'مستخدم', uEmail = '—';
+  try{
+    const res = await fetch('/api/account/profile', { credentials: 'same-origin' });
+    if(res.ok){
+      const d = await res.json();
+      uName = d.name || d.fullname || 'مستخدم';
+      uEmail = d.email || '—';
+    }
+  }catch(e){}
+  const initial = (uName.charAt(0) || 'E').toUpperCase();
+
+  const style = document.createElement('style');
+  style.id = 'sideDrawerStyles';
+  style.textContent = `
+    .side-drawer-bg{ position:fixed; inset:0; background:rgba(0,0,0,0.65); backdrop-filter:blur(4px); z-index:100; opacity:0; pointer-events:none; transition:opacity .25s; }
+    .side-drawer-bg.show{ opacity:1; pointer-events:auto; }
+    .side-drawer{ position:fixed; top:0; bottom:0; right:0; z-index:110; width:min(300px,82vw);
+      background:var(--panel,#0d1615); border-left:1px solid var(--teal-dim,#0e8f76); border-radius:26px 0 0 26px;
+      padding:22px 18px; transform:translateX(105%); transition:transform .35s cubic-bezier(.22,1,.36,1);
+      display:flex; flex-direction:column; box-shadow:-20px 0 60px rgba(0,0,0,.5); color:var(--text,#eef4f2); }
+    .side-drawer.show{ transform:none; }
+    .side-drawer-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+    .side-drawer-logo .w1{ font-family:'Rajdhani',sans-serif; font-weight:700; font-size:22px; letter-spacing:2px;
+      background:linear-gradient(180deg,#fff,#b9c3c1); -webkit-background-clip:text; background-clip:text; color:transparent; font-style:italic; }
+    .side-drawer-logo .w2{ font-family:'Rajdhani',sans-serif; font-size:7px; letter-spacing:4px; color:var(--teal,#17f0c3); margin-top:2px; }
+    .side-drawer-close{ width:34px; height:34px; border-radius:50%; border:1px solid var(--border,#1c2b28);
+      display:flex; align-items:center; justify-content:center; color:var(--text-dim,#8fa39e); background:none; cursor:pointer; font-size:14px; }
+    .side-drawer-user{ display:flex; align-items:center; gap:12px; background:var(--panel-2,#0f1a18);
+      border:1px solid var(--border,#1c2b28); border-radius:16px; padding:11px 12px; margin-bottom:16px; }
+    .side-drawer-avatar{ width:44px; height:44px; border-radius:13px; display:flex; align-items:center; justify-content:center;
+      font-family:'Rajdhani',sans-serif; font-size:20px; font-weight:700; color:var(--teal,#17f0c3);
+      background:radial-gradient(circle at 30% 25%, rgba(23,240,195,.2), transparent 70%), var(--panel,#0d1615);
+      border:1px solid var(--teal-dim,#0e8f76); flex-shrink:0; }
+    .side-drawer-user b{ font-size:13.5px; display:block; color:var(--text,#eef4f2); }
+    .side-drawer-user span{ font-size:10.5px; color:var(--text-dim,#8fa39e); direction:ltr; display:block; text-align:right; }
+    .side-drawer-links{ display:flex; flex-direction:column; gap:6px; flex:1; }
+    .side-drawer-links a, .side-drawer-links button{ display:flex; align-items:center; gap:12px; padding:12px 14px;
+      border-radius:14px; font-size:13.5px; font-weight:700; color:var(--text-dim,#8fa39e); text-align:right;
+      width:100%; border:1px solid transparent; transition:.2s; text-decoration:none; background:none; cursor:pointer; font-family:inherit; }
+    .side-drawer-links a:hover, .side-drawer-links button:hover{ background:rgba(23,240,195,.06); color:var(--text,#eef4f2); }
+    .side-drawer-links button.logout{ color:var(--red,#ef4a4a); background:rgba(239,74,74,.07); border:1px solid rgba(239,74,74,.3); margin-top:auto; }
+    .side-drawer-links svg{ width:19px; height:19px; flex-shrink:0; }
+  `;
+  document.head.appendChild(style);
+
+  const bg = document.createElement('div');
+  bg.className = 'side-drawer-bg';
+  bg.id = 'sideDrawerBg';
+
+  drawer = document.createElement('aside');
+  drawer.className = 'side-drawer';
+  drawer.id = 'sideDrawerEl';
+  drawer.innerHTML = `
+    <div class="side-drawer-head">
+      <div class="side-drawer-logo"><div class="w1">ELITE</div><div class="w2">TRADING</div></div>
+      <button class="side-drawer-close" id="sideDrawerClose">✕</button>
+    </div>
+    <div class="side-drawer-user">
+      <div class="side-drawer-avatar">${escapeHtml(initial)}</div>
+      <div><b>${escapeHtml(uName)}</b><span>${escapeHtml(uEmail)}</span></div>
+    </div>
+    <nav class="side-drawer-links">
+      <a href="/home"><svg viewBox="0 0 24 24" fill="none"><path d="M3 12l2-2 5 5L20 5l2 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 20h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>الرئيسية</a>
+      <a href="/work"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="7" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" stroke="currentColor" stroke-width="1.6"/></svg>العمل</a>
+      <a href="/trade"><svg viewBox="0 0 24 24" fill="none"><path d="M2 12h4l2.5-7L13 19l2.5-7H22" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>تداول</a>
+      <a href="/friends"><svg viewBox="0 0 24 24" fill="none"><circle cx="8" cy="8" r="3.2" stroke="currentColor" stroke-width="1.6"/><circle cx="16" cy="8" r="3.2" stroke="currentColor" stroke-width="1.6"/><path d="M2 20c0-3.3 2.8-5.5 6-5.5s6 2.2 6 5.5M12 20c0-3.3 2.8-5.5 6-5.5s6 2.2 6 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>الأصدقاء</a>
+      <a href="/account"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.7"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>حسابي</a>
+      <button class="logout" id="sideDrawerLogout"><svg viewBox="0 0 24 24" fill="none"><path d="M15 4h4a1.5 1.5 0 0 1 1.5 1.5v13A1.5 1.5 0 0 1 19 20h-4M10 8l-4 4 4 4M6 12h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>تسجيل الخروج</button>
+    </nav>
+  `;
+
+  document.body.appendChild(bg);
+  document.body.appendChild(drawer);
+
+  bg.addEventListener('click', closeSideDrawer);
+  document.getElementById('sideDrawerClose').addEventListener('click', closeSideDrawer);
+  document.getElementById('sideDrawerLogout').addEventListener('click', async ()=>{
+    try{ await fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' }); }catch(e){}
+    window.location.href = '/';
+  });
+
+  drawer.classList.add('show');
+  bg.classList.add('show');
+}
+
+function closeSideDrawer(){
+  const drawer = document.getElementById('sideDrawerEl');
+  const bg = document.getElementById('sideDrawerBg');
+  if(drawer) drawer.classList.remove('show');
+  if(bg) bg.classList.remove('show');
+}
+/* btnBell: related listener removed (handled by notifications.js) */
+attachInteractive(document.getElementById('btnDeposit'), ()=>{ window.location.href = '/deposit'; });
+attachInteractive(document.getElementById('btnSupport'), ()=> openSupportModal());
+
+/* ============================================================ */
+/* نافذة الدعم — مع قناة التلغرام والدعم المباشر                */
+/* ============================================================ */
+let supportContacts = null;
+
+async function loadSupportContacts(){
+  if(supportContacts) return supportContacts;
+  try{
+    const res = await fetch('/api/settings/contact', { credentials: 'same-origin' });
+    if(res.ok) supportContacts = await res.json();
+  }catch(e){ /* صامت */ }
+  return supportContacts || { telegram_channel:'', telegram_support:'' };
+}
+
+function updateSupportButtons(){
+  const modal = document.getElementById('supportModal');
+  if(!modal || !supportContacts) return;
+  const chanBtn   = modal.querySelector('#supportChannelBtn');
+  const directBtn = modal.querySelector('#supportDirectBtn');
+  if(chanBtn)   chanBtn.disabled   = !supportContacts.telegram_channel;
+  if(directBtn) directBtn.disabled = !supportContacts.telegram_support;
+}
+
+function openSupportModal(){
+  const EMAIL = 'elitetrading4433@gmail.com';
+  let modal = document.getElementById('supportModal');
+
+  if(!modal){
+    const style = document.createElement('style');
+    style.textContent = `
+      .support-modal-bg{ position:fixed; inset:0; background:rgba(0,0,0,0.72); backdrop-filter:blur(4px); z-index:9999; display:none; align-items:center; justify-content:center; padding:20px; }
+      .support-modal-bg.show{ display:flex; }
+      .support-modal-card{ background:var(--panel); border:1px solid var(--teal-dim); border-radius:22px; padding:22px 20px; max-width:360px; width:100%; box-shadow:0 0 40px rgba(23,240,195,0.2); }
+      .support-modal-card h3{ font-size:17px; font-weight:800; margin-bottom:16px; color:var(--text); text-align:center; }
+      .support-option{ background:var(--panel-2); border:1px solid var(--border); border-radius:14px; padding:12px; margin-bottom:10px; }
+      .support-option .so-head{ display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+      .support-option .so-icon{ width:38px; height:38px; border-radius:50%; background:rgba(23,240,195,0.12); border:1.5px solid var(--teal-dim); display:flex; align-items:center; justify-content:center; flex-shrink:0; color:var(--teal); }
+      .support-option .so-icon svg{ width:19px; height:19px; }
+      .support-option .so-title{ font-size:13.5px; font-weight:800; color:var(--text); }
+      .support-option .so-desc{ font-size:11px; color:var(--text-dim); margin-top:2px; direction:ltr; text-align:right; }
+      .support-option .so-btn{ width:100%; display:flex; align-items:center; justify-content:center; gap:7px; background:var(--teal); color:#04211b; border:none; padding:10px 14px; border-radius:11px; font-weight:800; font-size:13px; cursor:pointer; font-family:inherit; transition:transform .15s; }
+      .support-option .so-btn svg{ width:14px; height:14px; }
+      .support-option .so-btn:active{ transform:scale(0.97); }
+      .support-option .so-btn[disabled]{ opacity:.45; cursor:not-allowed; }
+      .support-close-btn{ width:100%; background:var(--panel-2); color:var(--text); border:1px solid var(--border); border-radius:12px; padding:11px; font-weight:700; font-size:13.5px; cursor:pointer; margin-top:4px; font-family:inherit; }
+    `;
+    document.head.appendChild(style);
+
+    modal = document.createElement('div');
+    modal.id = 'supportModal';
+    modal.className = 'support-modal-bg';
+    modal.innerHTML = `
+      <div class="support-modal-card">
+        <h3>التواصل مع الدعم</h3>
+
+        <div class="support-option">
+          <div class="so-head">
+            <div class="so-icon">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div>
+              <div class="so-title">قناة التلغرام</div>
+              <div class="so-desc">تعرض كل جديد حول المنصة</div>
+            </div>
+          </div>
+          <button class="so-btn" id="supportChannelBtn" disabled>
+            فتح القناة
+            <svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+
+        <div class="support-option">
+          <div class="so-head">
+            <div class="so-icon">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+            </div>
+            <div>
+              <div class="so-title">الدعم المباشر</div>
+              <div class="so-desc">تحدث مع إنسان</div>
+            </div>
+          </div>
+          <button class="so-btn" id="supportDirectBtn" disabled>
+            بدء المحادثة
+            <svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+
+        <div class="support-option">
+          <div class="so-head">
+            <div class="so-icon">
+              <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2.5" stroke="currentColor" stroke-width="1.7"/><path d="M3 8l9 6 9-6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div>
+              <div class="so-title">راسلنا</div>
+              <div class="so-desc">${EMAIL}</div>
+            </div>
+          </div>
+          <button class="so-btn" id="supportCopyBtn">
+            نسخ البريد
+            <svg viewBox="0 0 24 24" fill="none"><rect x="9" y="9" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M5 15V5a2 2 0 0 1 2-2h10" stroke="currentColor" stroke-width="1.8"/></svg>
+          </button>
+        </div>
+
+        <button class="support-close-btn" id="supportCloseBtn">إغلاق</button>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    modal.querySelector('#supportCloseBtn').addEventListener('click', ()=> modal.classList.remove('show'));
+    modal.addEventListener('click', (e)=>{ if(e.target === modal) modal.classList.remove('show'); });
+
+    modal.querySelector('#supportCopyBtn').addEventListener('click', async ()=>{
+      try{
+        await navigator.clipboard.writeText(EMAIL);
+        toast('تم نسخ البريد الإلكتروني');
+      }catch(e){
+        toast('انسخ البريد يدوياً', true);
+      }
+    });
+
+    modal.querySelector('#supportChannelBtn').addEventListener('click', ()=>{
+      if(!supportContacts || !supportContacts.telegram_channel){ toast('الرابط غير متوفر', true); return; }
+      window.open(supportContacts.telegram_channel, '_blank');
+    });
+
+    modal.querySelector('#supportDirectBtn').addEventListener('click', ()=>{
+      if(!supportContacts || !supportContacts.telegram_support){ toast('الرابط غير متوفر', true); return; }
+      let url = String(supportContacts.telegram_support).trim();
+      if(!url.startsWith('http')){ url = 'https://t.me/' + url.replace('@',''); }
+      window.open(url, '_blank');
+    });
+  }
+
+  modal.classList.add('show');
+
+  loadSupportContacts().then(()=> updateSupportButtons());
+}
+attachInteractive(document.getElementById('btnCta'), ()=>{ window.location.href = '/trade'; });
+attachInteractive(document.getElementById('btnViewAll'), ()=>{ window.location.href = '/trade'; });
+attachInteractive(document.getElementById('btnInvite'), ()=>{ window.location.href = '/friends'; });
+attachInteractive(document.getElementById('btnCopyLink'), ()=>{
+  if(!referralLink){ toast('جاري تحميل رابط الإحالة...', true); return; }
+  if(navigator.clipboard){ navigator.clipboard.writeText(referralLink).catch(()=>{}); }
+  toast('تم نسخ رابط الإحالة');
+});
+document.querySelectorAll('.nav-item').forEach(navEl=>{
+  attachInteractive(navEl, ()=>{
+    document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+    navEl.classList.add('active');
+    const page = navEl.dataset.page;
+    if (page === 'account') {
+    window.location.href = '/account';
+} else if (page === 'friends') {
+    window.location.href = '/friends';
+} else if (page === 'work') {
+    window.location.href = '/work';
+} else if (page === 'trade') {
+    window.location.href = '/trade';
+} else if (page === 'home') {
+    window.location.href = '/home';
+} else {
+    toast('قريباً');
+}
+});
+});
+
+/* ============================================================
+   3) init — render once, fetch real data immediately, then keep polling
+   ============================================================ */
+renderRows();
+loadReferralLink();
+loadUserBalance();
+tickAll();
+
+async function loadUserBalance(){
+  try{
+    const res = await fetch('/api/user/balance', { credentials: 'same-origin' });
+    if(res.status === 401){ window.location.href = '/'; return; }
+    if(!res.ok) return;
+    const data = await res.json();
+    const bal = Number(data.balance || 0);
+    const el = document.getElementById('balance');
+    if(el) el.textContent = '$ ' + bal.toLocaleString('en-US', { minimumFractionDigits:2, maximumFractionDigits:2 });
+  }catch(e){
+    console.warn('failed to load balance:', e.message);
+  }
+}
+setInterval(tickAll, 10000);
+
+// friendly warning if, after a few seconds, nothing real ever came through
+// (e.g. no internet, or the browser/network is blocking these APIs)
+setTimeout(()=>{ if(!liveConnected) toast('تعذر الاتصال بمصادر الأسعار الحقيقية — تحقق من الاتصال بالإنترنت', true); }, 6000);
+/* ============================================================
+   About / Referral Modal
+   ============================================================ */
+(function(){
+  const overlay = document.getElementById('aboutOverlay');
+  const btnAbout = document.getElementById('btnAbout');
+  const btnClose = document.getElementById('aboutClose');
+  const btnPrev = document.getElementById('aboutPrev');
+  const btnNext = document.getElementById('aboutNext');
+  const btnFinish = document.getElementById('aboutFinish');
+  const body = document.getElementById('aboutBody');
+  if(!overlay || !btnAbout) return;
+
+  const dots = overlay.querySelectorAll('.about-dot');
+  const pages = overlay.querySelectorAll('.about-page');
+  let currentPage = 1;
+  const totalPages = 2;
+
+  function showPage(n){
+    if(n < 1) n = 1;
+    if(n > totalPages) n = totalPages;
+    currentPage = n;
+    pages.forEach(p => p.classList.toggle('active', Number(p.dataset.page) === n));
+    dots.forEach(d => d.classList.toggle('active', Number(d.dataset.page) === n));
+    btnPrev.style.display = (n > 1) ? '' : 'none';
+    btnNext.style.display = (n < totalPages) ? '' : 'none';
+    btnFinish.style.display = (n === totalPages) ? '' : 'none';
+    body.scrollTop = 0;
+  }
+  function openModal(){
+    showPage(1);
+    overlay.classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal(){
+    overlay.classList.remove('show');
+    document.body.style.overflow = '';
+    setTimeout(()=>{ body.scrollTop = 0; }, 300);
+  }
+
+  btnAbout.addEventListener('click', openModal);
+  btnAbout.addEventListener('keydown', (e)=>{ if(e.key === 'Enter' || e.key === ' ') openModal(); });
+  btnClose.addEventListener('click', closeModal);
+  btnNext.addEventListener('click', ()=> showPage(currentPage + 1));
+  btnPrev.addEventListener('click', ()=> showPage(currentPage - 1));
+  btnFinish.addEventListener('click', closeModal);
+  overlay.addEventListener('click', (e)=>{ if(e.target === overlay) closeModal(); });
+  document.addEventListener('keydown', (e)=>{
+    if(e.key === 'Escape' && overlay.classList.contains('show')) closeModal();
+  });
+
+  const glowE = document.querySelector('.glow-e');
+  if(glowE) glowE.classList.add('clickable');
+})();
+</script>
+  <script src="/notifications.js"></script>
+</body>
+</html>

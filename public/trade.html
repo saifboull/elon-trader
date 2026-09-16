@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elite Trading — التداول</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #060a09;
+    --panel: #0d1615;
+    --panel-2: #0f1a18;
+    --border: #1c2b28;
+    --teal: #17f0c3;
+    --teal-dim: #0e8f76;
+    --gold: #e8a33d;
+    --red: #ef4a4a;
+    --text: #eef4f2;
+    --text-dim: #8fa39e;
+    --text-dim2: #5d726c;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+  html,body{ background:#000; }
+  body{ display:flex; justify-content:center; font-family:'Tajawal', sans-serif; min-height:100vh; }
+  button{ font-family:inherit; border:none; background:none; color:inherit; cursor:pointer; }
+
+  .device{
+    width:100%; max-width:430px; min-height:100vh;
+    background: radial-gradient(ellipse 500px 300px at 80% 0%, rgba(23,240,195,0.08), transparent 60%), var(--bg);
+    color:var(--text); position:relative; overflow:hidden; padding-bottom:110px;
+  }
+  @media (min-width:480px){
+    body{ padding:24px 0; }
+    .device{ min-height:844px; border-radius:36px; box-shadow:0 0 0 1px #1c2b28, 0 30px 80px rgba(0,0,0,.6); }
+    .bottom-nav{ border-radius:0 0 36px 36px; }
+  }
+
+  /* ---------- Top bar (identical to home) ---------- */
+  .topbar{ display:flex; align-items:center; justify-content:space-between; padding:22px 20px 18px; gap:10px; }
+  .menu-btn, .bell{ width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--text); }
+  .logo{ display:flex; flex-direction:column; align-items:center; line-height:1; }
+  .logo .word1{ font-family:'Rajdhani',sans-serif; font-weight:700; font-size:26px; letter-spacing:2px; background:linear-gradient(180deg,#fff,#b9c3c1); -webkit-background-clip:text; background-clip:text; color:transparent; font-style:italic; }
+  .logo .word2{ font-family:'Rajdhani',sans-serif; font-size:8px; letter-spacing:5px; color:var(--teal); margin-top:2px; }
+  .logo .rule{ width:70px; height:1px; background:linear-gradient(90deg,transparent,var(--teal-dim),transparent); margin-top:3px; }
+  .header-right{ display:flex; align-items:center; gap:10px; }
+  .bell{ position:relative; }
+  .bell::after{ content:''; position:absolute; top:7px; right:9px; width:8px; height:8px; border-radius:50%; background:var(--teal); box-shadow:0 0 6px var(--teal); }
+  .balance-pill{ background:var(--panel-2); border:1px solid var(--border); border-radius:14px; padding:6px 12px 8px; text-align:center; min-width:120px; }
+  .live-tag{ display:inline-flex; align-items:center; gap:4px; background:rgba(23,240,195,0.12); color:var(--teal); font-size:9px; font-weight:800; letter-spacing:1px; padding:2px 8px; border-radius:6px; margin-bottom:4px; }
+  .balance-pill .label{ font-size:11px; color:var(--text-dim); display:block; }
+  .balance-pill .amount{ font-family:'Rajdhani',sans-serif; font-size:19px; font-weight:700; color:var(--text); direction:ltr; display:block; }
+
+  .section{ padding:0 16px; margin-bottom:16px; }
+
+  /* ---------- Stats strip ---------- */
+  .stats{ display:flex; background:linear-gradient(180deg, rgba(23,240,195,0.05), rgba(13,22,21,0.9)); border:1px solid var(--teal-dim); border-radius:20px; padding:16px 6px 14px; box-shadow:0 0 30px rgba(23,240,195,0.08) inset; }
+  .stat{ flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; text-align:center; position:relative; }
+  .stat + .stat::after{ content:''; position:absolute; right:0; top:8%; height:84%; width:1px; background:var(--border); }
+  .stat svg{ width:26px; height:26px; color:var(--teal); }
+  .stat .lbl{ font-size:11.5px; color:var(--text-dim); white-space:nowrap; }
+  .stat .val{ font-family:'Rajdhani',sans-serif; font-weight:700; font-size:19px; direction:ltr; }
+  .stat .val.teal{ color:var(--teal); }
+
+  /* ---------- Trade hero ---------- */
+  .trade-card{ position:relative; border:1px solid var(--teal-dim); border-radius:22px; overflow:hidden; background:radial-gradient(ellipse 60% 80% at 20% 50%, rgba(23,240,195,0.10), transparent 60%), var(--panel); box-shadow:0 0 40px rgba(23,240,195,0.10); }
+  .trade-card.working{ border-color:var(--teal); box-shadow:0 0 44px rgba(23,240,195,0.22); }
+  .trade-card.done{ border-color:var(--gold); box-shadow:0 0 44px rgba(232,163,61,0.22); }
+  .trade-inner{ display:flex; gap:10px; padding:18px 16px 16px; align-items:stretch; }
+  .trade-copy{ flex:1.15; display:flex; flex-direction:column; justify-content:center; gap:10px; }
+  .brand{ font-family:'Rajdhani',sans-serif; font-weight:700; font-style:italic; font-size:44px; letter-spacing:2px; line-height:.9; background:linear-gradient(180deg,#9dffe6,#17f0c3 55%,#0e8f76); -webkit-background-clip:text; background-clip:text; color:transparent; filter:drop-shadow(0 0 14px rgba(23,240,195,0.45)); direction:ltr; text-align:right; }
+  .brand-sub{ display:flex; align-items:center; gap:8px; justify-content:flex-start; direction:ltr; font-family:'Rajdhani',sans-serif; letter-spacing:6px; font-size:12px; color:#b9f7e9; }
+  .brand-sub::before,.brand-sub::after{ content:''; height:1px; width:22px; background:var(--teal-dim); }
+  .tagline{ font-size:17px; font-weight:700; color:#cfe1dc; }
+  .status-line{ font-size:12.5px; color:var(--text-dim); min-height:18px; display:flex; align-items:center; gap:6px; }
+  .status-line .dot{ width:7px; height:7px; border-radius:50%; background:var(--teal); box-shadow:0 0 8px var(--teal); animation:blink 1.2s infinite; }
+  @keyframes blink{ 50%{ opacity:.2; } }
+  .status-line.done{ color:var(--gold); }
+  .status-line.done .dot{ background:var(--gold); box-shadow:0 0 8px var(--gold); animation:none; }
+  .status-line.idle .dot{ display:none; }
+
+  .start-btn{ position:relative; display:flex; align-items:center; justify-content:center; gap:14px; width:100%; padding:15px 12px; border-radius:40px; border:1.5px solid var(--teal); color:var(--text); font-size:19px; font-weight:800; background:linear-gradient(180deg, rgba(23,240,195,0.16), rgba(23,240,195,0.04)); box-shadow:0 0 22px rgba(23,240,195,0.25), 0 0 0 0 rgba(23,240,195,0.35); animation:breathe 2.4s ease-in-out infinite; overflow:hidden; }
+  @keyframes breathe{ 0%,100%{ box-shadow:0 0 22px rgba(23,240,195,0.25), 0 0 0 0 rgba(23,240,195,0.35);} 50%{ box-shadow:0 0 30px rgba(23,240,195,0.45), 0 0 0 10px rgba(23,240,195,0);} }
+  .start-btn .chev{ color:var(--teal); font-size:20px; line-height:1; letter-spacing:-4px; }
+  .start-btn:disabled{ animation:none; opacity:.85; cursor:default; }
+  .start-btn.working{ border-color:var(--teal-dim); background:rgba(13,22,21,0.9); }
+  .start-btn.locked{ border-color:var(--border); color:var(--text-dim); background:var(--panel-2); box-shadow:none; }
+  .start-btn.claim{ border-color:var(--gold); color:#ffe4b5; background:linear-gradient(180deg, rgba(232,163,61,0.22), rgba(232,163,61,0.05)); box-shadow:0 0 26px rgba(232,163,61,0.35); animation:breatheGold 2s ease-in-out infinite; }
+  @keyframes breatheGold{ 0%,100%{ box-shadow:0 0 22px rgba(232,163,61,0.3);} 50%{ box-shadow:0 0 34px rgba(232,163,61,0.55);} }
+  .start-btn .fill{ position:absolute; inset:0; width:0%; background:linear-gradient(90deg, rgba(23,240,195,0.28), rgba(23,240,195,0.10)); transition:width 1s linear; z-index:0; }
+  .start-btn > *:not(.fill){ position:relative; z-index:1; }
+
+  .trade-visual{ flex:1; position:relative; display:flex; align-items:center; justify-content:center; min-height:200px; }
+  .trade-visual img{ width:100%; max-width:190px; aspect-ratio:1; object-fit:cover; border-radius:50%; filter:drop-shadow(0 0 22px rgba(23,240,195,0.45)); mask-image:radial-gradient(circle, #000 60%, transparent 100%); -webkit-mask-image:radial-gradient(circle, #000 60%, transparent 100%); }
+  .ring{ position:absolute; inset:0; margin:auto; width:170px; height:170px; border-radius:50%; border:1px dashed rgba(23,240,195,0.35); animation:spin 14s linear infinite; }
+  .ring.r2{ width:196px; height:196px; border-style:solid; border-color:rgba(23,240,195,0.12); animation-duration:22s; animation-direction:reverse; }
+  .working .ring{ border-color:rgba(23,240,195,0.7); animation-duration:3s; }
+  .working .trade-visual img{ animation:pulseImg 1.6s ease-in-out infinite; }
+  @keyframes spin{ to{ transform:rotate(360deg);} }
+  @keyframes pulseImg{ 50%{ filter:drop-shadow(0 0 34px rgba(23,240,195,0.85)); } }
+
+  /* ---------- Session progress ---------- */
+  .session{ border-top:1px solid var(--border); padding:14px 16px 16px; display:none; flex-direction:column; gap:10px; background:rgba(6,10,9,0.5); }
+  .trade-card.working .session, .trade-card.done .session, .trade-card.cooldown .session{ display:flex; }
+  .session-head{ display:flex; justify-content:space-between; align-items:center; font-size:12.5px; color:var(--text-dim); }
+  .session-head b{ color:var(--text); font-family:'Rajdhani',sans-serif; font-size:20px; direction:ltr; letter-spacing:1px; }
+  .session-head b.gold{ color:var(--gold); }
+  .track{ height:10px; background:#0a1412; border:1px solid var(--border); border-radius:99px; overflow:hidden; position:relative; }
+  .track .bar{ height:100%; width:0%; border-radius:99px; background:linear-gradient(90deg,var(--teal-dim),var(--teal)); box-shadow:0 0 12px rgba(23,240,195,0.6); transition:width 1s linear; position:relative; }
+  .track .bar::after{ content:''; position:absolute; inset:0; background:linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent); background-size:200% 100%; animation:shimmer 1.4s linear infinite; }
+  @keyframes shimmer{ from{ background-position:200% 0;} to{ background-position:-200% 0;} }
+  .trade-card.done .track .bar, .trade-card.cooldown .track .bar{ background:linear-gradient(90deg,#a56a15,var(--gold)); box-shadow:0 0 12px rgba(232,163,61,0.6); }
+  .session-foot{ display:flex; justify-content:space-between; font-size:11.5px; color:var(--text-dim2); }
+  .session-foot span{ direction:ltr; }
+  .steps{ display:flex; justify-content:space-between; gap:6px; margin-top:2px; }
+  .step{ flex:1; display:flex; align-items:center; gap:6px; font-size:11px; color:var(--text-dim2); }
+  .step i{ width:16px; height:16px; border-radius:50%; border:1px solid var(--border); display:inline-flex; align-items:center; justify-content:center; font-size:9px; font-style:normal; flex-shrink:0; }
+  .step.on{ color:var(--teal); } .step.on i{ border-color:var(--teal); background:rgba(23,240,195,0.15); }
+  .step.ok{ color:var(--text); } .step.ok i{ border-color:var(--teal); background:var(--teal); color:#04211b; font-weight:900; }
+
+  /* ---------- Live ticker (ties trading to real markets) ---------- */
+  .ticker{ margin-top:12px; display:flex; gap:8px; overflow-x:auto; scrollbar-width:none; padding-bottom:2px; }
+  .ticker::-webkit-scrollbar{ display:none; }
+  .tick{ flex:0 0 auto; background:var(--panel-2); border:1px solid var(--border); border-radius:12px; padding:8px 12px; display:flex; flex-direction:column; gap:2px; min-width:104px; }
+  .tick .p{ font-size:11px; color:var(--text-dim); }
+  .tick .v{ font-family:'Rajdhani',sans-serif; font-weight:700; font-size:15px; direction:ltr; text-align:right; }
+  .tick .c{ font-size:11px; direction:ltr; text-align:right; font-weight:700; }
+  .tick .c.up{ color:var(--teal);} .tick .c.dn{ color:var(--red);}
+
+  /* ---------- Current plan ---------- */
+  .plan-card{ border:1px solid var(--teal-dim); border-radius:22px; padding:16px; background:radial-gradient(ellipse 80% 60% at 100% 0%, rgba(23,240,195,0.08), transparent 60%), var(--panel); }
+  .plan-head{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .plan-id{ display:flex; align-items:center; gap:14px; }
+  .plan-num{ width:64px; height:80px; border-radius:16px; border:1px solid var(--teal-dim); background:linear-gradient(180deg, rgba(23,240,195,0.12), transparent); display:flex; align-items:center; justify-content:center; font-family:'Rajdhani',sans-serif; font-weight:700; font-size:44px; color:var(--teal); text-shadow:0 0 16px rgba(23,240,195,0.6); }
+  .plan-tag{ display:inline-block; background:rgba(23,240,195,0.12); color:var(--teal); border:1px solid rgba(23,240,195,0.3); font-size:11px; font-weight:700; padding:3px 10px; border-radius:8px; margin-bottom:6px; }
+  .plan-title{ font-size:24px; font-weight:800; }
+  .plan-range{ color:var(--text-dim); font-size:15px; margin-top:4px; direction:rtl; }
+  .plan-range b{ color:var(--text); font-family:'Rajdhani',sans-serif; font-size:18px; direction:ltr; display:inline-block; }
+  .rocket{ width:92px; height:92px; border-radius:50%; border:1.5px solid var(--teal); display:flex; align-items:center; justify-content:center; background:radial-gradient(circle, rgba(23,240,195,0.18), transparent 70%); box-shadow:0 0 26px rgba(23,240,195,0.45), inset 0 0 18px rgba(23,240,195,0.2); }
+  .rocket svg{ width:44px; height:44px; color:var(--teal); }
+  .plan-stats{ display:flex; margin-top:16px; padding-top:14px; border-top:1px solid var(--border); }
+  .pstat{ flex:1; display:flex; align-items:center; gap:10px; position:relative; }
+  .pstat + .pstat::after{ content:''; position:absolute; right:-2px; top:10%; height:80%; width:1px; background:var(--border); }
+  .pstat .ic{ width:38px; height:38px; border-radius:50%; border:1px solid var(--teal-dim); display:flex; align-items:center; justify-content:center; color:var(--teal); flex-shrink:0; }
+  .pstat .ic svg{ width:18px; height:18px; }
+  .pstat .l{ font-size:11.5px; color:var(--text-dim); }
+  .pstat .v{ font-family:'Rajdhani',sans-serif; font-weight:700; font-size:17px; direction:ltr; text-align:right; }
+  .pstat .v.teal{ color:var(--teal); }
+  .plan-progress{ margin-top:16px; padding-top:14px; border-top:1px solid var(--border); }
+  .pp-row{ display:flex; justify-content:space-between; font-size:13px; color:var(--text-dim); }
+  .pp-row .amt{ font-family:'Rajdhani',sans-serif; font-weight:700; font-size:22px; color:var(--text); direction:ltr; display:block; }
+  .pp-track{ height:12px; margin:6px 0; background:#0a1412; border:1px solid var(--border); border-radius:99px; overflow:hidden; }
+  .pp-track .bar{ height:100%; width:0%; border-radius:99px; background:linear-gradient(90deg,var(--teal-dim),var(--teal)); box-shadow:0 0 10px rgba(23,240,195,0.5); transition:width .9s ease; }
+  .pp-pct{ display:flex; justify-content:space-between; font-size:12px; color:var(--gold); direction:rtl; }
+  .plan-none{ text-align:center; padding:8px 0 2px; color:var(--text-dim); font-size:14px; line-height:1.8; }
+  .plan-none button{ margin-top:10px; background:var(--teal); color:#04211b; font-weight:800; padding:10px 22px; border-radius:12px; font-size:14px; }
+
+  /* ---------- History ---------- */
+  .hist-title{ display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; font-size:15px; font-weight:700; }
+  .hist-title span:last-child{ font-size:11.5px; color:var(--text-dim); font-weight:500; }
+  .hist{ display:flex; flex-direction:column; gap:8px; }
+  .hrow{ display:flex; align-items:center; justify-content:space-between; background:var(--panel-2); border:1px solid var(--border); border-radius:14px; padding:10px 14px; font-size:12.5px; }
+  .hrow .d{ color:var(--text-dim); }
+  .hrow .a{ font-family:'Rajdhani',sans-serif; font-weight:700; font-size:16px; color:var(--teal); direction:ltr; }
+  .hist-empty{ color:var(--text-dim2); text-align:center; font-size:12.5px; padding:10px; border:1px dashed var(--border); border-radius:14px; }
+
+  /* ---------- Bottom nav (identical) ---------- */
+  .bottom-nav{ position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:430px; background:rgba(6,10,9,0.92); backdrop-filter:blur(10px); border-top:1px solid var(--border); display:flex; justify-content:space-around; align-items:flex-end; padding:10px 6px 24px; z-index:10; }
+  .nav-item{ display:flex; flex-direction:column; align-items:center; gap:5px; font-size:10.5px; color:var(--text-dim2); font-weight:600; width:60px; border-radius:14px; }
+  .nav-item.active{ color:var(--teal); }
+  .nav-item svg{ width:22px; height:22px; }
+  .nav-center{ width:56px; height:56px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:radial-gradient(circle, rgba(23,240,195,0.15), transparent 70%); border:1.5px solid var(--teal); margin-top:-30px; box-shadow:0 0 20px rgba(23,240,195,0.35); }
+  .nav-center svg{ width:24px; height:24px; }
+
+  .ripple-wrap{ position:relative; overflow:hidden; }
+  .nav-item.ripple-wrap{ overflow:visible; }
+  .ripple{ position:absolute; border-radius:50%; background:radial-gradient(circle, rgba(23,240,195,0.55), rgba(23,240,195,0) 70%); transform:scale(0); animation:rippleAnim .6s ease-out forwards; pointer-events:none; }
+  @keyframes rippleAnim{ to{ transform:scale(3.2); opacity:0; } }
+  .glow-pulse{ animation:glowPulse .55s ease; }
+  @keyframes glowPulse{ 0%{ box-shadow:0 0 0 0 rgba(23,240,195,.6); filter:brightness(1);} 40%{ filter:brightness(1.25);} 70%{ box-shadow:0 0 0 14px rgba(23,240,195,0);} 100%{ box-shadow:0 0 0 0 rgba(23,240,195,0); filter:brightness(1);} }
+
+  .toast{ position:fixed; bottom:112px; left:50%; transform:translate(-50%,14px); background:#0f1a18; border:1px solid var(--teal); color:var(--text); padding:10px 18px; border-radius:12px; font-size:12.5px; opacity:0; transition:all .3s ease; pointer-events:none; z-index:60; white-space:nowrap; max-width:90%; text-align:center; box-shadow:0 0 20px rgba(23,240,195,0.25); }
+  .toast.show{ opacity:1; transform:translate(-50%,0); }
+  .toast.warn{ border-color:var(--red); box-shadow:0 0 20px rgba(239,74,74,0.25); }
+
+  /* ---------- Modal ---------- */
+  .modal-bg{ position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(4px); display:none; align-items:flex-end; justify-content:center; z-index:80; }
+  .modal-bg.open{ display:flex; }
+  .modal{ width:100%; max-width:430px; background:var(--panel); border:1px solid var(--teal-dim); border-bottom:none; border-radius:26px 26px 0 0; padding:20px 20px 30px; animation:slideUp .3s ease; }
+  @keyframes slideUp{ from{ transform:translateY(40px); opacity:0;} to{ transform:none; opacity:1;} }
+  .modal .grab{ width:44px; height:4px; border-radius:99px; background:var(--border); margin:0 auto 14px; }
+  .modal h3{ font-size:19px; font-weight:800; margin-bottom:6px; display:flex; align-items:center; gap:8px; }
+  .modal p{ color:var(--text-dim); font-size:13.5px; line-height:1.9; }
+  .modal .big{ font-family:'Rajdhani',sans-serif; font-size:40px; font-weight:700; color:var(--teal); text-align:center; direction:ltr; margin:10px 0; text-shadow:0 0 18px rgba(23,240,195,0.5); }
+  .modal .row{ display:flex; gap:10px; margin-top:16px; }
+  .modal .btn{ flex:1; padding:13px; border-radius:14px; font-weight:800; font-size:14.5px; border:1px solid var(--border); color:var(--text); }
+  .modal .btn.primary{ background:var(--teal); color:#04211b; border-color:var(--teal); }
+  .confetti{ position:fixed; top:-10px; width:8px; height:14px; border-radius:2px; z-index:90; pointer-events:none; animation:fall linear forwards; }
+  @keyframes fall{ to{ transform:translateY(110vh) rotate(720deg); opacity:.2; } }
+</style>
+</head>
+<body>
+<div class="device" id="device">
+
+  <div class="topbar">
+    <button class="menu-btn" id="btnMenu" aria-label="القائمة">
+      <svg width="24" height="18" viewBox="0 0 24 18" fill="none"><path d="M1 1h22M1 9h16M1 17h22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <div class="logo">
+      <div class="word1">ELITE</div>
+      <div class="word2">TRADING</div>
+      <div class="rule"></div>
+    </div>
+    <div class="header-right">
+      <button class="bell" id="btnBell" aria-label="الإشعارات">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2a6 6 0 0 0-6 6v3.5c0 .8-.3 1.6-.9 2.2L4 15h16l-1.1-1.3c-.6-.6-.9-1.4-.9-2.2V8a6 6 0 0 0-6-6z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9.5 18a2.5 2.5 0 0 0 5 0" stroke="currentColor" stroke-width="1.6"/></svg>
+      </button>
+      <div class="balance-pill">
+        <span class="live-tag">LIVE</span>
+        <span class="label">الرصيد الكلي</span>
+        <span class="amount" id="balance">$ 0.00</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="section">
+    <div class="stats">
+      <div class="stat">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M9 3h6l-1.5 3h-3L9 3z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.5 6h9c2.5 3 3.5 6 3.5 9a7 7 0 0 1-16 0c0-3 1-6 3.5-9z" stroke="currentColor" stroke-width="1.6"/><path d="M12 10v7M10 12.5h3a1.5 1.5 0 0 1 0 3h-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <span class="lbl">إجمالي الربح</span><span class="val" id="stTotal">$0.00</span>
+      </div>
+      <div class="stat">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M3 17l5-6 4 3 5-7 4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 21h18" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        <span class="lbl">العائد اليومي</span><span class="val teal" id="stRate">5%</span>
+      </div>
+      <div class="stat">
+        <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="3" stroke="currentColor" stroke-width="1.6"/><path d="M3 10h18M8 3v4M16 3v4M12 13v4M10 15h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <span class="lbl">أرباح اليوم</span><span class="val" id="stToday">$0.00</span>
+      </div>
+      <div class="stat">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M4 20V10M9 20V4M14 20v-8M19 20v-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M4 8l5-4 5 6 5-3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" opacity=".6"/></svg>
+        <span class="lbl">أرباح الأمس</span><span class="val" id="stYesterday">$0.00</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Trade hero -->
+  <div class="section">
+    <div class="trade-card" id="tradeCard">
+      <div class="trade-inner">
+        <div class="trade-copy">
+          <div class="brand">ELITE</div>
+          <div class="brand-sub">TRADING</div>
+          <div class="tagline" id="tagline">ابدأ اليوم ودع الباقي علينا</div>
+          <div class="status-line idle" id="statusLine"><span class="dot"></span><span id="statusText">جلسة واحدة كل 24 ساعة • مدة الجلسة 2 ساعة</span></div>
+          <button class="start-btn" id="btnStart">
+            <span class="fill" id="btnFill"></span>
+            <span class="chev">»</span>
+            <span id="btnLabel">انقر للبدء</span>
+            <span class="chev">«</span>
+          </button>
+        </div>
+        <div class="trade-visual">
+          <div class="ring"></div><div class="ring r2"></div>
+          <img src="/images/bull.png" alt="ثور Elite Trading">
+        </div>
+      </div>
+
+      <div class="session" id="session">
+        <div class="session-head">
+          <span id="sessionLabel">الوقت المتبقي لإتمام الجلسة</span>
+          <b id="sessionTimer">02:00:00</b>
+        </div>
+        <div class="track"><div class="bar" id="sessionBar"></div></div>
+        <div class="session-foot">
+          <span id="sessionPct">0%</span>
+          <span id="sessionEarn">+$0.00 محقق حتى الآن</span>
+        </div>
+        <div class="steps">
+          <div class="step" id="s1"><i>1</i><span>تحليل السوق</span></div>
+          <div class="step" id="s2"><i>2</i><span>تنفيذ الصفقات</span></div>
+          <div class="step" id="s3"><i>3</i><span>تحصيل الأرباح</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ticker" id="ticker"></div>
+  </div>
+
+  <!-- Current plan -->
+  <div class="section" id="planSection"></div>
+
+  <!-- History -->
+  <div class="section">
+    <div class="hist-title"><span>سجل الجلسات</span><span>آخر 7 جلسات</span></div>
+    <div class="hist" id="hist"></div>
+  </div>
+
+  <div class="bottom-nav" id="bottomNav">
+    <button class="nav-item" data-page="account">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.7"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+      <span>حسابي</span>
+    </button>
+    <button class="nav-item" data-page="friends">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="8" cy="8" r="3.2" stroke="currentColor" stroke-width="1.6"/><circle cx="16" cy="8" r="3.2" stroke="currentColor" stroke-width="1.6"/><path d="M2 20c0-3.3 2.8-5.5 6-5.5s6 2.2 6 5.5M12 20c0-3.3 2.8-5.5 6-5.5s6 2.2 6 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <span>الأصدقاء</span>
+    </button>
+    <button class="nav-item active" data-page="trade">
+      <div class="nav-center"><svg viewBox="0 0 24 24" fill="none"><path d="M2 12h4l2.5-7L13 19l2.5-7H22" stroke="#17f0c3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span style="margin-top:2px;">التداول</span>
+    </button>
+    <button class="nav-item" data-page="work">
+      <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="7" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" stroke="currentColor" stroke-width="1.6"/></svg>
+      <span>العمل</span>
+    </button>
+    <button class="nav-item" data-page="home">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1v-9z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      <span>الرئيسية</span>
+    </button>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<div class="modal-bg" id="modalBg">
+  <div class="modal" id="modal"></div>
+</div>
+
+<script>
+/* ============================================================
+   Shared feedback (same as home/work)
+   ============================================================ */
+function toast(msg, isWarn){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.toggle('warn', !!isWarn);
+  t.classList.remove('show'); void t.offsetWidth; t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(()=>t.classList.remove('show'), 2400);
+}
+function attachInteractive(el, onClick){
+  el.classList.add('ripple-wrap');
+  el.addEventListener('click', (e)=>{
+    const rect = el.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const ripple = document.createElement('span');
+    ripple.className = 'ripple';
+    ripple.style.width = ripple.style.height = size + 'px';
+    ripple.style.left = (e.clientX - rect.left - size/2) + 'px';
+    ripple.style.top  = (e.clientY - rect.top - size/2) + 'px';
+    el.appendChild(ripple);
+    setTimeout(()=>ripple.remove(), 650);
+    el.classList.remove('glow-pulse'); void el.offsetWidth; el.classList.add('glow-pulse');
+    setTimeout(()=>el.classList.remove('glow-pulse'), 550);
+    if(onClick) onClick(e);
+  });
+}
+
+const fmt = n => '$' + (Math.round(n*100)/100).toLocaleString('en-US',{minimumFractionDigits:2, maximumFractionDigits:2});
+const pad = n => String(n).padStart(2,'0');
+const hms = ms => { ms=Math.max(0,ms); const h=Math.floor(ms/3.6e6), m=Math.floor(ms%3.6e6/6e4), s=Math.floor(ms%6e4/1e3); return `${pad(h)}:${pad(m)}:${pad(s)}`; };
+const dayKey = d => { const x=new Date(d); return `${x.getFullYear()}-${pad(x.getMonth()+1)}-${pad(x.getDate())}`; };
+const escapeHtml = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* ============================================================
+   ملاحظة: كل البيانات الآن من الخادم عبر /api/trade/*
+   لم يعد هناك أي اعتماد على localStorage في هذه الصفحة.
+   ============================================================ */
+
+/* ============================================================
+   بيانات التداول الحقيقية من الخادم
+   ============================================================ */
+let serverTradeState = null;
+let serverTradeHistory = [];
+let serverBalance = null;
+
+async function loadTradeState(){
+  try{
+    const resS = await fetch('/api/trade/session', { credentials: 'same-origin' });
+    if(resS.status === 401){
+      window.location.href = '/';
+      return;
+    }
+    if(!resS.ok) throw new Error('HTTP ' + resS.status);
+    serverTradeState = await resS.json();
+
+    const resH = await fetch('/api/trade/history', { credentials: 'same-origin' });
+    if(resH.ok){
+      const dataH = await resH.json();
+      serverTradeHistory = Array.isArray(dataH.sessions) ? dataH.sessions : [];
+    }
+
+    try{
+      const resB = await fetch('/api/user/balance', { credentials: 'same-origin' });
+      if(resB.ok) serverBalance = await resB.json();
+    }catch(e){ /* silent */ }
+
+    render();
+  }catch(e){
+    console.warn('failed to load trade state:', e.message);
+  }
+}
+
+/* ============================================================
+   Render: balance & stats
+   ============================================================ */
+function renderStats(){
+  const state = serverTradeState;
+  if(!state){
+    document.getElementById('balance').textContent = '$ 0.00';
+    document.getElementById('stTotal').textContent = '$0.00';
+    document.getElementById('stRate').textContent = '5%';
+    document.getElementById('stToday').textContent = '$0.00';
+    document.getElementById('stYesterday').textContent = '$0.00';
+    return;
+  }
+  const history = serverTradeHistory || [];
+  const totalProfit = history.reduce((a,r) => a + Number(r.amount || 0), 0);
+  const balance = serverBalance ? Number(serverBalance.balance || 0) : 0;
+
+  const todayK = dayKey(Date.now());
+  const yestK = dayKey(Date.now() - 864e5);
+  const sumFor = k => history
+    .filter(r => r.claimed_at && dayKey(r.claimed_at) === k)
+    .reduce((a,r) => a + Number(r.amount || 0), 0);
+
+  document.getElementById('balance').textContent = '$ ' + balance.toLocaleString('en-US',{minimumFractionDigits:2, maximumFractionDigits:2});
+  document.getElementById('stTotal').textContent = fmt(totalProfit);
+  document.getElementById('stRate').textContent = (state.plan ? state.plan.dailyPercent : 5) + '%';
+  document.getElementById('stToday').textContent = fmt(sumFor(todayK));
+  document.getElementById('stYesterday').textContent = fmt(sumFor(yestK));
+}
+
+/* ============================================================
+   Render: current plan card
+   ============================================================ */
+function renderPlan(){
+  const el = document.getElementById('planSection');
+  const state = serverTradeState;
+
+  const plan = state && state.plan ? state.plan : null;
+  if(!plan){
+    el.innerHTML = `<div class="plan-card"><div class="plan-none">لا توجد خطة مفعّلة بعد.<br>أودع <b style="color:var(--teal)">$50</b> على الأقل لتفعيل الخطة الأولى وبدء التداول.<button id="goPlans">اختر خطتك</button></div></div>`;
+    const goBtn = document.getElementById('goPlans');
+    if(goBtn) attachInteractive(goBtn, ()=>{ location.href = '/work'; });
+    return;
+  }
+
+  const dep = Number(state.planBasis || state.deposits || 0);
+  const workWallet = Number(state.workWallet || 0);
+  const min = Number(plan.minAmount || 0);
+  const max = Number(plan.maxAmount || 0);
+  const daily = Number(plan.dailyPercent || 5);
+  const range = max - min || 1;
+  const pct = Math.max(0, Math.min(100, (dep - min) / range * 100));
+
+  const history = serverTradeHistory || [];
+  const todayK = dayKey(Date.now());
+  const yestK = dayKey(Date.now() - 864e5);
+  const sumFor = k => history
+    .filter(r => r.claimed_at && dayKey(r.claimed_at) === k)
+    .reduce((a,r) => a + Number(r.amount || 0), 0);
+
+  el.innerHTML = `
+    <div class="plan-card">
+      <div class="plan-head">
+        <div class="plan-id">
+          <div class="plan-num">${plan.id}</div>
+          <div>
+            <span class="plan-tag">خطتك الحالية</span>
+            <div class="plan-title">${escapeHtml(plan.name)}</div>
+            <div class="plan-range">من <b>$${min.toLocaleString()}</b> إلى <b>$${max.toLocaleString()}</b></div>
+          </div>
+        </div>
+        <div class="rocket"><svg viewBox="0 0 24 24" fill="none"><path d="M14 4c3 0 6 3 6 6-2 4-6 8-9 9l-5-5c1-3 5-7 8-10z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="14.5" cy="9.5" r="1.6" stroke="currentColor" stroke-width="1.5"/><path d="M6 14l-2.5 1 1.5 1.5L4 19l2.5-1L8 19.5 9 17" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></div>
+      </div>
+      <div class="plan-stats">
+        <div class="pstat"><div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M4 20V10M9 20V4M14 20v-8M19 20v-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></div><div><div class="l">أرباح الأمس</div><div class="v">${fmt(sumFor(yestK))}</div></div></div>
+        <div class="pstat"><div class="ic"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="3" stroke="currentColor" stroke-width="1.6"/><path d="M3 10h18M8 3v4M16 3v4M12 13v4M10 15h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div><div><div class="l">أرباح اليوم</div><div class="v">${fmt(sumFor(todayK))}</div></div></div>
+        <div class="pstat"><div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M4 16l5-5 4 3 7-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 6h5v5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="l">العائد اليومي</div><div class="v teal">${daily}%</div></div></div>
+      </div>
+      <div class="plan-progress">
+        <div class="pp-row"><span>الحد الأدنى<span class="amt">$${min.toLocaleString()}</span></span><span style="text-align:left">الحد الأقصى<span class="amt">$${max.toLocaleString()}</span></span></div>
+        <div style="text-align:center;font-size:12px;color:var(--text-dim);margin:4px 0 6px;">
+          رأس مالك المستثمر: <b style="color:var(--teal);font-family:Rajdhani,sans-serif;font-size:14px;direction:ltr;display:inline-block;">$${dep.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</b>
+        </div>
+        <div class="pp-track"><div class="bar" id="ppBar"></div></div>
+        <div class="pp-pct"><span>${Math.round(pct)}%</span><span>100%</span></div>
+      </div>
+    </div>`;
+
+  requestAnimationFrame(()=>{
+    const bar = document.getElementById('ppBar');
+    if(bar) bar.style.width = Math.max(pct, 2) + '%';
+  });
+}
+
+/* ============================================================
+   Render: history
+   ============================================================ */
+function renderHistory(){
+  const el = document.getElementById('hist');
+  const rows = (serverTradeHistory || []).slice(0, 7);
+  if(!rows.length){
+    el.innerHTML = '<div class="hist-empty">لم تُنفَّذ أي جلسة بعد — ابدأ أول جلسة تداول اليوم.</div>';
+    return;
+  }
+  el.innerHTML = rows.map(r => {
+    const when = r.claimed_at || r.ends_at || r.started_at;
+    const dateStr = new Date(when).toLocaleDateString('ar-EG',{weekday:'long', day:'numeric', month:'short'});
+    return `<div class="hrow"><span class="d">${dateStr}</span><span class="a">+${fmt(Number(r.amount || 0))}</span></div>`;
+  }).join('');
+}
+
+/* ============================================================
+   Trading session engine
+   States: idle -> working (2h) -> done (claim) -> cooldown (till 24h) -> idle
+   ============================================================ */
+const card = document.getElementById('tradeCard');
+const btn  = document.getElementById('btnStart');
+const btnLabel = document.getElementById('btnLabel');
+const btnFill  = document.getElementById('btnFill');
+const statusLine = document.getElementById('statusLine');
+const statusText = document.getElementById('statusText');
+const tagline = document.getElementById('tagline');
+let tickTimer = null;
+
+function setSteps(n){
+  [1,2,3].forEach(i=>{
+    const s = document.getElementById('s'+i);
+    s.classList.toggle('ok', i < n);
+    s.classList.toggle('on', i === n);
+    s.querySelector('i').textContent = i < n ? '✓' : i;
+  });
+}
+
+function render(){
+  renderStats(); renderPlan(); renderHistory();
+  const state = serverTradeState;
+  const now = Date.now();
+  clearInterval(tickTimer);
+  card.className = 'trade-card';
+  btn.className = 'start-btn';
+  btn.disabled = false;
+  btnFill.style.width = '0%';
+
+  if(!state){
+    card.classList.add('idle');
+    btn.classList.add('locked');
+    btnLabel.textContent = 'جارٍ التحميل...';
+    tagline.textContent = 'ابدأ اليوم ودع الباقي علينا';
+    statusLine.className = 'status-line idle';
+    statusText.textContent = 'جارٍ جلب بيانات التداول من الخادم';
+    return;
+  }
+
+  const plan = state.plan;
+  if(!plan){
+    card.classList.add('idle');
+    btn.classList.add('locked');
+    btnLabel.textContent = 'أودع لتفعيل التداول';
+    tagline.textContent = 'ابدأ اليوم ودع الباقي علينا';
+    statusLine.className = 'status-line idle';
+    statusText.textContent = 'التداول يتطلب خطة مفعّلة (الحد الأدنى $50)';
+    return;
+  }
+
+  const s = state.session;
+  const sessionState = state.sessionState;
+  const dailyAmt = Number(state.dailyAmount || 0);
+
+  // Working session in progress
+  if(sessionState === 'running' && s){
+    card.classList.add('working');
+    btn.classList.add('working'); btn.disabled = true;
+    tagline.textContent = 'جاري العمل الآن…';
+    statusLine.className = 'status-line';
+    const tick = ()=>{
+      const t = Date.now();
+      if(t >= s.endsAt){ loadTradeState(); return; }
+      const total = s.endsAt - s.startedAt;
+      const done = total > 0 ? (t - s.startedAt) / total : 0;
+      const pct = Math.min(100, done*100);
+      document.getElementById('sessionTimer').textContent = hms(s.endsAt - t);
+      document.getElementById('sessionTimer').className = '';
+      document.getElementById('sessionLabel').textContent = 'الوقت المتبقي لإتمام الجلسة';
+      document.getElementById('sessionBar').style.width = pct + '%';
+      document.getElementById('sessionPct').textContent = Math.floor(pct) + '%';
+      document.getElementById('sessionEarn').textContent = '+' + fmt(s.amount * done) + ' محقق حتى الآن';
+      btnFill.style.width = pct + '%';
+      btnLabel.textContent = 'جاري التداول ' + Math.floor(pct) + '%';
+      const phase = done < .25 ? 'الروبوت يحلل الأسواق ويبحث عن أفضل الفرص' : done < .85 ? 'تنفيذ الصفقات على الذهب والعملات والبيتكوين' : 'إغلاق الصفقات وتجميع الأرباح';
+      statusText.textContent = phase;
+      setSteps(done < .25 ? 1 : done < .85 ? 2 : 3);
+    };
+    tick(); tickTimer = setInterval(tick, 1000);
+    return;
+  }
+
+  // Session finished, profit ready to claim
+  if(sessionState === 'done' && s){
+    card.classList.add('done');
+    btn.classList.add('claim');
+    tagline.textContent = 'اكتملت الجلسة بنجاح';
+    statusLine.className = 'status-line done';
+    statusText.textContent = 'أرباحك جاهزة — انقر لتحصيلها إلى رصيدك';
+    btnLabel.textContent = 'تحصيل ' + fmt(s.amount);
+    document.getElementById('sessionLabel').textContent = 'ربح الجلسة';
+    document.getElementById('sessionTimer').textContent = '+' + fmt(s.amount);
+    document.getElementById('sessionTimer').className = 'gold';
+    document.getElementById('sessionBar').style.width = '100%';
+    document.getElementById('sessionPct').textContent = '100%';
+    document.getElementById('sessionEarn').textContent = 'جاهز للتحصيل';
+    setSteps(4);
+    return;
+  }
+
+  // Cooldown
+  if(sessionState === 'cooldown' && s){
+    card.classList.add('cooldown');
+    btn.classList.add('locked'); btn.disabled = true;
+    tagline.textContent = 'جلسة اليوم مكتملة';
+    statusLine.className = 'status-line done';
+    setSteps(4);
+    const COOLDOWN = 24 * 60 * 60 * 1000;
+    const cooldownEnd = s.cooldownEndsAt || (s.startedAt + COOLDOWN);
+    const tick = ()=>{
+      const left = cooldownEnd - Date.now();
+      if(left <= 0){ loadTradeState(); return; }
+      btnLabel.innerHTML = '<span style="font-size:12px;display:block;color:var(--text-dim)">الجلسة التالية بعد</span><span style="font-family:Rajdhani,sans-serif;font-size:22px;letter-spacing:1px;direction:ltr;display:block">' + hms(left) + '</span>';
+      statusText.textContent = 'تحققت أرباح اليوم ' + fmt(s.amount) + ' • جلسة واحدة كل 24 ساعة';
+      document.getElementById('sessionLabel').textContent = 'تفتح الجلسة القادمة خلال';
+      document.getElementById('sessionTimer').textContent = hms(left);
+      document.getElementById('sessionTimer').className = 'gold';
+      document.getElementById('sessionBar').style.width = (100 - left / COOLDOWN * 100) + '%';
+      document.getElementById('sessionPct').textContent = Math.floor(100 - left / COOLDOWN * 100) + '%';
+      document.getElementById('sessionEarn').textContent = 'أُضيف +' + fmt(s.amount) + ' إلى رصيدك';
+    };
+    tick(); tickTimer = setInterval(tick, 1000);
+    return;
+  }
+
+  // Idle: weekend check
+  if(state.isWeekend){
+    card.classList.add('idle');
+    btn.classList.add('locked');
+    btn.disabled = true;
+    btnLabel.textContent = 'الأسواق مغلقة اليوم';
+    tagline.textContent = 'نلتقي يوم الاثنين';
+    statusLine.className = 'status-line idle';
+    statusText.textContent = 'التداول من الاثنين إلى الجمعة • السبت والأحد عطلة';
+    return;
+  }
+
+  // Idle: ready to start
+  card.classList.add('idle');
+  tagline.textContent = 'ابدأ اليوم ودع الباقي علينا';
+  statusLine.className = 'status-line idle';
+  statusText.textContent = 'ربح الجلسة المتوقع ' + fmt(dailyAmt) + ' • المدة 2 ساعة';
+  btnLabel.textContent = 'انقر للبدء';
+}
+
+function startSession(){
+  const state = serverTradeState;
+  if(!state){ toast('جارٍ التحميل...', true); return; }
+  if(state.tradingPaused){
+    toast('⛔ التداول متوقف — يرجى تفقد الإشعارات', true);
+    return;
+  }
+  if(!state.plan){ openModal('locked'); return; }
+  if(state.isWeekend){ toast('الأسواق مغلقة في عطلة نهاية الأسبوع', true); return; }
+  if(state.sessionState === 'running'){ toast('الجلسة قيد التنفيذ بالفعل'); return; }
+  if(state.sessionState === 'done'){ claim(); return; }
+  if(state.sessionState === 'cooldown'){ toast('جلسة واحدة فقط كل 24 ساعة', true); return; }
+  openModal('confirm', state.plan);
+}
+
+async function confirmStart(plan){
+  closeModal();
+  toast('جارٍ بدء الجلسة...');
+  try{
+    const res = await fetch('/api/trade/start', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({})
+    });
+    const data = await res.json();
+    if(!res.ok){
+      toast(data.message || 'تعذر بدء الجلسة', true);
+      await loadTradeState();
+      return;
+    }
+    toast('انطلقت جلسة التداول — جاري العمل الآن');
+    if(navigator.vibrate) navigator.vibrate(30);
+    await loadTradeState();
+  }catch(e){
+    console.error(e);
+    toast('تعذر الاتصال بالخادم', true);
+  }
+}
+
+async function claim(){
+  const state = serverTradeState;
+  if(!state || !state.session || state.sessionState !== 'done'){
+    toast('لا توجد أرباح جاهزة', true);
+    return;
+  }
+  if(state.tradingPaused){
+    toast('⛔ التداول متوقف — يرجى تفقد الإشعارات', true);
+    return;
+  }
+  const amount = Number(state.session.amount || 0);
+  const btn = document.getElementById('btnStart');
+  if(btn) btn.disabled = true;
+
+  try{
+    const res = await fetch('/api/trade/claim', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({})
+    });
+    const data = await res.json();
+    if(!res.ok){
+      toast(data.message || 'تعذر استلام الأرباح', true);
+      if(btn) btn.disabled = false;
+      await loadTradeState();
+      return;
+    }
+
+    confetti();
+    openModal('claimed', null, Number(data.claimed || amount));
+    if(navigator.vibrate) navigator.vibrate([30,40,60]);
+    await loadTradeState();
+  }catch(e){
+    console.error(e);
+    toast('تعذر الاتصال بالخادم', true);
+    if(btn) btn.disabled = false;
+  }
+}
+
+/* ============================================================
+   Modals
+   ============================================================ */
+const modalBg = document.getElementById('modalBg'), modal = document.getElementById('modal');
+function closeModal(){ modalBg.classList.remove('open'); }
+modalBg.addEventListener('click', e=>{ if(e.target === modalBg) closeModal(); });
+function openModal(type, plan, amount){
+  if(type === 'confirm'){
+    const daily = Number((serverTradeState && serverTradeState.dailyAmount) || 0);
+    const minAmt = Number(plan.minAmount || 0);
+    const maxAmt = Number(plan.maxAmount || 0);
+    const dep = Number((serverTradeState && serverTradeState.deposits) || 0);
+    const base = Math.min(dep, maxAmt);
+    modal.innerHTML = `<div class="grab"></div>
+      <h3>بدء جلسة التداول</h3>
+      <p>سيعمل روبوت Elite على حسابك لمدة <b style="color:var(--text)">ساعتين</b> ثم تُحصّل الربح إلى رصيدك. الجلسة متاحة مرة كل 24 ساعة.</p>
+      <div class="big">+${fmt(daily)}</div>
+      <p style="text-align:center">${plan.name} • عائد ${plan.dailyPercent}% على رأس مالك ${fmt(base)}<br><span style="color:var(--text-dim2);font-size:12px">رسوم التطبيق تُخصم من التداول وليس من دخلك اليومي</span></p>
+      <div class="row"><button class="btn" id="mCancel">لاحقًا</button><button class="btn primary" id="mGo">ابدأ الآن</button></div>`;
+    modalBg.classList.add('open');
+    attachInteractive(document.getElementById('mCancel'), closeModal);
+    attachInteractive(document.getElementById('mGo'), ()=>confirmStart(plan));
+  } else if(type === 'claimed'){
+    modal.innerHTML = `<div class="grab"></div>
+      <h3>تم تحصيل أرباحك</h3>
+      <div class="big">+${fmt(amount)}</div>
+      <p style="text-align:center">أُضيف الربح إلى رصيدك الكلي. الجلسة التالية تفتح بعد 24 ساعة من بداية هذه الجلسة.</p>
+      <div class="row"><button class="btn primary" id="mOk">ممتاز</button></div>`;
+    modalBg.classList.add('open');
+    attachInteractive(document.getElementById('mOk'), closeModal);
+  } else {
+    modal.innerHTML = `<div class="grab"></div>
+      <h3>فعّل خطتك أولًا</h3>
+      <p>لبدء التداول تحتاج إلى خطة مفعّلة. أودع <b style="color:var(--teal)">$50</b> على الأقل لتفعيل الخطة الأولى.</p>
+      <div class="row"><button class="btn" id="mCancel">إلغاء</button><button class="btn primary" id="mDep">إيداع الآن</button></div>`;
+    modalBg.classList.add('open');
+    attachInteractive(document.getElementById('mCancel'), closeModal);
+    attachInteractive(document.getElementById('mDep'), ()=>{ location.href = '/deposit'; });
+  }
+}
+
+function confetti(){
+  const colors = ['#17f0c3','#e8a33d','#ffffff','#0e8f76'];
+  for(let i=0;i<40;i++){
+    const c = document.createElement('span'); c.className='confetti';
+    c.style.left = Math.random()*100 + 'vw';
+    c.style.background = colors[i%colors.length];
+    c.style.animationDuration = (1.6 + Math.random()*1.4) + 's';
+    c.style.animationDelay = (Math.random()*.4) + 's';
+    document.body.appendChild(c); setTimeout(()=>c.remove(), 3400);
+  }
+}
+
+/* ============================================================
+   Live market ticker — real prices (Binance public API)
+   ============================================================ */
+async function loadTicker(){
+  const el = document.getElementById('ticker');
+  const syms = [['PAXGUSDT','الذهب'],['BTCUSDT','بيتكوين'],['ETHUSDT','إيثيريوم'],['EURUSDT','EUR/USD']];
+  try{
+    const res = await fetch('https://api.binance.com/api/v3/ticker/24hr?symbols=' + encodeURIComponent(JSON.stringify(syms.map(s=>s[0]))));
+    const data = await res.json();
+    el.innerHTML = syms.map(([sym,name])=>{
+      const d = data.find(x=>x.symbol===sym); if(!d) return '';
+      const ch = parseFloat(d.priceChangePercent);
+      const price = parseFloat(d.lastPrice);
+      return `<div class="tick"><span class="p">${name}</span><span class="v">${price.toLocaleString('en-US',{maximumFractionDigits: price>100?2:4})}</span><span class="c ${ch>=0?'up':'dn'}">${ch>=0?'+':''}${ch.toFixed(2)}%</span></div>`;
+    }).join('');
+  }catch{ el.innerHTML = ''; }
+}
+
+/* ============================================================
+   Wiring
+   ============================================================ */
+attachInteractive(btn, startSession);
+attachInteractive(document.getElementById('btnMenu'), ()=> openSideDrawer());
+
+async function openSideDrawer(){
+  let drawer = document.getElementById('sideDrawerEl');
+  if(drawer){
+    drawer.classList.add('show');
+    document.getElementById('sideDrawerBg').classList.add('show');
+    return;
+  }
+
+  let uName = 'مستخدم', uEmail = '—';
+  try{
+    const res = await fetch('/api/account/profile', { credentials: 'same-origin' });
+    if(res.ok){
+      const d = await res.json();
+      uName = d.name || d.fullname || 'مستخدم';
+      uEmail = d.email || '—';
+    }
+  }catch(e){}
+  const initial = (uName.charAt(0) || 'E').toUpperCase();
+
+  const style = document.createElement('style');
+  style.id = 'sideDrawerStyles';
+  style.textContent = `
+    .side-drawer-bg{ position:fixed; inset:0; background:rgba(0,0,0,0.65); backdrop-filter:blur(4px); z-index:100; opacity:0; pointer-events:none; transition:opacity .25s; }
+    .side-drawer-bg.show{ opacity:1; pointer-events:auto; }
+    .side-drawer{ position:fixed; top:0; bottom:0; right:0; z-index:110; width:min(300px,82vw);
+      background:var(--panel,#0d1615); border-left:1px solid var(--teal-dim,#0e8f76); border-radius:26px 0 0 26px;
+      padding:22px 18px; transform:translateX(105%); transition:transform .35s cubic-bezier(.22,1,.36,1);
+      display:flex; flex-direction:column; box-shadow:-20px 0 60px rgba(0,0,0,.5); color:var(--text,#eef4f2); }
+    .side-drawer.show{ transform:none; }
+    .side-drawer-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+    .side-drawer-logo .w1{ font-family:'Rajdhani',sans-serif; font-weight:700; font-size:22px; letter-spacing:2px;
+      background:linear-gradient(180deg,#fff,#b9c3c1); -webkit-background-clip:text; background-clip:text; color:transparent; font-style:italic; }
+    .side-drawer-logo .w2{ font-family:'Rajdhani',sans-serif; font-size:7px; letter-spacing:4px; color:var(--teal,#17f0c3); margin-top:2px; }
+    .side-drawer-close{ width:34px; height:34px; border-radius:50%; border:1px solid var(--border,#1c2b28);
+      display:flex; align-items:center; justify-content:center; color:var(--text-dim,#8fa39e); background:none; cursor:pointer; font-size:14px; }
+    .side-drawer-user{ display:flex; align-items:center; gap:12px; background:var(--panel-2,#0f1a18);
+      border:1px solid var(--border,#1c2b28); border-radius:16px; padding:11px 12px; margin-bottom:16px; }
+    .side-drawer-avatar{ width:44px; height:44px; border-radius:13px; display:flex; align-items:center; justify-content:center;
+      font-family:'Rajdhani',sans-serif; font-size:20px; font-weight:700; color:var(--teal,#17f0c3);
+      background:radial-gradient(circle at 30% 25%, rgba(23,240,195,.2), transparent 70%), var(--panel,#0d1615);
+      border:1px solid var(--teal-dim,#0e8f76); flex-shrink:0; }
+    .side-drawer-user b{ font-size:13.5px; display:block; color:var(--text,#eef4f2); }
+    .side-drawer-user span{ font-size:10.5px; color:var(--text-dim,#8fa39e); direction:ltr; display:block; text-align:right; }
+    .side-drawer-links{ display:flex; flex-direction:column; gap:6px; flex:1; }
+    .side-drawer-links a, .side-drawer-links button{ display:flex; align-items:center; gap:12px; padding:12px 14px;
+      border-radius:14px; font-size:13.5px; font-weight:700; color:var(--text-dim,#8fa39e); text-align:right;
+      width:100%; border:1px solid transparent; transition:.2s; text-decoration:none; background:none; cursor:pointer; font-family:inherit; }
+    .side-drawer-links a:hover, .side-drawer-links button:hover{ background:rgba(23,240,195,.06); color:var(--text,#eef4f2); }
+    .side-drawer-links button.logout{ color:var(--red,#ef4a4a); background:rgba(239,74,74,.07); border:1px solid rgba(239,74,74,.3); margin-top:auto; }
+    .side-drawer-links svg{ width:19px; height:19px; flex-shrink:0; }
+  `;
+  document.head.appendChild(style);
+
+  const bg = document.createElement('div');
+  bg.className = 'side-drawer-bg';
+  bg.id = 'sideDrawerBg';
+
+  drawer = document.createElement('aside');
+  drawer.className = 'side-drawer';
+  drawer.id = 'sideDrawerEl';
+  drawer.innerHTML = `
+    <div class="side-drawer-head">
+      <div class="side-drawer-logo"><div class="w1">ELITE</div><div class="w2">TRADING</div></div>
+      <button class="side-drawer-close" id="sideDrawerClose">✕</button>
+    </div>
+    <div class="side-drawer-user">
+      <div class="side-drawer-avatar">${escapeHtml(initial)}</div>
+      <div><b>${escapeHtml(uName)}</b><span>${escapeHtml(uEmail)}</span></div>
+    </div>
+    <nav class="side-drawer-links">
+      <a href="/home"><svg viewBox="0 0 24 24" fill="none"><path d="M3 12l2-2 5 5L20 5l2 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 20h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>الرئيسية</a>
+      <a href="/work"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="7" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" stroke="currentColor" stroke-width="1.6"/></svg>العمل</a>
+      <a href="/trade"><svg viewBox="0 0 24 24" fill="none"><path d="M2 12h4l2.5-7L13 19l2.5-7H22" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>تداول</a>
+      <a href="/friends"><svg viewBox="0 0 24 24" fill="none"><circle cx="8" cy="8" r="3.2" stroke="currentColor" stroke-width="1.6"/><circle cx="16" cy="8" r="3.2" stroke="currentColor" stroke-width="1.6"/><path d="M2 20c0-3.3 2.8-5.5 6-5.5s6 2.2 6 5.5M12 20c0-3.3 2.8-5.5 6-5.5s6 2.2 6 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>الأصدقاء</a>
+      <a href="/account"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.7"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>حسابي</a>
+      <button class="logout" id="sideDrawerLogout"><svg viewBox="0 0 24 24" fill="none"><path d="M15 4h4a1.5 1.5 0 0 1 1.5 1.5v13A1.5 1.5 0 0 1 19 20h-4M10 8l-4 4 4 4M6 12h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>تسجيل الخروج</button>
+    </nav>
+  `;
+
+  document.body.appendChild(bg);
+  document.body.appendChild(drawer);
+
+  bg.addEventListener('click', closeSideDrawer);
+  document.getElementById('sideDrawerClose').addEventListener('click', closeSideDrawer);
+  document.getElementById('sideDrawerLogout').addEventListener('click', async ()=>{
+    try{ await fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' }); }catch(e){}
+    window.location.href = '/';
+  });
+
+  drawer.classList.add('show');
+  bg.classList.add('show');
+}
+
+function closeSideDrawer(){
+  const drawer = document.getElementById('sideDrawerEl');
+  const bg = document.getElementById('sideDrawerBg');
+  if(drawer) drawer.classList.remove('show');
+  if(bg) bg.classList.remove('show');
+}
+attachInteractive(document.getElementById('btnBell'), ()=>{
+  const state = serverTradeState;
+  if(state && state.sessionState === 'done') toast('لديك أرباح جاهزة للتحصيل');
+  else toast('لا توجد إشعارات جديدة');
+});
+document.querySelectorAll('#bottomNav .nav-item').forEach(navEl=>{
+  attachInteractive(navEl, ()=>{
+    const page = navEl.dataset.page;
+    if(page === 'trade') return;
+    document.querySelectorAll('#bottomNav .nav-item').forEach(n=>n.classList.remove('active'));
+    navEl.classList.add('active');
+    if(page === 'home') location.href = '/home';
+    else if(page === 'work') location.href = '/work';
+    else if(page === 'account') location.href = '/account';
+    else if(page === 'friends') location.href = '/friends';
+    else toast('صفحة "' + navEl.querySelector('span:last-child').textContent + '" — قريبًا');
+  });
+});
+document.addEventListener('visibilitychange', ()=>{
+  if(!document.hidden) loadTradeState();
+});
+
+render();
+loadTradeState();
+loadTicker();
+setInterval(loadTicker, 30000);
+</script>
+  <script src="/notifications.js"></script>
+</body>
+</html>

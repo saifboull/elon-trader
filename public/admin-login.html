@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة الإدارة | ELITE TRADING</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #060a09;
+    --panel: #0d1615;
+    --panel-2: #0f1a18;
+    --border: #1c2b28;
+    --teal: #17f0c3;
+    --teal-dim: #0e8f76;
+    --gold: #e8a33d;
+    --red: #ef4a4a;
+    --text: #eef4f2;
+    --text-dim: #8fa39e;
+    --text-dim2: #5d726c;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+  html,body{ background:#000; min-height:100vh; }
+  body{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-family:'Tajawal', sans-serif;
+    padding:24px 18px;
+    background:
+      radial-gradient(ellipse 500px 400px at 50% 0%, rgba(23,240,195,0.08), transparent 60%),
+      var(--bg);
+  }
+
+  .card{
+    width:100%;
+    max-width:420px;
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:24px;
+    padding:32px 26px 28px;
+    box-shadow: 0 0 0 1px rgba(23,240,195,0.05), 0 20px 50px rgba(0,0,0,0.5), 0 0 60px rgba(23,240,195,0.06);
+  }
+
+  .brand{ text-align:center; margin-bottom:26px; }
+  .brand-name{
+    font-family:'Rajdhani',sans-serif; font-weight:700; font-size:34px;
+    letter-spacing:2px; font-style:italic;
+    background:linear-gradient(180deg,#fff,#b9c3c1);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    text-shadow:0 0 25px rgba(23,240,195,0.15);
+  }
+  .brand-sub{
+    margin-top:4px; display:flex; align-items:center; justify-content:center; gap:10px;
+    color:var(--teal); font-family:'Rajdhani',sans-serif;
+    font-size:11px; letter-spacing:6px; font-weight:600;
+  }
+  .brand-sub::before, .brand-sub::after{
+    content:""; width:26px; height:1px;
+    background:linear-gradient(90deg, transparent, var(--teal));
+  }
+  .brand-sub::after{ background:linear-gradient(90deg, var(--teal), transparent); }
+
+  .admin-badge{
+    display:inline-flex; align-items:center; gap:6px;
+    background:rgba(232,163,61,0.12); color:var(--gold);
+    font-size:10.5px; font-weight:800; letter-spacing:1px;
+    padding:5px 12px; border-radius:8px; margin-top:12px;
+    border:1px solid rgba(232,163,61,0.3);
+  }
+  .admin-badge svg{ width:13px; height:13px; }
+
+  .field{ margin-bottom:14px; }
+  .field label{
+    display:block; font-size:12.5px; font-weight:700;
+    color:var(--text-dim); margin-bottom:8px;
+  }
+  .input-wrap{
+    display:flex; align-items:center;
+    background:var(--panel-2); border:1.5px solid var(--border);
+    border-radius:14px; padding:0 14px; gap:10px;
+    transition:border-color .2s;
+  }
+  .input-wrap:focus-within{
+    border-color:var(--teal);
+    box-shadow:0 0 0 3px rgba(23,240,195,0.1);
+  }
+  .input-wrap svg{ width:18px; height:18px; color:var(--text-dim); flex-shrink:0; }
+  .input-wrap input{
+    flex:1; background:transparent; border:none; outline:none;
+    color:var(--text); font-size:14.5px; font-family:inherit;
+    padding:14px 0; font-weight:600;
+  }
+  .input-wrap input::placeholder{ color:var(--text-dim2); font-weight:500; }
+
+  .pw-toggle{
+    background:none; border:none; color:var(--text-dim);
+    cursor:pointer; display:flex; align-items:center; padding:4px;
+  }
+  .pw-toggle svg{ width:18px; height:18px; }
+
+  .forgot{
+    text-align:left; margin:-4px 2px 14px;
+    font-size:12.5px; color:var(--teal);
+    cursor:pointer; font-weight:700;
+  }
+  .forgot:hover{ text-decoration:underline; }
+
+  .btn{
+    width:100%; padding:15px; border-radius:14px; border:none;
+    font-family:inherit; font-weight:800; font-size:15px; cursor:pointer;
+    background:linear-gradient(180deg, var(--teal), var(--teal-dim));
+    color:#04211b; margin-top:8px;
+    box-shadow:0 14px 30px rgba(23,240,195,0.2);
+    transition:transform .15s, opacity .2s;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+  .btn:hover{ transform:translateY(-1px); }
+  .btn:disabled{ opacity:.6; cursor:not-allowed; transform:none; }
+  .btn svg{ width:18px; height:18px; }
+
+  .msg{
+    display:none; padding:12px 14px; margin-bottom:16px;
+    border-radius:12px; font-size:13px; font-weight:700; line-height:1.7;
+  }
+  .msg.error{
+    display:block; background:rgba(239,74,74,0.1);
+    border:1px solid rgba(239,74,74,0.35); color:#ff9c9c;
+  }
+  .msg.success{
+    display:block; background:rgba(23,240,195,0.08);
+    border:1px solid rgba(23,240,195,0.35); color:var(--teal);
+  }
+
+  .back-link{
+    text-align:center; margin-top:22px;
+    font-size:12.5px; color:var(--text-dim);
+  }
+  .back-link a{ color:var(--teal); font-weight:700; text-decoration:none; }
+
+  .shield{ display:flex; justify-content:center; margin-bottom:20px; }
+  .shield-icon{
+    width:60px; height:60px; border-radius:50%;
+    border:1.5px solid var(--gold);
+    display:flex; align-items:center; justify-content:center;
+    background:radial-gradient(circle, rgba(232,163,61,0.18), transparent 70%);
+    box-shadow:0 0 22px rgba(232,163,61,0.25);
+  }
+  .shield-icon svg{ width:28px; height:28px; color:var(--gold); }
+
+  /* نافذة منبثقة */
+  .modal-overlay{
+    display:none; position:fixed; inset:0;
+    background:rgba(0,0,0,0.75); backdrop-filter:blur(4px);
+    z-index:100; align-items:center; justify-content:center; padding:20px;
+  }
+  .modal-overlay.show{ display:flex; }
+
+  .modal-box{
+    width:100%; max-width:400px;
+    background:var(--panel); border:1px solid var(--teal-dim);
+    border-radius:22px; padding:24px;
+    box-shadow:0 0 40px rgba(23,240,195,0.15);
+  }
+  .modal-box h3{
+    font-size:17px; font-weight:800;
+    margin-bottom:8px; color:var(--text);
+  }
+  .modal-box p.desc{
+    color:var(--text-dim); font-size:13px;
+    margin-bottom:18px; line-height:1.7;
+  }
+  .modal-close{
+    display:flex; justify-content:flex-end; margin-bottom:6px;
+  }
+  .modal-close button{
+    background:none; border:none; color:var(--text-dim);
+    font-size:20px; cursor:pointer; padding:2px 6px;
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+
+  <div class="brand">
+    <div class="brand-name">ELITE</div>
+    <div class="brand-sub">TRADING</div>
+    <div class="admin-badge">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 3l8 4v5c0 5-3.5 8.5-8 9-4.5-.5-8-4-8-9V7l8-4z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      ADMIN PANEL
+    </div>
+  </div>
+
+  <div class="shield">
+    <div class="shield-icon">
+      <svg viewBox="0 0 24 24" fill="none">
+        <path d="M12 2l8 4v6c0 5-3.4 8.6-8 10-4.6-1.4-8-5-8-10V6l8-4z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+        <path d="M12 8v5M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
+  </div>
+
+  <div id="msg" class="msg"></div>
+
+  <form id="loginForm">
+
+    <div class="field">
+      <label for="email">البريد الإلكتروني للمدير</label>
+      <div class="input-wrap">
+        <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M3 7l9 6 9-6" stroke="currentColor" stroke-width="1.7"/></svg>
+        <input id="email" type="email" placeholder="admin@elite.trading" autocomplete="email" required>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="password">كلمة المرور</label>
+      <div class="input-wrap">
+        <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="10" width="16" height="10" rx="2.5" stroke="currentColor" stroke-width="1.7"/><path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="15" r="1.3" fill="currentColor"/></svg>
+        <input id="password" type="password" placeholder="••••••••" autocomplete="current-password" required>
+        <button type="button" class="pw-toggle" id="togglePw" aria-label="إظهار كلمة المرور">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.7"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="forgot" id="forgotLink">نسيت كلمة المرور؟</div>
+
+    <button type="submit" class="btn" id="submitBtn">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M15 4h4a1.5 1.5 0 0 1 1.5 1.5v13A1.5 1.5 0 0 1 19 20h-4M10 8l-4 4 4 4M6 12h10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>دخول لوحة الإدارة</span>
+    </button>
+
+  </form>
+
+  <div class="back-link">
+    <a href="/">← العودة للموقع الرئيسي</a>
+  </div>
+
+</div>
+
+<!-- نافذة استعادة كلمة المرور: الخطوة 1 -->
+<div class="modal-overlay" id="forgotStep1">
+  <div class="modal-box">
+    <div class="modal-close"><button id="closeStep1">✕</button></div>
+    <h3>استعادة كلمة مرور المدير</h3>
+    <p class="desc">أدخل بريدك الإلكتروني (بريد المدير) وسنرسل لك رمز تحقق لإعادة تعيين كلمة المرور.</p>
+    <div id="step1Msg" class="msg"></div>
+    <div class="field">
+      <label for="forgotEmail">البريد الإلكتروني</label>
+      <div class="input-wrap">
+        <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M3 7l9 6 9-6" stroke="currentColor" stroke-width="1.7"/></svg>
+        <input id="forgotEmail" type="email" placeholder="admin@elite.trading">
+      </div>
+    </div>
+    <button class="btn" id="sendCodeBtn">
+      <span>إرسال رمز التحقق</span>
+    </button>
+  </div>
+</div>
+
+<!-- نافذة استعادة كلمة المرور: الخطوة 2 -->
+<div class="modal-overlay" id="forgotStep2">
+  <div class="modal-box">
+    <div class="modal-close"><button id="closeStep2">✕</button></div>
+    <h3>تعيين كلمة مرور جديدة</h3>
+    <p class="desc">أدخل الرمز الذي وصلك عبر البريد، وكلمة المرور الجديدة.</p>
+    <div id="step2Msg" class="msg"></div>
+    <div class="field">
+      <label for="resetCode">رمز التحقق (6 أرقام)</label>
+      <div class="input-wrap">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.7"/></svg>
+        <input id="resetCode" type="text" placeholder="000000" maxlength="6" inputmode="numeric">
+      </div>
+    </div>
+    <div class="field">
+      <label for="newPassword">كلمة المرور الجديدة</label>
+      <div class="input-wrap">
+        <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="10" width="16" height="10" rx="2.5" stroke="currentColor" stroke-width="1.7"/><path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="15" r="1.3" fill="currentColor"/></svg>
+        <input id="newPassword" type="password" placeholder="6 أحرف على الأقل">
+      </div>
+    </div>
+    <button class="btn" id="confirmResetBtn">
+      <span>تأكيد تغيير كلمة المرور</span>
+    </button>
+  </div>
+</div>
+
+<script>
+  const form = document.getElementById('loginForm');
+  const emailInput = document.getElementById('email');
+  const passwordInput = document.getElementById('password');
+  const togglePw = document.getElementById('togglePw');
+  const submitBtn = document.getElementById('submitBtn');
+  const msg = document.getElementById('msg');
+
+  togglePw.addEventListener('click', ()=>{
+    passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+  });
+
+  function showMsg(text, isError){
+    msg.textContent = text;
+    msg.className = 'msg ' + (isError ? 'error' : 'success');
+  }
+
+  form.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+
+    if(!email || !password){
+      return showMsg('يرجى إدخال البريد وكلمة المرور', true);
+    }
+
+    submitBtn.disabled = true;
+    const origText = submitBtn.querySelector('span').textContent;
+    submitBtn.querySelector('span').textContent = 'جارٍ التحقق...';
+    msg.className = 'msg';
+
+    try{
+      const res = await fetch('/api/admin/login', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await res.json();
+
+      if(res.ok && data.status === 'success'){
+        showMsg('تم تسجيل الدخول بنجاح ✓ جارٍ التحويل...', false);
+        setTimeout(()=>{ window.location.href = '/admin'; }, 700);
+      } else {
+        showMsg(data.message || 'بيانات الدخول غير صحيحة', true);
+        submitBtn.disabled = false;
+        submitBtn.querySelector('span').textContent = origText;
+      }
+    }catch(err){
+      console.error(err);
+      showMsg('تعذر الاتصال بالخادم', true);
+      submitBtn.disabled = false;
+      submitBtn.querySelector('span').textContent = origText;
+    }
+  });
+
+  /* ============================================================
+     نسيان كلمة المرور (المدير)
+     ============================================================ */
+  const forgotLink = document.getElementById('forgotLink');
+  const forgotStep1 = document.getElementById('forgotStep1');
+  const forgotStep2 = document.getElementById('forgotStep2');
+  const forgotEmailInput = document.getElementById('forgotEmail');
+  const sendCodeBtn = document.getElementById('sendCodeBtn');
+  const step1Msg = document.getElementById('step1Msg');
+  const resetCodeInput = document.getElementById('resetCode');
+  const newPasswordInput = document.getElementById('newPassword');
+  const confirmResetBtn = document.getElementById('confirmResetBtn');
+  const step2Msg = document.getElementById('step2Msg');
+  let emailForReset = '';
+
+  function showStepMsg(el, text, isError){
+    el.textContent = text;
+    el.className = 'msg ' + (isError ? 'error' : 'success');
+  }
+
+  forgotLink.addEventListener('click', ()=>{
+    forgotEmailInput.value = emailInput.value.trim();
+    step1Msg.className = 'msg';
+    step1Msg.textContent = '';
+    forgotStep1.classList.add('show');
+  });
+
+  document.getElementById('closeStep1').addEventListener('click', ()=> forgotStep1.classList.remove('show'));
+  document.getElementById('closeStep2').addEventListener('click', ()=> forgotStep2.classList.remove('show'));
+
+  sendCodeBtn.addEventListener('click', async ()=>{
+    const email = forgotEmailInput.value.trim();
+    if(!email){ return showStepMsg(step1Msg, 'يرجى إدخال البريد الإلكتروني', true); }
+
+    sendCodeBtn.disabled = true;
+    const orig = sendCodeBtn.querySelector('span').textContent;
+    sendCodeBtn.querySelector('span').textContent = 'جارٍ الإرسال...';
+
+    try{
+      const res = await fetch('/api/admin/forgot-password', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      const data = await res.json();
+
+      if(res.ok && data.status === 'success'){
+        emailForReset = email;
+        showStepMsg(step1Msg, data.message || 'تم إرسال الرمز إلى بريدك', false);
+        setTimeout(()=>{
+          forgotStep1.classList.remove('show');
+          resetCodeInput.value = '';
+          newPasswordInput.value = '';
+          step2Msg.className = 'msg';
+          step2Msg.textContent = '';
+          forgotStep2.classList.add('show');
+        }, 900);
+      } else {
+        showStepMsg(step1Msg, data.message || 'تعذر إرسال الرمز', true);
+      }
+    }catch(err){
+      console.error(err);
+      showStepMsg(step1Msg, 'تعذر الاتصال بالخادم', true);
+    }finally{
+      sendCodeBtn.disabled = false;
+      sendCodeBtn.querySelector('span').textContent = orig;
+    }
+  });
+
+  confirmResetBtn.addEventListener('click', async ()=>{
+    const code = resetCodeInput.value.trim();
+    const newPassword = newPasswordInput.value;
+
+    if(!code || !newPassword){ return showStepMsg(step2Msg, 'يرجى تعبئة جميع الحقول', true); }
+    if(newPassword.length < 6){ return showStepMsg(step2Msg, 'كلمة المرور يجب أن تكون 6 أحرف على الأقل', true); }
+
+    confirmResetBtn.disabled = true;
+    const orig = confirmResetBtn.querySelector('span').textContent;
+    confirmResetBtn.querySelector('span').textContent = 'جارٍ التحقق...';
+
+    try{
+      const res = await fetch('/api/admin/reset-password', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: emailForReset, code, newPassword })
+      });
+      const data = await res.json();
+
+      if(res.ok && data.status === 'success'){
+        showStepMsg(step2Msg, 'تم تغيير كلمة المرور بنجاح ✓ يمكنك الدخول الآن', false);
+        setTimeout(()=>{ forgotStep2.classList.remove('show'); }, 1500);
+      } else {
+        showStepMsg(step2Msg, data.message || 'تعذر تغيير كلمة المرور', true);
+      }
+    }catch(err){
+      console.error(err);
+      showStepMsg(step2Msg, 'تعذر الاتصال بالخادم', true);
+    }finally{
+      confirmResetBtn.disabled = false;
+      confirmResetBtn.querySelector('span').textContent = orig;
+    }
+  });
+</script>
+
+</body>
+</html>

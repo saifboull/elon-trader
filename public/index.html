@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تسجيل الدخول</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root{
+    --bg:#050b0a;
+    --surface:#0d1715;
+    --surface-2:#0a1210;
+    --border:#1e302c;
+    --input-border:#243a35;
+    --primary:#14d9ae;
+    --primary-2:#0eae91;
+    --text:#ffffff;
+    --muted:#7d8b87;
+    --muted-2:#586460;
+  }
+
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(circle at 50% -10%, rgba(20,217,174,0.10), transparent 40%),
+      var(--bg);
+    color:var(--text);
+    font-family:'Segoe UI', Tahoma, Arial, sans-serif;
+    display:flex;
+    justify-content:center;
+    padding:24px 18px 40px;
+  }
+
+  .phone{ width:100%; max-width:420px; }
+
+  .topbar{
+    display:flex;
+    align-items:center;
+    margin-bottom:8px;
+  }
+
+  .back-btn{
+    width:38px; height:38px;
+    display:flex; align-items:center; justify-content:center;
+    border-radius:50%;
+    background:var(--surface);
+    border:1px solid var(--border);
+    color:var(--text);
+    cursor:pointer;
+    font-size:18px;
+  }
+
+  .brand{
+    text-align:center;
+    margin:26px 0 30px;
+  }
+
+  .brand-name{
+    font-size:34px;
+    font-weight:900;
+    letter-spacing:1px;
+    font-style:italic;
+    background:linear-gradient(180deg,#ffffff, #b9c4c1);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    text-shadow:0 0 25px rgba(20,217,174,0.15);
+  }
+
+  .brand-sub{
+    margin-top:4px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    color:var(--primary);
+    font-size:13px;
+    letter-spacing:5px;
+    font-weight:600;
+  }
+
+  .brand-sub::before, .brand-sub::after{
+    content:"";
+    width:26px; height:1px;
+    background:linear-gradient(90deg, transparent, var(--primary));
+  }
+  .brand-sub::after{ background:linear-gradient(90deg, var(--primary), transparent); }
+
+  .header-row{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    margin-bottom:26px;
+  }
+
+  .header-row h1{
+    font-size:24px;
+    margin-bottom:6px;
+  }
+
+  .header-row p{
+    color:var(--muted);
+    font-size:13px;
+    max-width:230px;
+    line-height:1.5;
+  }
+
+  .icon-badge{
+    width:56px; height:56px;
+    border-radius:50%;
+    border:1px solid rgba(20,217,174,0.35);
+    background:radial-gradient(circle at 50% 40%, rgba(20,217,174,0.18), transparent 70%);
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+  }
+
+  .icon-badge svg{ width:24px; height:24px; }
+
+  .field{ margin-bottom:16px; position:relative; }
+
+  .field .input-wrap{
+    display:flex;
+    align-items:center;
+    height:52px;
+    border:1px solid var(--input-border);
+    border-radius:14px;
+    background:var(--surface-2);
+    padding:0 14px;
+    gap:10px;
+    transition:border-color .2s, box-shadow .2s;
+  }
+
+  .field .input-wrap:focus-within{
+    border-color:var(--primary);
+    box-shadow:0 0 0 3px rgba(20,217,174,0.10);
+  }
+
+  .field svg.icon{ width:18px; height:18px; color:var(--muted); flex-shrink:0; }
+
+  .field input{
+    flex:1;
+    background:transparent;
+    border:none;
+    outline:none;
+    color:var(--text);
+    font-size:14px;
+    text-align:right;
+  }
+
+  .field input::placeholder{ color:var(--muted-2); }
+
+  .toggle-eye{
+    background:none;
+    border:none;
+    cursor:pointer;
+    color:var(--muted);
+    display:flex;
+    align-items:center;
+  }
+  .toggle-eye svg{ width:19px; height:19px; }
+
+  .forgot{
+    text-align:left;
+    margin:2px 2px 22px;
+    font-size:12.5px;
+    color:var(--primary);
+    cursor:pointer;
+  }
+
+  .btn{
+    width:100%;
+    height:52px;
+    border:none;
+    border-radius:14px;
+    font-size:15px;
+    font-weight:800;
+    cursor:pointer;
+    transition:transform .15s, box-shadow .15s, opacity .2s;
+  }
+
+  .btn-primary{
+    background:linear-gradient(135deg, var(--primary), var(--primary-2));
+    color:#03110d;
+    box-shadow:0 14px 30px rgba(20,217,174,0.18);
+  }
+  .btn-primary:hover{ transform:translateY(-2px); }
+  .btn-primary:disabled{ opacity:.6; cursor:not-allowed; transform:none; }
+
+  .divider{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin:20px 0;
+    color:var(--muted-2);
+    font-size:12px;
+  }
+  .divider::before, .divider::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:var(--border);
+  }
+
+  .btn-outline{
+    background:transparent;
+    color:var(--text);
+    border:1px solid var(--input-border);
+  }
+  .btn-outline:hover{ border-color:var(--primary); color:var(--primary); }
+
+  .message{
+    display:none;
+    padding:12px 14px;
+    margin-bottom:16px;
+    border-radius:12px;
+    font-size:13px;
+    line-height:1.5;
+  }
+
+  .logo-art{
+    margin-top:44px;
+    display:flex;
+    justify-content:center;
+  }
+
+  .e-mark{
+    position:relative;
+    width:190px; height:190px;
+    display:flex; align-items:center; justify-content:center;
+  }
+
+  .e-ring{
+    position:absolute;
+    border-radius:50%;
+    border:1px solid rgba(20,217,174,0.22);
+  }
+  .r1{ width:190px; height:190px; }
+  .r2{ width:145px; height:145px; }
+  .r3{ width:100px; height:100px; }
+
+  .e-glow{
+    position:absolute;
+    width:70px; height:70px;
+    border-radius:50%;
+    background:radial-gradient(circle, rgba(20,217,174,0.55), transparent 70%);
+    filter:blur(6px);
+  }
+
+  .e-letter{
+    position:relative;
+    font-size:78px;
+    font-weight:900;
+    font-style:italic;
+    background:linear-gradient(180deg,#7cf5da,#0eae91);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    text-shadow:0 0 30px rgba(20,217,174,0.5);
+  }
+
+  .modal-overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.65);
+    z-index:100;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+  }
+  .modal-overlay.show{ display:flex; }
+
+  .modal-box{
+    width:100%;
+    max-width:400px;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:24px;
+  }
+
+  .modal-box h3{ font-size:18px; margin-bottom:8px; }
+  .modal-box p.desc{ color:var(--muted); font-size:13px; margin-bottom:18px; line-height:1.6; }
+
+  .modal-close{
+    display:flex;
+    justify-content:flex-end;
+    margin-bottom:6px;
+  }
+  .modal-close button{
+    background:none;
+    border:none;
+    color:var(--muted);
+    font-size:20px;
+    cursor:pointer;
+  }
+
+  .modal-box .field{ margin-bottom:14px; }
+
+</style>
+</head>
+<body>
+
+<div class="phone">
+
+  <div class="topbar">
+    <button class="back-btn" onclick="history.back()">‹</button>
+  </div>
+
+  <div class="brand">
+    <div class="brand-name">ELITE</div>
+    <div class="brand-sub">TRADING</div>
+  </div>
+
+  <div class="header-row">
+    <div>
+      <h1>تسجيل دخول</h1>
+      <p>مرحبًا بعودتك! سجل دخولك لمتابعة نشاطك</p>
+    </div>
+    <div class="icon-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#14d9ae" stroke-width="1.8">
+        <rect x="5" y="11" width="14" height="9" rx="2"/>
+        <path d="M8 11V8a4 4 0 0 1 8 0v3"/>
+      </svg>
+    </div>
+  </div>
+
+  <div id="message" class="message"></div>
+
+  <form id="loginForm">
+
+    <div class="field">
+      <div class="input-wrap">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <rect x="3" y="5" width="18" height="14" rx="2"/>
+          <path d="M3 7l9 6 9-6"/>
+        </svg>
+        <input id="email" type="email" placeholder="البريد الإلكتروني" autocomplete="email" required>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="input-wrap">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <rect x="5" y="11" width="14" height="9" rx="2"/>
+          <path d="M8 11V8a4 4 0 0 1 8 0v3"/>
+        </svg>
+        <input id="password" type="password" placeholder="كلمة المرور" autocomplete="current-password" required>
+        <button type="button" class="toggle-eye" id="showPassword">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="forgot" id="forgotPassword">نسيت كلمة المرور؟</div>
+<div style="display:flex; align-items:center; gap:8px; margin: -4px 0 16px 0;">
+    <input type="checkbox" id="rememberMe" name="rememberMe" style="width:16px; height:16px; accent-color: #14d9ae;" />
+    <label for="rememberMe" style="color: #7d8b87; font-size: 13px; cursor:pointer;">تذكرني</label>
+</div>
+    <button type="submit" class="btn btn-primary" id="loginButton">تسجيل دخول</button>
+
+  </form>
+
+  <div class="divider">أو</div>
+
+  <a href="register.html" style="text-decoration:none;">
+    <button type="button" class="btn btn-outline">إنشاء حساب جديد</button>
+  </a>
+
+  <div class="logo-art">
+    <div class="e-mark">
+      <div class="e-ring r1"></div>
+      <div class="e-ring r2"></div>
+      <div class="e-ring r3"></div>
+      <div class="e-glow"></div>
+      <div class="e-letter">E</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- نافذة استعادة كلمة المرور: الخطوة 1 (إدخال البريد) -->
+<div class="modal-overlay" id="forgotModalStep1">
+  <div class="modal-box">
+    <div class="modal-close"><button id="closeStep1">✕</button></div>
+    <h3>استعادة كلمة المرور</h3>
+    <p class="desc">أدخل بريدك الإلكتروني وسنرسل لك رمز تحقق لإعادة تعيين كلمة المرور.</p>
+    <div id="step1Message" class="message"></div>
+    <div class="field">
+      <div class="input-wrap">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <rect x="3" y="5" width="18" height="14" rx="2"/>
+          <path d="M3 7l9 6 9-6"/>
+        </svg>
+        <input id="forgotEmail" type="email" placeholder="بريدك الإلكتروني" required>
+      </div>
+    </div>
+    <button class="btn btn-primary" id="sendCodeBtn">إرسال رمز التحقق</button>
+  </div>
+</div>
+
+<!-- نافذة استعادة كلمة المرور: الخطوة 2 (الرمز وكلمة المرور الجديدة) -->
+<div class="modal-overlay" id="forgotModalStep2">
+  <div class="modal-box">
+    <div class="modal-close"><button id="closeStep2">✕</button></div>
+    <h3>تعيين كلمة مرور جديدة</h3>
+    <p class="desc">أدخل الرمز الذي وصلك عبر البريد الإلكتروني، وكلمة المرور الجديدة.</p>
+    <div id="step2Message" class="message"></div>
+    <div class="field">
+      <div class="input-wrap">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M9 12l2 2 4-4"/>
+          <circle cx="12" cy="12" r="9"/>
+        </svg>
+        <input id="resetCode" type="text" placeholder="رمز التحقق (6 أرقام)" maxlength="6" required>
+      </div>
+    </div>
+    <div class="field">
+      <div class="input-wrap">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <rect x="5" y="11" width="14" height="9" rx="2"/>
+          <path d="M8 11V8a4 4 0 0 1 8 0v3"/>
+        </svg>
+        <input id="newPassword" type="password" placeholder="كلمة المرور الجديدة" required>
+      </div>
+    </div>
+    <button class="btn btn-primary" id="confirmResetBtn">تأكيد تغيير كلمة المرور</button>
+  </div>
+</div>
+
+<script>
+  const loginForm = document.getElementById("loginForm");
+  const emailInput = document.getElementById("email");
+  const passwordInput = document.getElementById("password");
+  const showPassword = document.getElementById("showPassword");
+  const loginButton = document.getElementById("loginButton");
+  const message = document.getElementById("message");
+  const forgotPassword = document.getElementById("forgotPassword");
+
+  showPassword.addEventListener("click", () => {
+    passwordInput.type = passwordInput.type === "password" ? "text" : "password";
+  });
+
+  function showMessage(text, success = false){
+    message.style.display = "block";
+    message.style.background = success ? "rgba(20,217,174,0.10)" : "rgba(255,70,70,0.10)";
+    message.style.color = success ? "#14d9ae" : "#ff7777";
+    message.textContent = text;
+  }
+
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+
+    if(!email || !password){
+      showMessage("يرجى إدخال البريد الإلكتروني وكلمة المرور");
+      return;
+    }
+
+    loginButton.disabled = true;
+    loginButton.textContent = "جارٍ تسجيل الدخول...";
+
+    try{
+      const response = await fetch("/login", {
+        method:"POST",
+        credentials:"same-origin",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({
+    email: email,
+    password: password,
+    rememberMe: document.getElementById('rememberMe').checked
+})
+      });
+      const data = await response.json();
+
+      if(data.status === "success"){
+        showMessage("تم تسجيل الدخول بنجاح ✓", true);
+       setTimeout(() => window.location.href = "/home", 700);
+      } else {
+        showMessage(data.message || "بيانات تسجيل الدخول غير صحيحة");
+        loginButton.disabled = false;
+        loginButton.textContent = "تسجيل دخول";
+      }
+    } catch(err){
+      console.error(err);
+      showMessage("تعذر الاتصال بالخادم");
+      loginButton.disabled = false;
+      loginButton.textContent = "تسجيل دخول";
+    }
+  });
+
+  // ===============================
+  // استعادة كلمة المرور
+  // ===============================
+
+  const forgotModalStep1 = document.getElementById("forgotModalStep1");
+  const forgotModalStep2 = document.getElementById("forgotModalStep2");
+  const forgotEmailInput = document.getElementById("forgotEmail");
+  const sendCodeBtn = document.getElementById("sendCodeBtn");
+  const step1Message = document.getElementById("step1Message");
+
+  const resetCodeInput = document.getElementById("resetCode");
+  const newPasswordInput = document.getElementById("newPassword");
+  const confirmResetBtn = document.getElementById("confirmResetBtn");
+  const step2Message = document.getElementById("step2Message");
+
+  let emailForReset = "";
+
+  function showModalMessage(el, text, success = false){
+    el.style.display = "block";
+    el.style.background = success ? "rgba(20,217,174,0.10)" : "rgba(255,70,70,0.10)";
+    el.style.color = success ? "#14d9ae" : "#ff7777";
+    el.textContent = text;
+  }
+
+  forgotPassword.addEventListener("click", () => {
+    forgotEmailInput.value = emailInput.value.trim();
+    step1Message.style.display = "none";
+    forgotModalStep1.classList.add("show");
+  });
+
+  document.getElementById("closeStep1").addEventListener("click", () => {
+    forgotModalStep1.classList.remove("show");
+  });
+  document.getElementById("closeStep2").addEventListener("click", () => {
+    forgotModalStep2.classList.remove("show");
+  });
+
+  sendCodeBtn.addEventListener("click", async () => {
+    const email = forgotEmailInput.value.trim();
+
+    if(!email){
+      showModalMessage(step1Message, "يرجى إدخال البريد الإلكتروني");
+      return;
+    }
+
+    sendCodeBtn.disabled = true;
+    sendCodeBtn.textContent = "جارٍ الإرسال...";
+
+    try{
+      const response = await fetch("/forgot-password", {
+        method:"POST",
+        credentials:"same-origin",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({ email })
+      });
+      const data = await response.json();
+
+      if(data.status === "success"){
+        emailForReset = email;
+        showModalMessage(step1Message, data.message, true);
+        setTimeout(() => {
+          forgotModalStep1.classList.remove("show");
+          resetCodeInput.value = "";
+          newPasswordInput.value = "";
+          step2Message.style.display = "none";
+          forgotModalStep2.classList.add("show");
+        }, 900);
+      } else {
+        showModalMessage(step1Message, data.message || "تعذر إرسال الرمز");
+      }
+    } catch(err){
+      console.error(err);
+      showModalMessage(step1Message, "تعذر الاتصال بالخادم");
+    }
+
+    sendCodeBtn.disabled = false;
+    sendCodeBtn.textContent = "إرسال رمز التحقق";
+  });
+
+  confirmResetBtn.addEventListener("click", async () => {
+    const code = resetCodeInput.value.trim();
+    const newPassword = newPasswordInput.value;
+
+    if(!code || !newPassword){
+      showModalMessage(step2Message, "يرجى تعبئة جميع الحقول");
+      return;
+    }
+
+    if(newPassword.length < 6){
+      showModalMessage(step2Message, "كلمة المرور يجب أن تكون 6 أحرف على الأقل");
+      return;
+    }
+
+    confirmResetBtn.disabled = true;
+    confirmResetBtn.textContent = "جارٍ التحقق...";
+
+    try{
+      const response = await fetch("/reset-password", {
+        method:"POST",
+        credentials:"same-origin",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({ email: emailForReset, code, newPassword })
+      });
+      const data = await response.json();
+
+      if(data.status === "success"){
+        showModalMessage(step2Message, "تم تغيير كلمة المرور بنجاح ✓ يمكنك تسجيل الدخول الآن", true);
+        setTimeout(() => {
+          forgotModalStep2.classList.remove("show");
+        }, 1500);
+      } else {
+        showModalMessage(step2Message, data.message || "تعذر تغيير كلمة المرور");
+      }
+    } catch(err){
+      console.error(err);
+      showModalMessage(step2Message, "تعذر الاتصال بالخادم");
+    }
+
+    confirmResetBtn.disabled = false;
+    confirmResetBtn.textContent = "تأكيد تغيير كلمة المرور";
+  });
+</script>
+
+</body>
+</html>

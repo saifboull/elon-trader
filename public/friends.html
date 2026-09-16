@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elite Trading — الأصدقاء والإحالة</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #060a09;
+    --panel: #0d1615;
+    --panel-2: #0f1a18;
+    --border: #1c2b28;
+    --teal: #17f0c3;
+    --teal-dim: #0e8f76;
+    --gold: #e8a33d;
+    --red: #ef4a4a;
+    --text: #eef4f2;
+    --text-dim: #8fa39e;
+    --text-dim2: #5d726c;
+    /* level accents (نفس ألوان خطط صفحة العمل) */
+    --l0: #8fa39e;  --l0d: #5d726c;
+    --l1: #17f0c3;  --l1d: #0e8f76;
+    --l2: #2e8dff;  --l2d: #1552a8;
+    --l3: #e8a33d;  --l3d: #9a6716;
+    --l4: #d9e6ff;  --l4d: #7d8aa8;
+    --l5: #a855f7;  --l5d: #6b21a8;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+  html,body{ background:#000; }
+  body{ display:flex; justify-content:center; font-family:'Tajawal', sans-serif; min-height:100vh; }
+  button{ font-family:inherit; border:none; background:none; color:inherit; cursor:pointer; }
+
+  .device{
+    width:100%; max-width:430px; min-height:100vh;
+    background: radial-gradient(ellipse 500px 300px at 80% 0%, rgba(23,240,195,0.08), transparent 60%), var(--bg);
+    color:var(--text); position:relative; overflow:hidden; padding-bottom:110px;
+  }
+  @media (min-width:480px){
+    body{ padding:24px 0; }
+    .device{ min-height:844px; border-radius:36px; box-shadow:0 0 0 1px #1c2b28, 0 30px 80px rgba(0,0,0,.6); }
+    .bottom-nav{ border-radius:0 0 36px 36px; }
+  }
+
+  /* ---------- Top bar (identical to home/work/trade) ---------- */
+  .topbar{ display:flex; align-items:center; justify-content:space-between; padding:22px 20px 18px; gap:10px; }
+  .menu-btn, .bell{ width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--text); }
+  .logo{ display:flex; flex-direction:column; align-items:center; line-height:1; }
+  .logo .word1{ font-family:'Rajdhani',sans-serif; font-weight:700; font-size:26px; letter-spacing:2px; background:linear-gradient(180deg,#fff,#b9c3c1); -webkit-background-clip:text; background-clip:text; color:transparent; font-style:italic; }
+  .logo .word2{ font-family:'Rajdhani',sans-serif; font-size:8px; letter-spacing:5px; color:var(--teal); margin-top:2px; }
+  .logo .rule{ width:70px; height:1px; background:linear-gradient(90deg,transparent,var(--teal-dim),transparent); margin-top:3px; }
+  .header-right{ display:flex; align-items:center; gap:10px; }
+  .bell{ position:relative; }
+  .bell::after{ content:''; position:absolute; top:7px; right:9px; width:8px; height:8px; border-radius:50%; background:var(--teal); box-shadow:0 0 6px var(--teal); }
+  .balance-pill{ background:var(--panel-2); border:1px solid var(--border); border-radius:14px; padding:6px 12px 8px; text-align:center; min-width:120px; }
+  .live-tag{ display:inline-flex; align-items:center; gap:4px; background:rgba(23,240,195,0.12); color:var(--teal); font-size:9px; font-weight:800; letter-spacing:1px; padding:2px 8px; border-radius:6px; margin-bottom:4px; }
+  .balance-pill .label{ font-size:11px; color:var(--text-dim); display:block; }
+  .balance-pill .amount{ font-family:'Rajdhani',sans-serif; font-size:19px; font-weight:700; color:var(--text); direction:ltr; display:block; }
+
+  .section{ padding:0 16px; margin-bottom:16px; }
+
+  /* ---------- Page head (identical to work) ---------- */
+  .page-head{ text-align:center; padding:0 20px 18px; }
+  .page-head h1{ display:flex; align-items:center; justify-content:center; gap:10px; font-size:21px; font-weight:800; color:var(--text); }
+  .page-head h1 .spark{ color:var(--teal); font-size:11px; }
+  .page-head h1::before, .page-head h1::after{ content:''; flex:1; max-width:44px; height:1px; background:linear-gradient(90deg,transparent,var(--teal-dim)); }
+  .page-head h1::after{ background:linear-gradient(90deg,var(--teal-dim),transparent); }
+  .page-head .sub{ color:var(--gold); font-size:15px; margin-top:6px; font-weight:500; }
+  .page-head .rule{ width:150px; height:1px; margin:10px auto 0; background:linear-gradient(90deg,transparent,var(--gold),transparent); opacity:.6; }
+
+  /* ---------- Referral link card ---------- */
+  .ref-card{ border:1px solid var(--teal-dim); border-radius:20px; padding:16px;
+    background:radial-gradient(ellipse 260px 150px at 15% 0%, rgba(23,240,195,.10), transparent 65%), var(--panel);
+    box-shadow:0 0 26px rgba(23,240,195,.08); }
+  .ref-label{ display:flex; align-items:center; gap:8px; font-size:13px; font-weight:800; }
+  .ref-label svg{ width:17px; height:17px; color:var(--teal); }
+  .ref-box{ display:flex; gap:8px; margin-top:11px; }
+  .ref-link{ flex:1; min-width:0; direction:ltr; text-align:left; background:var(--panel-2); border:1px solid var(--border);
+    border-radius:12px; padding:12px 12px; font-family:'Rajdhani',sans-serif; font-size:14px; font-weight:600; letter-spacing:.4px;
+    color:var(--teal); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; user-select:all; }
+  .copy-btn{ width:48px; border-radius:12px; background:var(--teal); color:#04211b; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 0 14px rgba(23,240,195,.3); }
+  .copy-btn svg{ width:19px; height:19px; }
+  .ref-code{ display:flex; align-items:center; gap:6px; margin-top:9px; font-size:11px; color:var(--text-dim); }
+  .ref-code b{ font-family:'Rajdhani',sans-serif; font-size:13px; color:var(--gold); direction:ltr; letter-spacing:1px; }
+  .ref-code svg{ width:13px; height:13px; color:var(--teal-dim); }
+
+  .share-title{ display:flex; align-items:center; gap:10px; margin:15px 0 0; font-size:11.5px; color:var(--text-dim); font-weight:600; }
+  .share-title::before{ content:''; flex:1; height:1px; background:var(--border); }
+  .share-title::after{ content:''; flex:1; height:1px; background:var(--border); }
+
+  .share-row{ display:flex; justify-content:center; gap:9px; flex-wrap:wrap; margin-top:12px; }
+  .share-btn{ width:45px; height:45px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; border:1px solid rgba(255,255,255,.08); }
+  .share-btn svg{ width:21px; height:21px; }
+  .sh-wa{ background:#1fae53; } .sh-tg{ background:#229ED9; } .sh-fb{ background:#1877F2; }
+  .sh-ig{ background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); }
+  .sh-tt{ background:#010101; border:1px solid #2c2c2c !important; }
+  .sh-x{ background:#ffffff; color:#000; }
+  .sh-ms{ background:linear-gradient(180deg,#00B2FF,#006AFF); }
+
+  /* ---------- Stats strip (identical style to trade) ---------- */
+  .stats{ display:flex; background:linear-gradient(180deg, rgba(23,240,195,0.05), rgba(13,22,21,0.9)); border:1px solid var(--teal-dim); border-radius:20px; padding:16px 6px 14px; box-shadow:0 0 30px rgba(23,240,195,0.08) inset; }
+  .stat{ flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; text-align:center; position:relative; }
+  .stat + .stat::after{ content:''; position:absolute; right:0; top:8%; height:84%; width:1px; background:var(--border); }
+  .stat svg{ width:25px; height:25px; color:var(--teal); }
+  .stat .lbl{ font-size:11px; color:var(--text-dim); white-space:nowrap; }
+  .stat .val{ font-family:'Rajdhani',sans-serif; font-weight:700; font-size:19px; direction:ltr; }
+  .stat .val.teal{ color:var(--teal); } .stat .val.gold{ color:var(--gold); }
+
+  /* ---------- Levels ---------- */
+  .hist-title{ display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; font-size:15px; font-weight:700; }
+  .hist-title span:last-child{ font-size:11.5px; color:var(--text-dim); font-weight:500; }
+
+  .levels{ display:flex; flex-direction:column; gap:14px; }
+  .level{ position:relative; --c:var(--l1); --cd:var(--l1d); border:1px solid var(--cd); border-radius:20px; padding:16px 14px 14px;
+    background:radial-gradient(ellipse 240px 130px at 85% 0%, color-mix(in srgb, var(--c) 12%, transparent), transparent 70%), var(--panel);
+    box-shadow:0 0 20px color-mix(in srgb, var(--c) 8%, transparent); }
+  .level.lv0{ --c:var(--l0); --cd:var(--l0d); }
+  .level.lv2{ --c:var(--l2); --cd:var(--l2d); } .level.lv3{ --c:var(--l3); --cd:var(--l3d); } .level.lv4{ --c:var(--l4); --cd:var(--l4d); }
+  .level.lv5{ --c:var(--l5); --cd:var(--l5d); }
+  .level-head{ display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+  .level-num{ width:46px; height:46px; border-radius:14px; border:1.5px solid var(--c); flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; font-family:'Rajdhani',sans-serif; font-size:24px; font-weight:700; color:var(--c);
+    background:color-mix(in srgb, var(--c) 10%, transparent); box-shadow:0 0 14px color-mix(in srgb, var(--c) 25%, transparent); }
+  .level h4{ font-size:15.5px; font-weight:800; }
+  .level .lsub{ font-size:10.5px; color:var(--text-dim2); margin-top:2px; }
+  .chips{ display:flex; gap:8px; margin-bottom:12px; }
+  .chip{ flex:1; background:var(--panel-2); border:1px solid var(--border); border-radius:12px; padding:8px 10px; text-align:center; }
+  .chip .k{ font-size:10px; color:var(--text-dim); display:block; }
+  .chip .v{ font-family:'Rajdhani',sans-serif; font-size:18px; font-weight:700; color:var(--c); direction:ltr; line-height:1.15; }
+  .level-foot{ display:flex; align-items:center; border-top:1px dashed var(--border); padding-top:10px; }
+  .lv-stat{ flex:1; display:flex; align-items:center; gap:9px; }
+  .lv-stat .ic{ width:34px; height:34px; border-radius:50%; border:1px solid var(--cd); display:flex; align-items:center; justify-content:center; color:var(--c); flex-shrink:0; }
+  .lv-stat .ic svg{ width:16px; height:16px; }
+  .lv-stat .k{ font-size:10.5px; color:var(--text-dim); }
+  .lv-stat .v{ font-family:'Rajdhani',sans-serif; font-size:17px; font-weight:700; direction:ltr; line-height:1.1; }
+  .lv-stat .v.c{ color:var(--c); }
+  .lv-sep{ width:1px; height:34px; background:var(--border); margin:0 8px; }
+
+  /* ---------- Details button ---------- */
+  .details-btn{ width:100%; display:flex; align-items:center; justify-content:center; gap:10px; border:1.5px solid var(--teal); border-radius:40px;
+    padding:14px; font-size:16px; font-weight:800; color:var(--text);
+    background:linear-gradient(180deg, rgba(23,240,195,.14), rgba(23,240,195,.03)); box-shadow:0 0 18px rgba(23,240,195,.2); }
+  .details-btn svg{ width:19px; height:19px; color:var(--teal); }
+
+  /* ---------- Recent referrals ---------- */
+  .rrow{ display:flex; align-items:center; gap:12px; background:var(--panel-2); border:1px solid var(--border); border-radius:14px; padding:10px 12px; margin-bottom:8px; }
+  .ravatar{ width:40px; height:40px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+    font-family:'Rajdhani',sans-serif; font-size:18px; font-weight:700; color:var(--teal);
+    background:radial-gradient(circle at 30% 25%, rgba(23,240,195,.2), transparent 70%), var(--panel); border:1px solid var(--teal-dim); }
+  .rinfo{ flex:1; min-width:0; }
+  .rinfo b{ font-size:13.5px; display:block; }
+  .rinfo span{ font-size:10.5px; color:var(--text-dim2); }
+  .rside{ text-align:left; flex-shrink:0; }
+  .ramt{ font-family:'Rajdhani',sans-serif; font-size:15px; font-weight:700; color:var(--teal); direction:ltr; display:block; }
+  .rdate{ font-size:10px; color:var(--text-dim2); }
+  .hist-empty{ color:var(--text-dim2); text-align:center; font-size:12.5px; padding:14px 10px; border:1px dashed var(--border); border-radius:14px; line-height:1.9; }
+
+  /* ---------- Bottom nav (identical) ---------- */
+  .bottom-nav{ position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:430px; background:rgba(6,10,9,0.92); backdrop-filter:blur(10px); border-top:1px solid var(--border); display:flex; justify-content:space-around; align-items:flex-end; padding:10px 6px 24px; z-index:10; }
+  .nav-item{ display:flex; flex-direction:column; align-items:center; gap:5px; font-size:10.5px; color:var(--text-dim2); font-weight:600; width:60px; border-radius:14px; }
+  .nav-item.active{ color:var(--teal); }
+  .nav-item svg{ width:22px; height:22px; }
+  .nav-center{ width:56px; height:56px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:radial-gradient(circle, rgba(23,240,195,0.15), transparent 70%); border:1.5px solid var(--teal); margin-top:-30px; box-shadow:0 0 20px rgba(23,240,195,0.35); }
+  .nav-center svg{ width:24px; height:24px; }
+
+  .ripple-wrap{ position:relative; overflow:hidden; }
+  .nav-item.ripple-wrap{ overflow:visible; }
+  .ripple{ position:absolute; border-radius:50%; background:radial-gradient(circle, rgba(23,240,195,0.55), rgba(23,240,195,0) 70%); transform:scale(0); animation:rippleAnim .6s ease-out forwards; pointer-events:none; }
+  @keyframes rippleAnim{ to{ transform:scale(3.2); opacity:0; } }
+  .glow-pulse{ animation:glowPulse .55s ease; }
+  @keyframes glowPulse{ 0%{ box-shadow:0 0 0 0 rgba(23,240,195,.6); filter:brightness(1);} 40%{ filter:brightness(1.25);} 70%{ box-shadow:0 0 0 14px rgba(23,240,195,0);} 100%{ box-shadow:0 0 0 0 rgba(23,240,195,0); filter:brightness(1);} }
+
+  .toast{ position:fixed; bottom:112px; left:50%; transform:translate(-50%,14px); background:#0f1a18; border:1px solid var(--teal); color:var(--text); padding:10px 18px; border-radius:12px; font-size:12.5px; opacity:0; transition:all .3s ease; pointer-events:none; z-index:60; white-space:nowrap; max-width:90%; text-align:center; box-shadow:0 0 20px rgba(23,240,195,0.25); }
+  .toast.show{ opacity:1; transform:translate(-50%,0); }
+  .toast.warn{ border-color:var(--red); box-shadow:0 0 20px rgba(239,74,74,0.25); }
+
+  /* ---------- Modal (identical to trade) ---------- */
+  .modal-bg{ position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(4px); display:none; align-items:flex-end; justify-content:center; z-index:80; }
+  .modal-bg.open{ display:flex; }
+  .modal{ width:100%; max-width:430px; background:var(--panel); border:1px solid var(--teal-dim); border-bottom:none; border-radius:26px 26px 0 0; padding:20px 20px 30px; animation:slideUp .3s ease; max-height:86vh; overflow-y:auto; }
+  @keyframes slideUp{ from{ transform:translateY(40px); opacity:0;} to{ transform:none; opacity:1;} }
+  .modal .grab{ width:44px; height:4px; border-radius:99px; background:var(--border); margin:0 auto 14px; }
+  .modal h3{ font-size:19px; font-weight:800; margin-bottom:6px; display:flex; align-items:center; gap:8px; }
+  .modal h3 svg{ width:20px; height:20px; color:var(--teal); }
+  .modal p{ color:var(--text-dim); font-size:13.5px; line-height:1.9; }
+  .modal .row{ display:flex; gap:10px; margin-top:16px; }
+  .modal .btn{ flex:1; padding:13px; border-radius:14px; font-weight:800; font-size:14.5px; border:1px solid var(--border); color:var(--text); }
+  .modal .btn.primary{ background:var(--teal); color:#04211b; border-color:var(--teal); }
+  .m-sec{ margin-top:16px; }
+  .m-sec h5{ font-size:13.5px; font-weight:800; margin-bottom:9px; display:flex; align-items:center; gap:7px; }
+  .m-sec h5 .dot{ width:6px; height:6px; border-radius:50%; background:var(--teal); box-shadow:0 0 6px var(--teal); }
+
+  .cmt-table{ width:100%; border-collapse:separate; border-spacing:0; border:1px solid var(--teal-dim); border-radius:14px; overflow:hidden; font-size:13px; }
+  .cmt-table th{ background:rgba(23,240,195,.1); color:var(--teal); font-weight:800; padding:10px 8px; font-size:11.5px; }
+  .cmt-table td{ padding:10px 8px; text-align:center; border-top:1px solid var(--border); }
+  .cmt-table td:first-child{ font-weight:700; }
+  .cmt-table .num{ font-family:'Rajdhani',sans-serif; font-size:15.5px; font-weight:700; direction:ltr; display:inline-block; }
+  .cmt-table .dep{ color:var(--teal); } .cmt-table .wd{ color:var(--gold); }
+
+  .ex-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .ex-card{ background:var(--panel-2); border:1px solid var(--border); border-radius:14px; padding:11px 10px; }
+  .ex-card h6{ font-size:12px; font-weight:800; color:var(--gold); text-align:center; margin-bottom:9px; }
+  .ex-row{ display:flex; align-items:center; justify-content:space-between; direction:ltr; padding:5px 2px; border-top:1px dashed var(--border); font-family:'Rajdhani',sans-serif; font-size:14px; font-weight:700; }
+  .ex-row:first-of-type{ border-top:none; }
+  .ex-row .in{ color:var(--text-dim); }
+  .ex-row .arr{ color:var(--teal-dim); font-size:12px; }
+  .ex-row .out{ color:var(--teal); }
+  .logic{ list-style:none; display:flex; flex-direction:column; gap:8px; }
+  .logic li{ font-size:12.5px; color:var(--text-dim); line-height:1.8; display:flex; gap:8px; }
+  .logic li::before{ content:'✦'; color:var(--teal); font-size:10px; margin-top:5px; }
+  .logic li b{ color:var(--text); }
+</style>
+</head>
+<body>
+<div class="device">
+
+  <!-- ===== الترويسة (مطابقة تمامًا) ===== -->
+  <div class="topbar">
+    <button class="menu-btn" id="btnMenu" aria-label="القائمة">
+      <svg width="24" height="18" viewBox="0 0 24 18" fill="none"><path d="M1 1h22M1 9h16M1 17h22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <div class="logo">
+      <div class="word1">ELITE</div>
+      <div class="word2">TRADING</div>
+      <div class="rule"></div>
+    </div>
+    <div class="header-right">
+      <button class="bell" id="btnBell" aria-label="الإشعارات">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2a6 6 0 0 0-6 6v3.5c0 .8-.3 1.6-.9 2.2L4 15h16l-1.1-1.3c-.6-.6-.9-1.4-.9-2.2V8a6 6 0 0 0-6-6z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9.5 18a2.5 2.5 0 0 0 5 0" stroke="currentColor" stroke-width="1.6"/></svg>
+      </button>
+      <div class="balance-pill">
+        <span class="live-tag">LIVE</span>
+        <span class="label">الرصيد الكلي</span>
+        <span class="amount" id="balance">$ 0.00</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-head">
+    <h1><span class="spark">◆</span>الأصدقاء / الإحالة<span class="spark">◆</span></h1>
+    <div class="sub">ادعُ أصدقاءك واربح عمولات فورية</div>
+    <div class="rule"></div>
+  </div>
+
+  <!-- ===== رابط الإحالة + المشاركة ===== -->
+  <div class="section">
+    <div class="ref-card">
+      <div class="ref-label">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M10 14a5 5 0 0 0 7.07 0l3.18-3.18a5 5 0 0 0-7.07-7.07L11.5 5.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M14 10a5 5 0 0 0-7.07 0l-3.18 3.18a5 5 0 0 0 7.07 7.07l1.68-1.65" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        رابط الإحالة الخاص بك
+      </div>
+      <div class="ref-box">
+        <div class="ref-link" id="refLink">—</div>
+        <button class="copy-btn" id="btnCopy" aria-label="نسخ الرابط">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="9" y="9" width="12" height="12" rx="2.5" stroke="currentColor" stroke-width="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" stroke="currentColor" stroke-width="2"/></svg>
+        </button>
+      </div>
+      <div class="ref-code">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 11v5M12 8h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        معرّفك الإحالي: <b id="refCode">—</b>
+      </div>
+      <div class="share-title">شارك رابطك عبر</div>
+      <div class="share-row" id="shareRow">
+        <button class="share-btn sh-wa" data-share="whatsapp" aria-label="واتساب"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></button>
+        <button class="share-btn sh-tg" data-share="telegram" aria-label="تيليجرام"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
+        <button class="share-btn sh-fb" data-share="facebook" aria-label="فيسبوك"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 13.5h2.5l.5-3H14v-1.6c0-.87.22-1.46 1.5-1.46H17V4.7c-.3-.04-1.3-.13-2.47-.13-2.44 0-4.1 1.49-4.1 4.22v1.71H8v3h2.43V21H14v-7.5z"/></svg></button>
+        <button class="share-btn sh-ig" data-share="instagram" aria-label="انستغرام"><svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="2.5" width="19" height="19" rx="5" stroke="currentColor" stroke-width="1.9"/><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.9"/><circle cx="17.3" cy="6.7" r="1.2" fill="currentColor"/></svg></button>
+        <button class="share-btn sh-tt" data-share="tiktok" aria-label="تيك توك"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64c.3 0 .6.05.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z"/></svg></button>
+        <button class="share-btn sh-x" data-share="x" aria-label="إكس"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></button>
+        <button class="share-btn sh-ms" data-share="messenger" aria-label="ماسنجر"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.14 2 11.25c0 2.88 1.42 5.45 3.65 7.15V22l3.36-1.84c.94.26 1.94.4 2.99.4 5.5 0 10-4.14 10-9.25S17.5 2 12 2zm1.03 12.41l-2.55-2.72-4.97 2.72L11.14 8.6l2.61 2.72 4.9-2.72-5.62 5.81z"/></svg></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== بطاقة الإحصائيات ===== -->
+  <div class="section">
+    <div class="stats">
+      <div class="stat">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="8" cy="8" r="3.2" stroke="currentColor" stroke-width="1.6"/><circle cx="16" cy="8" r="3.2" stroke="currentColor" stroke-width="1.6"/><path d="M2 20c0-3.3 2.8-5.5 6-5.5s6 2.2 6 5.5M12 20c0-3.3 2.8-5.5 6-5.5s6 2.2 6 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <span class="lbl">أعضاء الفريق</span><span class="val" id="stMembers">0</span>
+      </div>
+      <div class="stat">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 3v13m0 0-4.5-4.5M12 16l4.5-4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 19h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <span class="lbl">أرباح الإحالة</span><span class="val teal" id="stDepEarn">$0.00</span>
+      </div>
+
+      <div class="stat">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.7"/><path d="M12 8v5M12 16h.01" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+        <span class="lbl">غير مُودِعين</span><span class="val" id="stPending" style="color:var(--text-dim)">0</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== مستويات الإحالة ===== -->
+  <div class="section">
+    <div class="hist-title"><span>شرائح الإحالة</span><span>عمولات على 5 شرائح من مبلغ الإيداع</span></div>
+    <div class="levels" id="levels"></div>
+  </div>
+
+  <!-- ===== زر التفاصيل ===== -->
+  <div class="section">
+    <button class="details-btn" id="btnDetails">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.7"/><path d="M12 11v5M12 8h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <span>تفاصيل نظام الإحالة</span>
+    </button>
+  </div>
+
+  <!-- ===== آخر الإحالات ===== -->
+  <div class="section">
+    <div class="hist-title"><span>آخر الإحالات</span><span>الأعضاء المنضمون عبر رابطك</span></div>
+    <div id="recentList"></div>
+    <div class="hist-empty" id="recentEmpty">لا توجد إحالات بعد — شارك رابطك مع أصدقائك<br>وابدأ ببناء فريقك وتربح من كل إيداع وسحب.</div>
+  </div>
+
+  <!-- ===== الشريط السفلي (مطابق — الأصدقاء مفعّل) ===== -->
+  <div class="bottom-nav" id="bottomNav">
+    <button class="nav-item" data-page="account">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.7"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+      <span>حسابي</span>
+    </button>
+    <button class="nav-item active" data-page="friends">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="8" cy="8" r="3.2" stroke="currentColor" stroke-width="1.6"/><circle cx="16" cy="8" r="3.2" stroke="currentColor" stroke-width="1.6"/><path d="M2 20c0-3.3 2.8-5.5 6-5.5s6 2.2 6 5.5M12 20c0-3.3 2.8-5.5 6-5.5s6 2.2 6 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <span>الأصدقاء</span>
+    </button>
+    <button class="nav-item" data-page="trade">
+      <div class="nav-center"><svg viewBox="0 0 24 24" fill="none"><path d="M2 12h4l2.5-7L13 19l2.5-7H22" stroke="#17f0c3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span style="margin-top:2px;">تداول</span>
+    </button>
+    <button class="nav-item" data-page="work">
+      <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="7" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" stroke="currentColor" stroke-width="1.6"/></svg>
+      <span>العمل</span>
+    </button>
+    <button class="nav-item" data-page="home">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M3 12l2-2 5 5L20 5l2 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 20h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <span>الرئيسية</span>
+    </button>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<!-- Modal -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal" id="modal"></div>
+</div>
+
+<script>
+/* ============================================================
+   1) Toast + click feedback (identical to home/work/trade)
+   ============================================================ */
+function toast(msg, isWarn){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.toggle('warn', !!isWarn);
+  t.classList.remove('show'); void t.offsetWidth; t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(()=>t.classList.remove('show'), 2200);
+}
+function attachInteractive(el, onClick){
+  el.classList.add('ripple-wrap');
+  el.addEventListener('click', (e)=>{
+    const rect = el.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const ripple = document.createElement('span');
+    ripple.className = 'ripple';
+    ripple.style.width = ripple.style.height = size + 'px';
+    ripple.style.left = (e.clientX - rect.left - size/2) + 'px';
+    ripple.style.top  = (e.clientY - rect.top - size/2) + 'px';
+    el.appendChild(ripple);
+    setTimeout(()=>ripple.remove(), 650);
+    el.classList.remove('glow-pulse'); void el.offsetWidth; el.classList.add('glow-pulse');
+    setTimeout(()=>el.classList.remove('glow-pulse'), 550);
+    if(onClick) onClick(e);
+  });
+}
+const fmt2 = n => (Math.round(n*100)/100).toLocaleString('en-US',{minimumFractionDigits:2, maximumFractionDigits:2});
+const fmt  = n => Math.round(n).toLocaleString('en-US');
+const escapeHtml = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* ============================================================
+   2) رابط الإحالة — يجلب الكود الحقيقي من الخادم
+   ============================================================ */
+let REF_CODE = '—';
+let REF_LINK = '';
+const _base = (location.origin && location.origin !== 'null' && location.protocol.startsWith('http')) ? location.origin : 'https://elitetrading.app';
+
+// جلب الكود الحقيقي من الخادم
+async function loadRealReferralCode(){
+    try{
+        const res = await fetch('/api/user', { credentials: 'same-origin' });
+        if(res.status === 401){
+            window.location.href = '/';
+            return;
+        }
+        if(!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        const realCode = (data.user && data.user.referralCode) ? data.user.referralCode : null;
+        if(realCode && realCode !== 'لا يوجد'){
+            REF_CODE = realCode;
+            REF_LINK = _base + '/register?ref=' + REF_CODE;
+            document.getElementById('refLink').textContent = REF_LINK;
+            document.getElementById('refCode').textContent = REF_CODE;
+        }
+    }catch(e){
+        console.warn('failed to load referral code:', e.message);
+    }
+}
+
+// جلب الإحالات الحقيقية من الخادم
+async function loadRealReferrals(){
+    try{
+        const res = await fetch('/api/account/referrals', { credentials: 'same-origin' });
+        if(res.status === 401){
+            window.location.href = '/';
+            return;
+        }
+        if(!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+
+        const friends = Array.isArray(data.friends) ? data.friends : [];
+        const friendsCount = Number(data.friendsCount || friends.length) + Number(data.pendingCount || 0);
+        const referralProfit = Number(data.referralProfit || 0);
+
+        // تحديث الإحصائيات
+        const membersEl = document.getElementById('stMembers');
+        const depEarnEl = document.getElementById('stDepEarn');
+        const pendingEl = document.getElementById('stPending');
+        if(membersEl) membersEl.textContent = fmt(friendsCount);
+        if(depEarnEl) depEarnEl.textContent = '$' + fmt2(referralProfit);
+        if(pendingEl) pendingEl.textContent = fmt(data.pendingCount || 0);
+
+        // تحديث قائمة آخر الإحالات
+        const el = document.getElementById('recentList');
+        const empty = document.getElementById('recentEmpty');
+        if(!el || !empty) return;
+
+        const pending = Array.isArray(data.pending) ? data.pending : [];
+        const combined = [
+            ...friends.map(f => ({ ...f, _isPending: false })),
+            ...pending.map(p => ({ ...p, _isPending: true }))
+        ];
+
+        if(!combined.length){
+            el.innerHTML = '';
+            empty.style.display = 'block';
+        } else {
+            empty.style.display = 'none';
+            el.innerHTML = combined.slice(0, 20).map(r => {
+                const name = r.fullname || (r.email ? r.email.split('@')[0] : 'مستخدم');
+                const initial = (name || 'A').charAt(0).toUpperCase();
+                const date = r.created_at
+                    ? new Date(r.created_at).toLocaleDateString('ar-EG', {day:'numeric', month:'short'})
+                    : '—';
+                const commission = Number(r.commission || 0);
+
+                const safeName = escapeHtml(name);
+                const safeInitial = escapeHtml(initial);
+                if(r._isPending){
+                    return `<div class="rrow" style="border-color:var(--border);">
+                      <div class="ravatar" style="background:radial-gradient(circle at 30% 25%, rgba(143,163,158,.2), transparent 70%), var(--panel); border-color:var(--text-dim2); color:var(--text-dim);">${safeInitial}</div>
+                      <div class="rinfo"><b>${safeName}</b><span style="color:var(--text-dim2);">مسجّل — لم يودع بعد</span></div>
+                      <div class="rside"><span class="ramt" style="color:var(--text-dim2);">$0.00</span><span class="rdate">${date}</span></div>
+                    </div>`;
+                }
+
+                return `<div class="rrow">
+                  <div class="ravatar">${safeInitial}</div>
+                  <div class="rinfo"><b>${safeName}</b><span>أودع • عمولتك: $${fmt2(commission)}</span></div>
+                  <div class="rside"><span class="ramt">+$${fmt2(commission)}</span><span class="rdate">${date}</span></div>
+                </div>`;
+            }).join('');
+        }
+
+        // تحديث إحصائيات كل مستوى من الخادم
+        const stats = data.levelStats || {};
+        for(let lvl = 0; lvl <= 5; lvl++){
+            const s = stats[lvl] || { count: 0, earnings: 0 };
+            const cntEl = document.querySelector(`[data-lv-count="${lvl}"]`);
+            const earnEl = document.querySelector(`[data-lv-earn="${lvl}"]`);
+            if(cntEl) cntEl.textContent = fmt(s.count);
+            if(earnEl) earnEl.textContent = '$' + fmt2(s.earnings);
+        }
+    }catch(e){
+        console.warn('failed to load referrals:', e.message);
+    }
+}
+
+/* ============================================================
+   3) مستويات الإحالة — النسب الرسمية (للعرض فقط)
+   ============================================================ */
+const RATES = [
+  { level:0, name:'غير مُودِع',        dep:0,   wd:0   },   // مسجّل، لم يُودع
+  { level:1, name:'الشريحة الأولى',   dep:8.2, wd:1.0 },
+  { level:2, name:'الشريحة الثانية',  dep:4.5, wd:1.0 },
+  { level:3, name:'الشريحة الثالثة',  dep:3.0, wd:1.0 },
+  { level:4, name:'الشريحة الرابعة',  dep:2.8, wd:1.0 },
+  { level:5, name:'الشريحة الخامسة',  dep:2.3, wd:1.0 }
+];
+
+/* ============================================================
+   4) العرض — كل البيانات من الخادم
+   ============================================================ */
+async function loadRealBalance(){
+  try{
+    const res = await fetch('/api/user/balance', { credentials: 'same-origin' });
+    if(res.status === 401){ window.location.href = '/'; return; }
+    if(!res.ok) return;
+    const data = await res.json();
+    const bal = Number(data.balance || 0);
+    document.getElementById('balance').textContent = '$ ' + fmt2(bal);
+  }catch(e){ /* silent */ }
+}
+
+function renderLink(){
+  document.getElementById('refLink').textContent  = REF_LINK || '—';
+  document.getElementById('refCode').textContent  = REF_CODE;
+}
+
+function renderLevels(){
+  document.getElementById('levels').innerHTML = RATES.map((r)=>`
+    <div class="level lv${r.level}">
+      <div class="level-head">
+        <div class="level-num">${r.level === 0 ? '0' : r.level}</div>
+        <div>
+          <h4>${r.name}</h4>
+          <div class="lsub">${r.level === 0 ? 'مسجّلون، لم يُودعوا بعد' : 'أعضاء سجّلوا عبر رابطك مباشرة أو عبر فريقك'}</div>
+        </div>
+      </div>
+      <div class="chips">
+        <div class="chip"><span class="k">عمولة الإيداع</span><span class="v">${r.dep}%</span></div>
+        <div class="chip"><span class="k">عمولة السحب</span><span class="v">${r.wd}%</span></div>
+      </div>
+      <div class="level-foot">
+        <div class="lv-stat">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+          <div><div class="k">أعضاء المستوى</div><div class="v" data-lv-count="${r.level}">0</div></div>
+        </div>
+        <div class="lv-sep"></div>
+        <div class="lv-stat">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="7" width="18" height="13" rx="2.5" stroke="currentColor" stroke-width="1.7"/><path d="M3 10h18" stroke="currentColor" stroke-width="1.7"/><circle cx="16.5" cy="15" r="1.2" fill="currentColor"/></svg></div>
+          <div><div class="k">أرباح المستوى</div><div class="v c" data-lv-earn="${r.level}">$0.00</div></div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function renderAll(){
+  renderLink();
+  renderLevels();
+  loadRealBalance();
+}
+
+/* ============================================================
+   5) نسخ + مشاركة
+   ============================================================ */
+function copyText(txt, msg){
+  const done = ()=>toast(msg || 'تم النسخ بنجاح');
+  const fallback = ()=>{
+    const ta = document.createElement('textarea');
+    ta.value = txt; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); done(); }catch(e){ toast('تعذر النسخ — انسخ الرابط يدويًا', true); }
+    ta.remove();
+  };
+  if(navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(txt).then(done).catch(fallback);
+  else fallback();
+}
+let SHARE_TEXT = '🔥 انضم إلى ELITE TRADING — خطط استثمارية بعائد يومي 5% وأرباح إحالة على 5 مستويات!';
+const openURL = u => window.open(u, '_blank');
+
+// جلب نص المشاركة من الخادم
+async function loadShareText(){
+  try{
+    const res = await fetch('/api/referral/message', { credentials: 'same-origin' });
+    if(!res.ok) return;
+    const data = await res.json();
+    if(data && data.message){
+      SHARE_TEXT = data.message;
+    }
+  }catch(e){ /* يبقى النص الافتراضي */ }
+}
+
+const SHARE = {
+  whatsapp : ()=> openURL('https://wa.me/?text=' + encodeURIComponent(SHARE_TEXT + '\n' + REF_LINK)),
+  telegram : ()=> openURL('https://t.me/share/url?url=' + encodeURIComponent(REF_LINK) + '&text=' + encodeURIComponent(SHARE_TEXT)),
+  facebook : ()=> openURL('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(REF_LINK) + '&quote=' + encodeURIComponent(SHARE_TEXT)),
+  x        : ()=> openURL('https://twitter.com/intent/tweet?url=' + encodeURIComponent(REF_LINK) + '&text=' + encodeURIComponent(SHARE_TEXT)),
+  /* انستغرام وتيك توك لا تدعمان مشاركة رابط مباشرة من الويب → ننسخ الرابط ونفتح التطبيق */
+  instagram: ()=>{ copyText(REF_LINK, 'تم نسخ الرابط — الصقه في ستوري أو رسائل انستغرام'); setTimeout(()=>openURL('https://www.instagram.com/'), 450); },
+  tiktok   : ()=>{ copyText(REF_LINK, 'تم نسخ الرابط — الصقه في بايو أو رسائل تيك توك'); setTimeout(()=>openURL('https://www.tiktok.com/'), 450); },
+  /* ماسنجر: يتطلب Facebook App ID مسجّل. أضف المعرّف بالأسفل لتفعيل النافذة الرسمية،
+     وإلا سننسخ الرابط ونفتح ماسنجر (طريقة تعمل دائمًا) */
+  messenger: ()=>{
+    const FB_APP_ID = ''; // ← ضع هنا Facebook App ID الخاص بموقعك
+    if(FB_APP_ID){
+      openURL('https://www.facebook.com/dialog/send?link=' + encodeURIComponent(REF_LINK) + '&app_id=' + FB_APP_ID + '&redirect_uri=' + encodeURIComponent(location.href));
+    } else {
+      copyText(REF_LINK, 'تم نسخ الرابط — الصقه في محادثة ماسنجر');
+      setTimeout(()=>openURL('https://www.messenger.com/'), 450);
+    }
+  }
+};
+
+/* ============================================================
+   6) نافذة تفاصيل نظام الإحالة
+   ============================================================ */
+const modalBg = document.getElementById('modalBg'), modal = document.getElementById('modal');
+function closeModal(){ modalBg.classList.remove('open'); }
+modalBg.addEventListener('click', e=>{ if(e.target === modalBg) closeModal(); });
+
+function openDetails(){
+  modal.innerHTML = `
+    <div class="grab"></div>
+    <h3>
+      <svg viewBox="0 0 24 24" fill="none"><path d="M10 14a5 5 0 0 0 7.07 0l3.18-3.18a5 5 0 0 0-7.07-7.07L11.5 5.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M14 10a5 5 0 0 0-7.07 0l-3.18 3.18a5 5 0 0 0 7.07 7.07l1.68-1.65" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      نظام الإحالة — 5 شرائح
+    </h3>
+    <p>اربح عمولة فورية من إيداعات أعضاء فريقك، وعمولة إضافية من كل عملية سحب ينفذونها — من خلال خمس شرائح من مبلغ الإيداع.</p>
+
+    <div class="m-sec">
+      <h5><span class="dot"></span>جدول نسب العمولات (حسب شريحة الإيداع)</h5>
+      <table class="cmt-table">
+        <tr><th>الشريحة</th><th>عمولة الإيداع</th><th>عمولة السحب</th></tr>
+        ${RATES.map(r=>`<tr><td>${r.name}</td><td><span class="num dep">${r.dep}%</span></td><td><span class="num wd">${r.wd}%</span></td></tr>`).join('')}
+      </table>
+    </div>
+
+    <div class="m-sec">
+      <h5><span class="dot"></span>أمثلة الأرباح (على إيداع $100 — الشريحة الأولى 8.2%)</h5>
+      <div class="ex-grid">
+        <div class="ex-card">
+          <h6>إيداع $100</h6>
+          <div class="ex-row"><span class="in">الشريحة 1 · 8.2%</span><span class="arr">→</span><span class="out">$8.20</span></div>
+          <div class="ex-row"><span class="in">الشريحة 2 · 4.5%</span><span class="arr">→</span><span class="out">$4.50</span></div>
+          <div class="ex-row"><span class="in">الشريحة 3 · 3.0%</span><span class="arr">→</span><span class="out">$3.00</span></div>
+          <div class="ex-row"><span class="in">الشريحة 4 · 2.8%</span><span class="arr">→</span><span class="out">$2.80</span></div>
+          <div class="ex-row"><span class="in">الشريحة 5 · 2.3%</span><span class="arr">→</span><span class="out">$2.30</span></div>
+        </div>
+        <div class="ex-card">
+          <h6>سحب $100</h6>
+          <div class="ex-row"><span class="in">الشريحة 1 · 1%</span><span class="arr">→</span><span class="out">$1.00</span></div>
+          <div class="ex-row"><span class="in">الشريحة 2 · 1%</span><span class="arr">→</span><span class="out">$1.00</span></div>
+          <div class="ex-row"><span class="in">الشريحة 3 · 1%</span><span class="arr">→</span><span class="out">$1.00</span></div>
+          <div class="ex-row"><span class="in">الشريحة 4 · 1%</span><span class="arr">→</span><span class="out">$1.00</span></div>
+          <div class="ex-row"><span class="in">الشريحة 5 · 1%</span><span class="arr">→</span><span class="out">$1.00</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="m-sec">
+      <h5><span class="dot"></span>منطق النظام</h5>
+      <ul class="logic">
+        <li><span>عند تسجيل مستخدم عبر <b>رابط الإحالة</b> الخاص بك يصبح ضمن فريقك مباشرة (يظهر كـ «غير مُودِع» حتى يودع).</span></li>
+        <li><span>تحصل على <b>عمولة إيداع</b> فورية حسب مستوى العضو (من 8.2% إلى 2.3%).</span></li>
+        <li><span>تحصل أيضًا على <b>عمولة سحب</b> بنسبة 1% عند تنفيذ العضو عملية سحب.</span></li>
+        <li><span>تُحتسب الأرباح <b>تلقائيًا</b> وتُضاف إلى رصيد الإحالة (محفظة السحب في صفحة حسابي).</span></li>
+        <li><span>النظام يدعم <b>خمس شرائح من مبلغ الإيداع</b> — كل شريحة لها نسبتها (من 8.2% إلى 2.3%).</span></li>
+      </ul>
+    </div>
+
+    <div class="row"><button class="btn primary" id="mShare">شارك رابطك الآن</button><button class="btn" id="mClose">إغلاق</button></div>
+  `;
+  modalBg.classList.add('open');
+  attachInteractive(document.getElementById('mClose'), closeModal);
+  attachInteractive(document.getElementById('mShare'), ()=>{ closeModal(); SHARE.whatsapp(); });
+}
+
+/* ============================================================
+   7) الأزرار والتنقل (نفس أسلوب بقية الصفحات)
+   ============================================================ */
+attachInteractive(document.getElementById('btnCopy'), ()=>copyText(REF_LINK, 'تم نسخ رابط الإحالة'));
+document.querySelectorAll('[data-share]').forEach(b=>{
+  attachInteractive(b, ()=>SHARE[b.dataset.share]());
+});
+attachInteractive(document.getElementById('btnDetails'), openDetails);
+attachInteractive(document.getElementById('btnMenu'), ()=> openSideDrawer());
+
+async function openSideDrawer(){
+  let drawer = document.getElementById('sideDrawerEl');
+  if(drawer){
+    drawer.classList.add('show');
+    document.getElementById('sideDrawerBg').classList.add('show');
+    return;
+  }
+
+  let uName = 'مستخدم', uEmail = '—';
+  try{
+    const res = await fetch('/api/account/profile', { credentials: 'same-origin' });
+    if(res.ok){
+      const d = await res.json();
+      uName = d.name || d.fullname || 'مستخدم';
+      uEmail = d.email || '—';
+    }
+  }catch(e){}
+  const initial = (uName.charAt(0) || 'E').toUpperCase();
+
+  const style = document.createElement('style');
+  style.id = 'sideDrawerStyles';
+  style.textContent = `
+    .side-drawer-bg{ position:fixed; inset:0; background:rgba(0,0,0,0.65); backdrop-filter:blur(4px); z-index:100; opacity:0; pointer-events:none; transition:opacity .25s; }
+    .side-drawer-bg.show{ opacity:1; pointer-events:auto; }
+    .side-drawer{ position:fixed; top:0; bottom:0; right:0; z-index:110; width:min(300px,82vw);
+      background:var(--panel,#0d1615); border-left:1px solid var(--teal-dim,#0e8f76); border-radius:26px 0 0 26px;
+      padding:22px 18px; transform:translateX(105%); transition:transform .35s cubic-bezier(.22,1,.36,1);
+      display:flex; flex-direction:column; box-shadow:-20px 0 60px rgba(0,0,0,.5); color:var(--text,#eef4f2); }
+    .side-drawer.show{ transform:none; }
+    .side-drawer-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+    .side-drawer-logo .w1{ font-family:'Rajdhani',sans-serif; font-weight:700; font-size:22px; letter-spacing:2px;
+      background:linear-gradient(180deg,#fff,#b9c3c1); -webkit-background-clip:text; background-clip:text; color:transparent; font-style:italic; }
+    .side-drawer-logo .w2{ font-family:'Rajdhani',sans-serif; font-size:7px; letter-spacing:4px; color:var(--teal,#17f0c3); margin-top:2px; }
+    .side-drawer-close{ width:34px; height:34px; border-radius:50%; border:1px solid var(--border,#1c2b28);
+      display:flex; align-items:center; justify-content:center; color:var(--text-dim,#8fa39e); background:none; cursor:pointer; font-size:14px; }
+    .side-drawer-user{ display:flex; align-items:center; gap:12px; background:var(--panel-2,#0f1a18);
+      border:1px solid var(--border,#1c2b28); border-radius:16px; padding:11px 12px; margin-bottom:16px; }
+    .side-drawer-avatar{ width:44px; height:44px; border-radius:13px; display:flex; align-items:center; justify-content:center;
+      font-family:'Rajdhani',sans-serif; font-size:20px; font-weight:700; color:var(--teal,#17f0c3);
+      background:radial-gradient(circle at 30% 25%, rgba(23,240,195,.2), transparent 70%), var(--panel,#0d1615);
+      border:1px solid var(--teal-dim,#0e8f76); flex-shrink:0; }
+    .side-drawer-user b{ font-size:13.5px; display:block; color:var(--text,#eef4f2); }
+    .side-drawer-user span{ font-size:10.5px; color:var(--text-dim,#8fa39e); direction:ltr; display:block; text-align:right; }
+    .side-drawer-links{ display:flex; flex-direction:column; gap:6px; flex:1; }
+    .side-drawer-links a, .side-drawer-links button{ display:flex; align-items:center; gap:12px; padding:12px 14px;
+      border-radius:14px; font-size:13.5px; font-weight:700; color:var(--text-dim,#8fa39e); text-align:right;
+      width:100%; border:1px solid transparent; transition:.2s; text-decoration:none; background:none; cursor:pointer; font-family:inherit; }
+    .side-drawer-links a:hover, .side-drawer-links button:hover{ background:rgba(23,240,195,.06); color:var(--text,#eef4f2); }
+    .side-drawer-links button.logout{ color:var(--red,#ef4a4a); background:rgba(239,74,74,.07); border:1px solid rgba(239,74,74,.3); margin-top:auto; }
+    .side-drawer-links svg{ width:19px; height:19px; flex-shrink:0; }
+  `;
+  document.head.appendChild(style);
+
+  const bg = document.createElement('div');
+  bg.className = 'side-drawer-bg';
+  bg.id = 'sideDrawerBg';
+
+  drawer = document.createElement('aside');
+  drawer.className = 'side-drawer';
+  drawer.id = 'sideDrawerEl';
+  drawer.innerHTML = `
+    <div class="side-drawer-head">
+      <div class="side-drawer-logo"><div class="w1">ELITE</div><div class="w2">TRADING</div></div>
+      <button class="side-drawer-close" id="sideDrawerClose">✕</button>
+    </div>
+    <div class="side-drawer-user">
+      <div class="side-drawer-avatar">${escapeHtml(initial)}</div>
+      <div><b>${escapeHtml(uName)}</b><span>${escapeHtml(uEmail)}</span></div>
+    </div>
+    <nav class="side-drawer-links">
+      <a href="/home"><svg viewBox="0 0 24 24" fill="none"><path d="M3 12l2-2 5 5L20 5l2 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 20h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>الرئيسية</a>
+      <a href="/work"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="7" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" stroke="currentColor" stroke-width="1.6"/></svg>العمل</a>
+      <a href="/trade"><svg viewBox="0 0 24 24" fill="none"><path d="M2 12h4l2.5-7L13 19l2.5-7H22" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>تداول</a>
+      <a href="/friends"><svg viewBox="0 0 24 24" fill="none"><circle cx="8" cy="8" r="3.2" stroke="currentColor" stroke-width="1.6"/><circle cx="16" cy="8" r="3.2" stroke="currentColor" stroke-width="1.6"/><path d="M2 20c0-3.3 2.8-5.5 6-5.5s6 2.2 6 5.5M12 20c0-3.3 2.8-5.5 6-5.5s6 2.2 6 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>الأصدقاء</a>
+      <a href="/account"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.7"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>حسابي</a>
+      <button class="logout" id="sideDrawerLogout"><svg viewBox="0 0 24 24" fill="none"><path d="M15 4h4a1.5 1.5 0 0 1 1.5 1.5v13A1.5 1.5 0 0 1 19 20h-4M10 8l-4 4 4 4M6 12h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>تسجيل الخروج</button>
+    </nav>
+  `;
+
+  document.body.appendChild(bg);
+  document.body.appendChild(drawer);
+
+  bg.addEventListener('click', closeSideDrawer);
+  document.getElementById('sideDrawerClose').addEventListener('click', closeSideDrawer);
+  document.getElementById('sideDrawerLogout').addEventListener('click', async ()=>{
+    try{ await fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' }); }catch(e){}
+    window.location.href = '/';
+  });
+
+  drawer.classList.add('show');
+  bg.classList.add('show');
+}
+
+function closeSideDrawer(){
+  const drawer = document.getElementById('sideDrawerEl');
+  const bg = document.getElementById('sideDrawerBg');
+  if(drawer) drawer.classList.remove('show');
+  if(bg) bg.classList.remove('show');
+}
+
+document.querySelectorAll('#bottomNav .nav-item').forEach(navEl=>{
+  attachInteractive(navEl, ()=>{
+    const page = navEl.dataset.page;
+    if(page === 'friends') return;
+    document.querySelectorAll('#bottomNav .nav-item').forEach(n=>n.classList.remove('active'));
+    navEl.classList.add('active');
+    if(page === 'home') location.href = '/home';
+    else if(page === 'work') location.href = '/work';
+    else if(page === 'trade') location.href = '/trade';
+    else if(page === 'account') location.href = '/account';
+    else toast('قريبًا');
+  });
+});
+
+/* تحديث فوري عند تغيير البيانات من تبويب آخر */
+// لا حاجة لمستمع storage — البيانات تُحدَّث من الخادم عند تحميل الصفحة
+document.addEventListener('visibilitychange', ()=>{
+  if(!document.hidden){
+    renderAll();
+    loadRealReferrals();
+  }
+});
+
+/* ============================================================
+   8) انتهى — كل البيانات من الخادم
+   ============================================================ */
+
+/* ---------- التشغيل ---------- */
+(async () => {
+    await loadRealReferralCode();
+    await loadShareText();
+    renderAll();
+    loadRealReferrals();
+})();
+</script>
+  <script src="/notifications.js"></script>
+</body>
+</html>

@@ -1,0 +1,1608 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الإيداع | Elite Trading</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #060a09;
+    --panel: #0d1615;
+    --panel-2: #0f1a18;
+    --border: #1c2b28;
+    --teal: #17f0c3;
+    --teal-dim: #0e8f76;
+    --gold: #e8a33d;
+    --red: #ef4a4a;
+    --text: #eef4f2;
+    --text-dim: #8fa39e;
+    --text-dim2: #5d726c;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+  html,body{ background:#000; }
+  body{ display:flex; justify-content:center; font-family:'Tajawal', sans-serif; min-height:100vh; }
+  button{ font-family:inherit; border:none; background:none; color:inherit; cursor:pointer; }
+  input, textarea{ font-family:inherit; }
+
+  .device{
+    width:100%; max-width:430px; min-height:100vh;
+    background: radial-gradient(ellipse 500px 300px at 80% 0%, rgba(23,240,195,0.08), transparent 60%), var(--bg);
+    color:var(--text); position:relative; overflow:hidden; padding-bottom:110px;
+  }
+  @media (min-width:480px){
+    body{ padding:24px 0; }
+    .device{ min-height:844px; border-radius:36px; box-shadow:0 0 0 1px #1c2b28, 0 30px 80px rgba(0,0,0,.6); }
+    .bottom-nav{ border-radius:0 0 36px 36px; }
+  }
+
+  /* ---------- topbar ---------- */
+  .topbar{ display:flex; align-items:center; justify-content:space-between; padding:22px 20px 18px; gap:10px; }
+  .menu-btn, .bell{ width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--text); }
+  .logo{ display:flex; flex-direction:column; align-items:center; line-height:1; }
+  .logo .word1{ font-family:'Rajdhani',sans-serif; font-weight:700; font-size:26px; letter-spacing:2px; background:linear-gradient(180deg,#fff,#b9c3c1); -webkit-background-clip:text; background-clip:text; color:transparent; font-style:italic; }
+  .logo .word2{ font-family:'Rajdhani',sans-serif; font-size:8px; letter-spacing:5px; color:var(--teal); margin-top:2px; }
+  .logo .rule{ width:70px; height:1px; background:linear-gradient(90deg,transparent,var(--teal-dim),transparent); margin-top:3px; }
+  .header-right{ display:flex; align-items:center; gap:10px; }
+  .bell{ position:relative; }
+  .bell::after{ content:''; position:absolute; top:7px; right:9px; width:8px; height:8px; border-radius:50%; background:var(--teal); box-shadow:0 0 6px var(--teal); }
+
+  /* ---------- page title ---------- */
+  .page-title-row{ display:flex; align-items:center; gap:12px; padding:4px 20px 16px; }
+  .back-btn{ width:38px; height:38px; border-radius:12px; background:var(--panel-2); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--text); flex-shrink:0; }
+  .page-title-row h1{ font-size:20px; font-weight:800; }
+  .page-title-row .sub{ font-size:11.5px; color:var(--text-dim2); margin-top:2px; }
+
+  /* ---------- stepper ---------- */
+  .stepper{ display:flex; align-items:flex-start; padding:0 26px 22px; }
+  .step{ display:flex; flex-direction:column; align-items:center; flex:1; position:relative; }
+  .step .dot{ width:28px; height:28px; border-radius:50%; background:var(--panel-2); border:1.5px solid var(--border); display:flex; align-items:center; justify-content:center; font-family:'Rajdhani',sans-serif; font-weight:700; font-size:12px; color:var(--text-dim2); transition:all .3s ease; z-index:1; }
+  .step .lbl{ font-size:9.5px; color:var(--text-dim2); margin-top:7px; font-weight:600; text-align:center; }
+  .step .line{ position:absolute; top:14px; right:calc(50% + 14px); left:calc(-50% + 14px); height:2px; background:var(--border); z-index:0; transition:background .3s ease; }
+  .step:first-child .line{ display:none; }
+  .step.done .dot{ background:var(--teal); border-color:var(--teal); color:#04211b; box-shadow:0 0 12px rgba(23,240,195,0.4); }
+  .step.done .line{ background:var(--teal-dim); }
+  .step.active .dot{ border-color:var(--teal); color:var(--teal); box-shadow:0 0 0 4px rgba(23,240,195,0.12); }
+  .step.active .lbl{ color:var(--teal); }
+  .step.done .lbl{ color:var(--text-dim); }
+
+  /* ---------- balance hero ---------- */
+  .balance-hero{
+    margin:0 20px 24px; border-radius:22px; padding:22px 20px;
+    background: radial-gradient(ellipse 220px 140px at 15% -10%, rgba(23,240,195,0.16), transparent 60%), linear-gradient(160deg, var(--panel-2), var(--panel));
+    border:1px solid var(--teal-dim); position:relative; overflow:hidden;
+    box-shadow: 0 0 0 1px rgba(23,240,195,0.05), 0 18px 40px rgba(0,0,0,0.45), 0 0 30px rgba(23,240,195,0.08) inset;
+  }
+  .balance-hero::before{
+    content:''; position:absolute; top:-40px; left:-40px; width:140px; height:140px; border-radius:50%;
+    background:radial-gradient(circle, rgba(23,240,195,0.22), transparent 70%); filter:blur(2px);
+  }
+  .balance-hero .top-row{ display:flex; align-items:center; justify-content:space-between; position:relative; z-index:1; }
+  .balance-hero .live-tag{ display:inline-flex; align-items:center; gap:5px; background:rgba(23,240,195,0.12); color:var(--teal); font-size:9.5px; font-weight:800; letter-spacing:1px; padding:4px 10px; border-radius:8px; }
+  .balance-hero .live-tag .dot{ width:6px; height:6px; border-radius:50%; background:var(--teal); box-shadow:0 0 6px var(--teal); animation:blink 1.6s ease-in-out infinite; }
+  @keyframes blink{ 0%,100%{opacity:1;} 50%{opacity:.35;} }
+  .balance-hero .wallet-icon{ width:34px; height:34px; border-radius:50%; background:var(--panel-2); border:1px solid var(--teal-dim); display:flex; align-items:center; justify-content:center; color:var(--teal); }
+  .balance-hero .wallet-icon svg{ width:17px; height:17px; }
+  .balance-hero .label-en{ font-size:10px; letter-spacing:3px; color:var(--text-dim2); margin-top:18px; font-weight:700; }
+  .balance-hero .label-ar{ font-size:13px; color:var(--text-dim); margin-top:2px; }
+  .balance-hero .amount{
+    font-family:'Rajdhani',sans-serif; font-weight:700; font-size:40px; direction:ltr; text-align:left;
+    margin-top:8px; color:#eafff9; text-shadow:0 0 22px rgba(23,240,195,0.45); position:relative; z-index:1;
+  }
+  .balance-hero .amount .cur{ font-size:20px; color:var(--teal); margin-left:6px; }
+  .balance-hero .foot-row{ display:flex; justify-content:space-between; align-items:center; margin-top:16px; position:relative; z-index:1; }
+  .balance-hero .foot-item{ font-size:11px; color:var(--text-dim2); }
+  .balance-hero .foot-item b{ color:var(--text-dim); font-weight:700; }
+
+  /* ---------- section headers ---------- */
+  .section-title{ display:flex; justify-content:space-between; align-items:baseline; padding:10px 20px 14px; }
+  .section-title h2{ font-size:18px; font-weight:800; }
+  .section-title .hint{ font-size:11px; color:var(--text-dim2); }
+
+  /* ---------- network cards ---------- */
+  .network-grid{ display:grid; grid-template-columns:1fr; gap:12px; padding:0 20px 8px; }
+  .network-card{
+    display:flex; align-items:center; gap:14px; background:var(--panel); border:1.5px solid var(--border);
+    border-radius:18px; padding:16px; text-align:right; position:relative; transition:all .25s ease;
+  }
+  .network-card .coin-icon{
+    width:46px; height:46px; border-radius:14px; display:flex; align-items:center; justify-content:center;
+    font-family:'Rajdhani',sans-serif; font-weight:700; font-size:15px; flex-shrink:0; color:#04211b;
+  }
+  .network-card[data-network="trc20"] .coin-icon{ background:linear-gradient(160deg,#26a17b,#0e8f76); }
+  .network-card[data-network="polygon"] .coin-icon{ background:linear-gradient(160deg,#a855f7,#6b21a8); }
+  .network-card[data-network="erc20"] .coin-icon{ background:linear-gradient(160deg,#8c9eff,#5468d9); }
+  .network-card .info{ flex:1; min-width:0; }
+  .network-card .coin-name-row{ display:flex; align-items:center; gap:7px; flex-wrap:wrap; }
+  .network-card .coin-name{ font-size:15.5px; font-weight:800; }
+  .network-card .status-chip{ font-size:9px; font-weight:800; padding:2px 7px; border-radius:6px; display:inline-flex; align-items:center; gap:4px; }
+  .network-card .status-chip .sdot{ width:5px; height:5px; border-radius:50%; }
+  .network-card .status-chip.operational{ background:rgba(23,240,195,0.12); color:var(--teal); }
+  .network-card .status-chip.operational .sdot{ background:var(--teal); }
+  .network-card .status-chip.busy{ background:rgba(232,163,61,0.12); color:var(--gold); }
+  .network-card .status-chip.busy .sdot{ background:var(--gold); }
+  .network-card .coin-sub{ font-size:12px; color:var(--text-dim2); margin-top:2px; }
+  .network-card .meta-tag{ font-size:10.5px; color:var(--text-dim2); margin-top:5px; }
+  .network-card .meta-tag b{ color:var(--text-dim); font-weight:700; }
+  .network-card .radio{ width:22px; height:22px; border-radius:50%; border:1.5px solid var(--border); flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:all .25s ease; align-self:center; }
+  .network-card .radio::after{ content:''; width:10px; height:10px; border-radius:50%; background:var(--teal); transform:scale(0); transition:transform .2s ease; }
+  .network-card.selected{
+    border-color:var(--teal); background:linear-gradient(180deg, rgba(23,240,195,0.10), var(--panel));
+    box-shadow:0 0 0 1px rgba(23,240,195,0.25), 0 0 24px rgba(23,240,195,0.22);
+  }
+  .network-card.selected .radio{ border-color:var(--teal); }
+  .network-card.selected .radio::after{ transform:scale(1); }
+  .network-card:active{ transform:scale(0.98); }
+
+  /* ---------- amount section ---------- */
+  .amount-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; padding:0 20px 14px; }
+  .amount-btn{
+    background:var(--panel); border:1.5px solid var(--border); border-radius:13px; padding:12px 6px;
+    font-family:'Rajdhani',sans-serif; font-weight:700; font-size:15.5px; color:var(--text); text-align:center; direction:ltr;
+    transition:all .2s ease;
+  }
+  .amount-btn:active{ transform:scale(0.96); }
+  .amount-btn.active{ border-color:var(--teal); color:var(--teal); background:linear-gradient(180deg, rgba(23,240,195,0.12), transparent); box-shadow:0 0 16px rgba(23,240,195,0.2); }
+
+  .manual-amount{ padding:0 20px 6px; }
+  .manual-amount label{ font-size:12.5px; color:var(--text-dim); display:block; margin-bottom:8px; }
+  .manual-amount .input-wrap{ position:relative; display:flex; align-items:center; background:var(--panel); border:1.5px solid var(--border); border-radius:14px; padding:4px 14px; transition:border-color .2s ease; }
+  .manual-amount .input-wrap.focus{ border-color:var(--teal-dim); }
+  .manual-amount .input-wrap.error{ border-color:var(--red); }
+  .manual-amount input{ flex:1; background:transparent; border:none; outline:none; color:var(--text); font-family:'Rajdhani',sans-serif; font-size:20px; font-weight:700; padding:12px 0; direction:ltr; text-align:left; }
+  .manual-amount .cur-tag{ font-size:12.5px; color:var(--text-dim2); font-weight:700; }
+  .field-error{ color:var(--red); font-size:11.5px; margin-top:7px; min-height:14px; }
+  .field-hint{ color:var(--text-dim2); font-size:11px; margin-top:7px; }
+
+  .cta-btn{ width:100%; margin-top:6px; display:flex; align-items:center; justify-content:center; gap:10px; border:1px solid var(--teal-dim); border-radius:14px; padding:15px; color:var(--teal); font-weight:700; font-size:14.5px; background:linear-gradient(180deg, rgba(23,240,195,0.08), transparent); transition:all .2s ease; }
+  .cta-btn:active{ transform:scale(0.98); }
+  .cta-btn.solid{ background:var(--teal); color:#04211b; border-color:var(--teal); box-shadow:0 0 22px rgba(23,240,195,0.3); }
+  .cta-btn[disabled]{ opacity:.4; pointer-events:none; }
+  .wrap-pad{ padding:6px 20px 4px; }
+
+  /* ---------- deposit details (slide-in) ---------- */
+  .deposit-details{
+    max-height:0; opacity:0; overflow:hidden; margin:0 20px; transition:max-height .5s cubic-bezier(.4,0,.2,1), opacity .4s ease, margin .4s ease;
+  }
+  .deposit-details.open{ max-height:3200px; opacity:1; margin:18px 20px 0; }
+  .details-card{ background:var(--panel); border:1px solid var(--border); border-radius:20px; padding:20px; }
+  .details-card .dc-head{ display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+  .details-card .dc-head .coin-icon{ width:36px; height:36px; border-radius:11px; flex-shrink:0; }
+  .details-card .dc-head .t1{ font-size:15px; font-weight:800; }
+  .details-card .dc-head .t2{ font-size:11.5px; color:var(--text-dim2); }
+
+  /* countdown */
+  .expiry-bar{ display:flex; align-items:center; gap:10px; background:var(--panel-2); border:1px solid var(--border); border-radius:12px; padding:10px 14px; margin-bottom:16px; }
+  .expiry-ring{ width:30px; height:30px; flex-shrink:0; }
+  .expiry-text{ flex:1; font-size:11.5px; color:var(--text-dim); }
+  .expiry-text b{ color:var(--teal); font-family:'Rajdhani',sans-serif; font-size:14px; direction:ltr; display:inline-block; }
+  .expiry-bar.expired{ border-color:rgba(239,74,74,0.4); background:rgba(239,74,74,0.06); }
+  .expiry-bar.expired .expiry-text b{ color:var(--red); }
+  .refresh-addr-btn{ font-size:11px; font-weight:800; color:var(--teal); border:1px solid var(--teal-dim); border-radius:8px; padding:6px 10px; flex-shrink:0; display:none; }
+  .expiry-bar.expired .refresh-addr-btn{ display:block; }
+
+  .details-card .amount-line{ display:flex; justify-content:space-between; align-items:center; background:var(--panel-2); border:1px solid var(--border); border-radius:12px; padding:12px 14px; margin-bottom:16px; }
+  .details-card .amount-line .lbl{ font-size:12px; color:var(--text-dim); }
+  .details-card .amount-line .val{ font-family:'Rajdhani',sans-serif; font-weight:700; font-size:18px; color:var(--teal); direction:ltr; }
+
+  .qr-box{ display:flex; align-items:center; justify-content:center; background:#fff; border-radius:16px; padding:16px; width:200px; height:200px; margin:0 auto 14px; box-shadow:0 0 30px rgba(23,240,195,0.18); position:relative; }
+  .qr-box #qrcodeCanvas{ width:100%; height:100%; }
+  .qr-fallback{ font-size:11px; color:#333; text-align:center; }
+  .qr-actions{ display:flex; justify-content:center; gap:10px; margin-bottom:18px; }
+  .qr-action-btn{ display:flex; align-items:center; gap:6px; font-size:11.5px; font-weight:700; color:var(--text-dim); border:1px solid var(--border); border-radius:10px; padding:8px 14px; }
+  .qr-action-btn svg{ width:14px; height:14px; }
+
+  .address-label{ font-size:12px; color:var(--text-dim); margin-bottom:8px; }
+  .address-box{ display:flex; align-items:center; gap:10px; background:var(--panel-2); border:1px solid var(--border); border-radius:14px; padding:12px 14px; margin-bottom:8px; }
+  .address-box .addr-text{ flex:1; font-family:'Rajdhani',sans-serif; font-size:13px; color:var(--text); word-break:break-all; direction:ltr; text-align:left; }
+  .copy-btn{ width:38px; height:38px; border-radius:10px; background:rgba(23,240,195,0.1); border:1px solid var(--teal-dim); color:var(--teal); display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all .2s ease; }
+  .copy-btn svg{ width:16px; height:16px; }
+  .copy-btn.copied{ background:var(--teal); color:#04211b; }
+
+  .meta-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px; }
+  .meta-box{ background:var(--panel-2); border:1px solid var(--border); border-radius:12px; padding:10px 12px; text-align:center; }
+  .meta-box .mv{ font-family:'Rajdhani',sans-serif; font-weight:700; font-size:15px; color:var(--teal); }
+  .meta-box .ml{ font-size:10px; color:var(--text-dim2); margin-top:3px; }
+
+  .security-note{ display:flex; gap:10px; background:rgba(239,74,74,0.08); border:1px solid rgba(239,74,74,0.35); border-radius:14px; padding:13px 14px; margin-top:16px; }
+  .security-note svg{ width:18px; height:18px; color:var(--red); flex-shrink:0; margin-top:1px; }
+  .security-note .txt{ font-size:12px; line-height:1.9; color:#f0c9c9; }
+  .security-note .txt b{ color:var(--red); }
+
+  /* ---------- big warning callout before confirm ---------- */
+  .warning-callout{
+    display:flex; gap:12px; background:linear-gradient(160deg, rgba(232,163,61,0.14), rgba(232,163,61,0.03));
+    border:1.5px solid var(--gold); border-radius:16px; padding:16px; margin:0 0 16px;
+    box-shadow:0 0 24px rgba(232,163,61,0.12);
+  }
+  .warning-callout .wc-icon{ width:38px; height:38px; border-radius:50%; background:rgba(232,163,61,0.18); border:1.5px solid var(--gold); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .warning-callout .wc-icon svg{ width:19px; height:19px; color:var(--gold); }
+  .warning-callout .wc-txt{ font-size:12.5px; line-height:1.9; color:#f5e2c2; }
+  .warning-callout .wc-txt b{ color:var(--gold); }
+
+  .info-callout{
+    display:flex; gap:12px; background:rgba(23,240,195,0.06); border:1px solid rgba(23,240,195,0.25); border-radius:16px; padding:16px; margin:0 0 18px;
+  }
+  .info-callout .ic-icon{ width:38px; height:38px; border-radius:50%; background:rgba(23,240,195,0.12); border:1.5px solid var(--teal-dim); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .info-callout .ic-icon svg{ width:19px; height:19px; color:var(--teal); }
+  .info-callout .ic-txt{ font-size:12.5px; line-height:1.9; color:var(--text-dim); }
+  .info-callout .ic-txt b{ color:var(--teal); }
+  .info-callout .ic-txt .timeline{ display:flex; gap:14px; margin-top:8px; }
+  .info-callout .ic-txt .timeline span{ font-size:11px; color:var(--text-dim2); display:flex; align-items:center; gap:5px; }
+  .info-callout .ic-txt .timeline b{ font-family:'Rajdhani',sans-serif; }
+
+  /* ---------- confirm transfer form ---------- */
+  .confirm-card{ background:var(--panel); border:1px solid var(--border); border-radius:20px; padding:20px; margin-top:14px; }
+  .confirm-card h3{ font-size:15px; font-weight:800; margin-bottom:14px; }
+  .form-field{ margin-bottom:14px; }
+  .form-field label{ font-size:12px; color:var(--text-dim); display:block; margin-bottom:8px; }
+  .form-field .input-with-btn{ display:flex; gap:8px; }
+  .form-field input, .form-field textarea{
+    width:100%; background:var(--panel-2); border:1.5px solid var(--border); border-radius:12px; padding:12px 14px;
+    color:var(--text); font-size:14px; outline:none; transition:border-color .2s ease; direction:ltr; text-align:left;
+  }
+  .form-field textarea{ direction:rtl; text-align:right; min-height:70px; resize:vertical; font-family:inherit; }
+  .form-field input:focus, .form-field textarea:focus{ border-color:var(--teal-dim); }
+  .form-field input.error, .form-field textarea.error{ border-color:var(--red); }
+  .form-field .err-msg{ color:var(--red); font-size:11px; margin-top:6px; min-height:13px; }
+  .paste-btn{ flex-shrink:0; width:46px; border-radius:12px; background:var(--panel-2); border:1.5px solid var(--border); color:var(--text-dim); display:flex; align-items:center; justify-content:center; }
+  .paste-btn svg{ width:16px; height:16px; }
+
+  .upload-box{ border:1.5px dashed var(--border); border-radius:14px; padding:18px; text-align:center; cursor:pointer; transition:all .2s ease; position:relative; }
+  .upload-box:hover, .upload-box.drag{ border-color:var(--teal-dim); background:rgba(23,240,195,0.04); }
+  .upload-box svg{ width:24px; height:24px; color:var(--text-dim2); margin-bottom:8px; }
+  .upload-box .ut1{ font-size:12.5px; color:var(--text-dim); font-weight:700; }
+  .upload-box .ut2{ font-size:10.5px; color:var(--text-dim2); margin-top:4px; }
+  .upload-box input[type="file"]{ position:absolute; inset:0; opacity:0; cursor:pointer; }
+  .upload-preview{ display:none; align-items:center; gap:10px; background:var(--panel-2); border:1px solid var(--border); border-radius:12px; padding:10px 12px; margin-top:10px; }
+  .upload-preview.show{ display:flex; }
+  .upload-preview img{ width:40px; height:40px; border-radius:8px; object-fit:cover; }
+  .upload-preview .uf-name{ flex:1; font-size:11.5px; color:var(--text-dim); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .upload-preview .uf-remove{ color:var(--red); font-size:11px; font-weight:700; flex-shrink:0; }
+
+  .confirm-checkbox{ display:flex; align-items:flex-start; gap:10px; background:var(--panel-2); border:1.5px solid var(--border); border-radius:14px; padding:14px; margin-bottom:16px; transition:border-color .2s ease; }
+  .confirm-checkbox.checked{ border-color:var(--teal-dim); }
+  .confirm-checkbox input{ width:20px; height:20px; margin-top:1px; accent-color:var(--teal); flex-shrink:0; }
+  .confirm-checkbox label{ font-size:12.5px; color:var(--text-dim); line-height:1.8; }
+  .confirm-checkbox label b{ color:var(--text); }
+
+  /* ---------- history ---------- */
+  .history-list{ display:flex; flex-direction:column; gap:12px; padding:0 20px; }
+  .history-card{ background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:14px 16px; display:flex; align-items:center; gap:12px; }
+  .history-card .hc-icon{ width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-family:'Rajdhani',sans-serif; font-weight:700; font-size:13px; color:#04211b; background:linear-gradient(160deg,#26a17b,#0e8f76); }
+  .history-card .hc-info{ flex:1; min-width:0; }
+  .history-card .hc-amount{ font-family:'Rajdhani',sans-serif; font-weight:700; font-size:16px; direction:ltr; text-align:left; }
+  .history-card .hc-meta{ font-size:11.5px; color:var(--text-dim2); margin-top:3px; }
+  .status-badge{ font-size:10.5px; font-weight:800; padding:5px 11px; border-radius:8px; flex-shrink:0; white-space:nowrap; }
+  .status-badge.pending{ background:rgba(232,163,61,0.14); color:var(--gold); }
+  .status-badge.approved{ background:rgba(23,240,195,0.14); color:var(--teal); }
+  .status-badge.rejected{ background:rgba(239,74,74,0.14); color:var(--red); }
+
+  .empty-state{ text-align:center; padding:36px 20px; color:var(--text-dim2); font-size:13px; }
+  .empty-state svg{ width:40px; height:40px; color:var(--text-dim2); margin-bottom:10px; opacity:.6; }
+  .skeleton{ background:var(--panel); border:1px solid var(--border); border-radius:16px; height:66px; position:relative; overflow:hidden; }
+  .skeleton::after{ content:''; position:absolute; inset:0; background:linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent); animation:shimmer 1.4s infinite; }
+  @keyframes shimmer{ 0%{ transform:translateX(-100%);} 100%{ transform:translateX(100%);} }
+
+  /* ---------- FAQ accordion ---------- */
+  .faq-list{ padding:0 20px; display:flex; flex-direction:column; gap:10px; }
+  .faq-item{ background:var(--panel); border:1px solid var(--border); border-radius:14px; overflow:hidden; }
+  .faq-q{ width:100%; display:flex; align-items:center; justify-content:space-between; gap:10px; padding:14px 16px; font-size:13px; font-weight:700; text-align:right; }
+  .faq-q .chev{ width:16px; height:16px; color:var(--text-dim2); transition:transform .25s ease; flex-shrink:0; }
+  .faq-item.open .chev{ transform:rotate(180deg); color:var(--teal); }
+  .faq-a{ max-height:0; overflow:hidden; transition:max-height .3s ease; }
+  .faq-item.open .faq-a{ max-height:200px; }
+  .faq-a p{ padding:0 16px 16px; font-size:12px; color:var(--text-dim); line-height:1.9; }
+
+  /* ---------- trust strip ---------- */
+  .trust-strip{ display:flex; justify-content:space-around; padding:20px 20px 6px; }
+  .trust-item{ display:flex; flex-direction:column; align-items:center; gap:6px; flex:1; }
+  .trust-item svg{ width:20px; height:20px; color:var(--teal-dim); }
+  .trust-item span{ font-size:9.5px; color:var(--text-dim2); text-align:center; font-weight:600; }
+
+  /* ---------- support floating button ---------- */
+  .support-fab{ position:absolute; left:16px; bottom:126px; width:48px; height:48px; border-radius:50%; background:var(--panel); border:1.5px solid var(--teal-dim); display:flex; align-items:center; justify-content:center; color:var(--teal); box-shadow:0 6px 20px rgba(0,0,0,0.5), 0 0 16px rgba(23,240,195,0.2); z-index:30; }
+  .support-fab svg{ width:21px; height:21px; }
+
+  /* ---------- modal ---------- */
+  .modal-overlay{ position:absolute; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center; z-index:80; opacity:0; pointer-events:none; transition:opacity .3s ease; padding:20px; }
+  .modal-overlay.show{ opacity:1; pointer-events:auto; }
+  .modal-card{ background:var(--panel); border:1px solid var(--teal-dim); border-radius:22px; padding:26px 24px; text-align:center; max-width:330px; width:100%; transform:scale(0.85) translateY(10px); transition:transform .35s cubic-bezier(.34,1.56,.64,1); box-shadow:0 0 40px rgba(23,240,195,0.2); }
+  .modal-overlay.show .modal-card{ transform:scale(1) translateY(0); }
+  .modal-icon{ width:60px; height:60px; border-radius:50%; background:rgba(23,240,195,0.12); border:1.5px solid var(--teal); display:flex; align-items:center; justify-content:center; margin:0 auto 16px; box-shadow:0 0 24px rgba(23,240,195,0.3); }
+  .modal-icon.warn-icon{ background:rgba(232,163,61,0.12); border-color:var(--gold); box-shadow:0 0 24px rgba(232,163,61,0.28); }
+  .modal-icon svg{ width:28px; height:28px; color:var(--teal); }
+  .modal-icon.warn-icon svg{ color:var(--gold); }
+  .modal-card h3{ font-size:17px; font-weight:800; margin-bottom:8px; }
+  .modal-card p{ font-size:13px; color:var(--text-dim); line-height:1.8; margin-bottom:16px; }
+  .modal-card .dep-id{ font-family:'Rajdhani',sans-serif; color:var(--teal); direction:ltr; display:inline-block; }
+  .modal-actions{ display:flex; gap:10px; }
+  .modal-btn{ flex:1; border-radius:13px; padding:13px; font-weight:800; font-size:13.5px; transition:all .2s ease; }
+  .modal-btn:active{ transform:scale(0.97); }
+  .modal-btn.cancel{ background:var(--panel-2); border:1px solid var(--border); color:var(--text-dim); }
+  .modal-btn.confirm{ background:var(--teal); color:#04211b; box-shadow:0 0 18px rgba(23,240,195,0.3); }
+  .modal-close{ width:100%; background:var(--teal); color:#04211b; font-weight:800; border-radius:13px; padding:13px; font-size:14px; }
+
+  .success-timeline{ display:flex; align-items:center; justify-content:center; gap:6px; margin-bottom:18px; }
+  .success-timeline .tl-step{ display:flex; flex-direction:column; align-items:center; gap:6px; }
+  .success-timeline .tl-dot{ width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; }
+  .success-timeline .tl-step.done .tl-dot{ background:var(--teal); color:#04211b; }
+  .success-timeline .tl-step.pending .tl-dot{ background:var(--panel-2); border:1.5px solid var(--gold); color:var(--gold); }
+  .success-timeline .tl-step.wait .tl-dot{ background:var(--panel-2); border:1.5px solid var(--border); color:var(--text-dim2); }
+  .success-timeline .tl-step span{ font-size:9px; color:var(--text-dim2); }
+  .success-timeline .tl-line{ width:24px; height:2px; background:var(--border); margin-bottom:16px; }
+
+  /* ---------- toast ---------- */
+  .toast{ position:absolute; bottom:112px; left:50%; transform:translate(-50%,14px); background:#0f1a18; border:1px solid var(--teal); color:var(--text); padding:10px 18px; border-radius:12px; font-size:12.5px; opacity:0; transition:all .3s ease; pointer-events:none; z-index:90; white-space:nowrap; max-width:90%; text-align:center; box-shadow:0 0 20px rgba(23,240,195,0.25); }
+  .toast.show{ opacity:1; transform:translate(-50%,0); }
+  .toast.warn{ border-color:var(--red); box-shadow:0 0 20px rgba(239,74,74,0.25); }
+
+  .ripple-wrap{ position:relative; overflow:hidden; }
+  .nav-item.ripple-wrap{ overflow:visible; }
+  .ripple{ position:absolute; border-radius:50%; background:radial-gradient(circle, rgba(23,240,195,0.55), rgba(23,240,195,0) 70%); transform:scale(0); animation:rippleAnim .6s ease-out forwards; pointer-events:none; }
+  @keyframes rippleAnim{ to{ transform:scale(3.2); opacity:0; } }
+  .glow-pulse{ animation:glowPulse .55s ease; }
+  @keyframes glowPulse{ 0%{ box-shadow:0 0 0 0 rgba(23,240,195,.6); filter:brightness(1);} 40%{ filter:brightness(1.25);} 70%{ box-shadow:0 0 0 14px rgba(23,240,195,0);} 100%{ box-shadow:0 0 0 0 rgba(23,240,195,0); filter:brightness(1);} }
+
+  /* ---------- bottom nav ---------- */
+  .bottom-nav{ position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:430px; background:rgba(6,10,9,0.92); backdrop-filter:blur(10px); border-top:1px solid var(--border); display:flex; justify-content:space-around; align-items:flex-end; padding:10px 6px 24px; z-index:10; }
+  .nav-item{ display:flex; flex-direction:column; align-items:center; gap:5px; font-size:10.5px; color:var(--text-dim2); font-weight:600; width:60px; border-radius:14px; }
+  .nav-item.active{ color:var(--teal); }
+  .nav-item svg{ width:22px; height:22px; }
+  .nav-center{ width:56px; height:56px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:radial-gradient(circle, rgba(23,240,195,0.15), transparent 70%); border:1.5px solid var(--teal); margin-top:-30px; box-shadow:0 0 20px rgba(23,240,195,0.35); }
+  .nav-center svg{ width:24px; height:24px; }
+</style>
+</head>
+<body>
+<div class="device">
+
+  <div class="topbar">
+    <button class="menu-btn" id="btnMenu" aria-label="القائمة">
+      <svg width="24" height="18" viewBox="0 0 24 18" fill="none"><path d="M1 1h22M1 9h16M1 17h22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <div class="logo">
+      <div class="word1">ELITE</div>
+      <div class="word2">TRADING</div>
+      <div class="rule"></div>
+    </div>
+    <div class="header-right">
+      <button class="bell" id="btnBell" aria-label="الإشعارات">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2a6 6 0 0 0-6 6v3.5c0 .8-.3 1.6-.9 2.2L4 15h16l-1.1-1.3c-.6-.6-.9-1.4-.9-2.2V8a6 6 0 0 0-6-6z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9.5 18a2.5 2.5 0 0 0 5 0" stroke="currentColor" stroke-width="1.6"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="page-title-row">
+    <button class="back-btn" id="btnBack" aria-label="رجوع">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div>
+      <h1>الإيداع</h1>
+      <div class="sub">أضف رصيداً إلى محفظتك بأمان</div>
+    </div>
+  </div>
+
+  <!-- Stepper -->
+  <div class="stepper" id="stepper">
+    <div class="step active" data-step="1"><div class="line"></div><div class="dot">1</div><div class="lbl">الشبكة</div></div>
+    <div class="step" data-step="2"><div class="line"></div><div class="dot">2</div><div class="lbl">المبلغ</div></div>
+    <div class="step" data-step="3"><div class="line"></div><div class="dot">3</div><div class="lbl">التحويل</div></div>
+    <div class="step" data-step="4"><div class="line"></div><div class="dot">4</div><div class="lbl">التأكيد</div></div>
+  </div>
+
+  <!-- Balance hero -->
+  <div class="balance-hero">
+    <div class="top-row">
+      <span class="live-tag"><span class="dot"></span>LIVE</span>
+      <div class="wallet-icon">
+        <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="13" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M16 12.5h.01" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M7 6V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1" stroke="currentColor" stroke-width="1.6"/></svg>
+      </div>
+    </div>
+    <div class="label-en">TOTAL BALANCE</div>
+    <div class="label-ar">الرصيد الإجمالي الحالي</div>
+    <div class="amount" id="totalBalance"><span class="cur">$</span>—</div>
+    <div class="foot-row">
+      <div class="foot-item">الحساب: <b id="accountRef">—</b></div>
+      <div class="foot-item">آخر تحديث: <b id="lastUpdate">—</b></div>
+    </div>
+  </div>
+
+  <!-- Step 1: choose network -->
+  <div class="section-title">
+    <span class="hint">اختر شبكة واحدة</span>
+    <h2>1. اختر الشبكة</h2>
+  </div>
+  <div class="network-grid" id="networkGrid"></div>
+
+  <!-- Step 2: choose amount -->
+  <div class="section-title">
+    <span class="hint" id="amountLimitsHint">50 – 100,000 USDT</span>
+    <h2>2. اختر المبلغ</h2>
+  </div>
+  <div class="amount-grid" id="amountGrid"></div>
+  <div class="manual-amount">
+    <label for="manualAmount">أو أدخل مبلغاً مخصصاً</label>
+    <div class="input-wrap" id="amountInputWrap">
+      <input type="number" id="manualAmount" placeholder="0.00" inputmode="decimal">
+      <span class="cur-tag">USDT</span>
+    </div>
+    <div class="field-error" id="amountError"></div>
+  </div>
+
+  <div class="wrap-pad">
+    <button class="cta-btn" id="btnContinue" disabled>
+      <span>متابعة</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+
+  <!-- Step 3: deposit details (slides in) -->
+  <div class="deposit-details" id="depositDetails">
+    <div class="details-card">
+      <div class="dc-head">
+        <div class="coin-icon" id="ddCoinIcon"></div>
+        <div>
+          <div class="t1" id="ddNetworkName">—</div>
+          <div class="t2">أرسل فقط عبر هذه الشبكة</div>
+        </div>
+      </div>
+
+      <div class="expiry-bar" id="expiryBar">
+        <svg class="expiry-ring" viewBox="0 0 36 36">
+          <circle cx="18" cy="18" r="15.5" fill="none" stroke="var(--border)" stroke-width="3"/>
+          <circle id="expiryProgress" cx="18" cy="18" r="15.5" fill="none" stroke="var(--teal)" stroke-width="3" stroke-linecap="round" stroke-dasharray="97.4" stroke-dashoffset="0" transform="rotate(-90 18 18)"/>
+        </svg>
+        <div class="expiry-text">صلاحية هذا العنوان تنتهي خلال <b id="expiryTime">15:00</b></div>
+        <button class="refresh-addr-btn" id="btnRefreshAddress">تحديث العنوان</button>
+      </div>
+
+      <div class="amount-line">
+        <span class="lbl">المبلغ المطلوب إرساله</span>
+        <span class="val" id="ddAmount">—</span>
+      </div>
+
+      <div class="qr-box" id="qrBox">
+        <div class="qr-fallback" id="qrFallback">جاري إنشاء رمز QR…</div>
+      </div>
+      <div class="qr-actions">
+        <button class="qr-action-btn" id="btnShareAddress">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 3v13m0 0-4-4m4 4 4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+          <span>مشاركة</span>
+        </button>
+      </div>
+
+      <div class="address-label">عنوان المحفظة</div>
+      <div class="address-box">
+        <span class="addr-text" id="ddAddress">—</span>
+        <button class="copy-btn" id="btnCopyAddress" aria-label="نسخ العنوان">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="9" y="9" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M5 15V5a2 2 0 0 1 2-2h10" stroke="currentColor" stroke-width="1.8"/></svg>
+        </button>
+      </div>
+
+      <div class="meta-grid" id="metaGrid" style="display:none;">
+        <div class="meta-box"><div class="mv" id="metaConfirmations">—</div><div class="ml">تأكيدات مطلوبة</div></div>
+        <div class="meta-box"><div class="mv" id="metaEta">—</div><div class="ml">الوقت التقريبي</div></div>
+      </div>
+
+      <div class="security-note">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 2l8 4v6c0 5-3.4 8.6-8 10-4.6-1.4-8-5-8-10V6l8-4z" stroke="currentColor" stroke-width="1.6"/><path d="M12 8v5M12 16h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <div class="txt">
+          <b>تنبيه أمني:</b> تأكد من إرسال المبلغ عبر الشبكة المحددة فقط <span id="ddNetworkInline">—</span>.
+          إرسال العملة عبر شبكة مختلفة قد يؤدي إلى <b>فقدان الأموال بشكل نهائي</b>. تحقق من العنوان حرفاً بحرف قبل التحويل.
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4: confirm transfer -->
+    <div class="confirm-card">
+      <h3>3. تأكيد التحويل</h3>
+
+      <div class="warning-callout">
+        <div class="wc-icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 9v4M12 17h.01" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="wc-txt">
+          <b>مهم جداً — لا تضغط زر التأكيد الآن.</b><br>
+          أرسل التحويل فعلياً أولاً على الشبكة الصحيحة، وانتظر حتى يظهر لديك رقم TXID من محفظتك أو المنصة التي أرسلت منها،
+          ثم عد إلى هنا وأدخل بياناته. <b>تأكيد الطلب دون إتمام التحويل الفعلي يعرّض طلبك للرفض.</b>
+        </div>
+      </div>
+
+      <form id="confirmForm">
+        <div class="form-field">
+          <label for="fTxid">TXID (رقم المعاملة)</label>
+          <div class="input-with-btn">
+            <input type="text" id="fTxid" placeholder="أدخل رقم المعاملة بعد إتمام التحويل">
+            <button type="button" class="paste-btn" id="btnPasteTxid" aria-label="لصق">
+              <svg viewBox="0 0 24 24" fill="none"><rect x="7" y="4" width="10" height="4" rx="1" stroke="currentColor" stroke-width="1.6"/><path d="M9 4H6a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-3" stroke="currentColor" stroke-width="1.6"/></svg>
+            </button>
+          </div>
+          <div class="err-msg" id="errTxid"></div>
+        </div>
+        <div class="form-field">
+          <label for="fHash">Hash</label>
+          <input type="text" id="fHash" placeholder="أدخل الهاش (اختياري)">
+          <div class="err-msg" id="errHash"></div>
+        </div>
+        <div class="form-field">
+          <label for="fAmountSent">المبلغ المُرسل</label>
+          <input type="number" id="fAmountSent" placeholder="0.00" inputmode="decimal">
+          <div class="err-msg" id="errAmountSent"></div>
+        </div>
+        <div class="form-field">
+          <label for="fNotes">ملاحظات</label>
+          <textarea id="fNotes" placeholder="أي تفاصيل إضافية (اختياري)"></textarea>
+        </div>
+        <div class="form-field">
+          <label>إثبات التحويل (اختياري)</label>
+          <div class="upload-box" id="uploadBox">
+            <input type="file" id="fProof" accept="image/*">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 16V4m0 0-4 4m4-4 4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            <div class="ut1">أرفق لقطة شاشة للتحويل</div>
+            <div class="ut2">PNG / JPG — تسريع مراجعة طلبك</div>
+          </div>
+          <div class="upload-preview" id="uploadPreview">
+            <img id="uploadPreviewImg" src="" alt="">
+            <span class="uf-name" id="uploadFileName">—</span>
+            <button type="button" class="uf-remove" id="btnRemoveUpload">إزالة</button>
+          </div>
+        </div>
+
+        <div class="confirm-checkbox" id="confirmCheckboxWrap">
+          <input type="checkbox" id="confirmCheckbox">
+          <label for="confirmCheckbox"><b>أقر بأنني أتممت التحويل فعلياً</b> على الشبكة الصحيحة وأن جميع البيانات المدخلة أعلاه صحيحة ومطابقة لعملية التحويل.</label>
+        </div>
+
+        <div class="info-callout">
+  <div class="ic-icon">
+    <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 7v5l3.5 2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+  <div class="ic-txt">
+    <b>مدة معالجة الإيداع:</b> تتم مراجعة الطلب خلال مدة تتراوح من 0 إلى ساعتين. في حال حدوث ازدحام على الشبكة أو مشكلة تقنية، قد تستغرق العملية وقتاً أطول. إذا تجاوز طلبك هذه المدة، تواصل مع الدعم فوراً ولا ترسل تحويلاً آخر.
+    <div class="timeline">
+      <span>⚡ من: <b>0 دقيقة</b></span>
+      <span>⏱️ إلى: <b>ساعتان</b></span>
+    </div>
+  </div>
+</div>
+
+        <button type="submit" class="cta-btn solid" id="btnConfirmPaid" disabled>
+          <span>لقد قمت بالدفع I Have Paid</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Trust strip -->
+  <div class="trust-strip">
+    <div class="trust-item">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 2l8 4v6c0 5-3.4 8.6-8 10-4.6-1.4-8-5-8-10V6l8-4z" stroke="currentColor" stroke-width="1.6"/></svg>
+      <span>تشفير 256-bit</span>
+    </div>
+    <div class="trust-item">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/></svg>
+      <span>معالجة آمنة</span>
+    </div>
+    <div class="trust-item">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 7v5l3.5 2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>دعم 24/7</span>
+    </div>
+  </div>
+
+  <!-- History -->
+  <div class="section-title" style="margin-top:4px;">
+    <span class="hint" id="historyCount"></span>
+    <h2>سجل الإيداعات</h2>
+  </div>
+  <div class="history-list" id="historyList">
+    <div class="skeleton"></div>
+    <div class="skeleton"></div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="section-title" style="margin-top:10px;">
+    <span class="hint"></span>
+    <h2>أسئلة شائعة</h2>
+  </div>
+  <div class="faq-list" id="faqList"></div>
+
+  <div class="bottom-nav" id="bottomNav">
+    <button class="nav-item" data-page="account">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.7"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+      <span>حسابي</span>
+    </button>
+    <button class="nav-item" data-page="friends">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="8" cy="8" r="3.2" stroke="currentColor" stroke-width="1.6"/><circle cx="16" cy="8" r="3.2" stroke="currentColor" stroke-width="1.6"/><path d="M2 20c0-3.3 2.8-5.5 6-5.5s6 2.2 6 5.5M12 20c0-3.3 2.8-5.5 6-5.5s6 2.2 6 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <span>الأصدقاء</span>
+    </button>
+    <button class="nav-item" data-page="trade">
+      <div class="nav-center"><svg viewBox="0 0 24 24" fill="none"><path d="M2 12h4l2.5-7L13 19l2.5-7H22" stroke="#17f0c3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span style="margin-top:2px;">تداول</span>
+    </button>
+    <button class="nav-item" data-page="work">
+      <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="7" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" stroke="currentColor" stroke-width="1.6"/></svg>
+      <span>العمل</span>
+    </button>
+    <button class="nav-item" data-page="home">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M3 12l2-2 5 5L20 5l2 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 20h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <span>الرئيسية</span>
+    </button>
+  </div>
+
+  <button class="support-fab" id="btnSupportFab" aria-label="الدعم">
+    <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M4 12h4l2-4 3 8 2-4h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+
+  <!-- Pre-submit double confirmation modal -->
+  <div class="modal-overlay" id="preSubmitModal">
+    <div class="modal-card">
+      <div class="modal-icon warn-icon">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 9v4M12 17h.01" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+      </div>
+      <h3>هل أتممت التحويل فعلاً؟</h3>
+      <p>لا تؤكد هذا الطلب إلا إذا كنت قد أرسلت التحويل بالفعل. الطلبات التي تُؤكَّد دون تحويل فعلي سيتم رفضها.</p>
+      <div class="modal-actions">
+        <button class="modal-btn cancel" id="btnPreSubmitCancel">لم أرسل بعد</button>
+        <button class="modal-btn confirm" id="btnPreSubmitConfirm">نعم، أرسلت التحويل</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success modal -->
+  <div class="modal-overlay" id="successModal">
+    <div class="modal-card">
+      <div class="modal-icon">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <h3>تم إرسال طلب الإيداع</h3>
+      <div class="success-timeline">
+        <div class="tl-step done"><div class="tl-dot">✓</div><span>الإرسال</span></div>
+        <div class="tl-line"></div>
+        <div class="tl-step pending"><div class="tl-dot">●</div><span>المراجعة</span></div>
+        <div class="tl-line"></div>
+        <div class="tl-step wait"><div class="tl-dot">○</div><span>الاعتماد</span></div>
+      </div>
+      <p>سيتم مراجعة طلبك من فريق العمليات. مدة المعالجة تتراوح من <b style="color:var(--gold)">0 إلى ساعتين</b>.<br>رقم الطلب: <span class="dep-id" id="modalDepId">—</span></p>
+      <button class="modal-close" id="btnModalClose">تم</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+/* ============================================================
+   0) shared helpers
+   ============================================================ */
+function toast(msg, isWarn){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.toggle('warn', !!isWarn);
+  t.classList.remove('show'); void t.offsetWidth; t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(()=>t.classList.remove('show'), 2600);
+}
+function attachInteractive(el, onClick){
+  if(!el) return;
+  el.classList.add('ripple-wrap');
+  el.addEventListener('click', (e)=>{
+    const rect = el.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const ripple = document.createElement('span');
+    ripple.className = 'ripple';
+    ripple.style.width = ripple.style.height = size + 'px';
+    ripple.style.left = (e.clientX - rect.left - size/2) + 'px';
+    ripple.style.top  = (e.clientY - rect.top - size/2) + 'px';
+    el.appendChild(ripple);
+    setTimeout(()=>ripple.remove(), 650);
+    el.classList.remove('glow-pulse'); void el.offsetWidth; el.classList.add('glow-pulse');
+    setTimeout(()=>el.classList.remove('glow-pulse'), 550);
+    if(onClick) onClick(e);
+  });
+}
+const escapeHtml = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* ============================================================
+   1) config — backend integration points
+   ------------------------------------------------------------
+   No hard-coded wallet addresses or fake deposit history.
+
+     GET  /api/user/balance          -> { balance, accountRef }
+     GET  /api/deposit/networks      -> [{ id, address, minAmount,
+                                            maxAmount, status,
+                                            confirmationsRequired,
+                                            etaMinutes }]
+     GET  /api/deposit/history       -> [{ id, amount, network,
+                                            date, status }]
+     POST /api/deposit/confirm       -> body: { network, address,
+                                            amount, txid, hash,
+                                            amountSent, notes }
+                                       -> { success, depositId }
+     (Attach the proof screenshot, if provided, as multipart/
+      form-data alongside the JSON fields above.)
+   ============================================================ */
+const CONFIG = { MIN_AMOUNT: 50, MAX_AMOUNT: 100000 };
+const PRESET_AMOUNTS = [50, 500, 3000, 10000, 30000, 100000];
+const ADDRESS_VALIDITY_SECONDS = 15 * 60;
+
+const NETWORKS = [
+  { id:'trc20',   coin:'USDT',     label:'TRC20',   full:'Tron Network',     icon:'T', address:null, status:null, confirmationsRequired:null, etaMinutes:null },
+  { id:'polygon', coin:'USDT',     label:'Polygon', full:'Polygon Network',  icon:'P', address:null, status:null, confirmationsRequired:null, etaMinutes:null },
+  { id:'erc20',   coin:'Ethereum', label:'ERC20',   full:'Ethereum Network', icon:'E', address:null, status:null, confirmationsRequired:null, etaMinutes:null }
+];
+
+const state = { network:null, amount:null, proofFile:null, checkboxOk:false, currentStep:1 };
+let expiryTimer = null;
+
+/* ============================================================
+   2) stepper
+   ============================================================ */
+function setStep(n){
+  state.currentStep = n;
+  document.querySelectorAll('.step').forEach(el=>{
+    const s = Number(el.dataset.step);
+    el.classList.remove('active','done');
+    if(s < n) el.classList.add('done');
+    else if(s === n) el.classList.add('active');
+  });
+}
+
+/* ============================================================
+   3) render: network cards
+   ============================================================ */
+function networkCardTemplate(n){
+  const safeStatus = escapeHtml(n.status || '');
+  const statusChip = n.status
+    ? `<span class="status-chip ${safeStatus}"><span class="sdot"></span>${n.status==='operational'?'متاح الآن':'مزدحم قليلاً'}</span>`
+    : '';
+  const metaTxt = (n.confirmationsRequired != null && n.etaMinutes != null)
+    ? `<div class="meta-tag">تأكيد تلقائي بعد <b>${escapeHtml(n.confirmationsRequired)}</b> تأكيدات · تقريباً <b>${escapeHtml(n.etaMinutes)} دقيقة</b></div>`
+    : '';
+  return `
+  <button class="network-card" data-network="${escapeHtml(n.id)}">
+    <div class="coin-icon">${escapeHtml(n.icon)}</div>
+    <div class="info">
+      <div class="coin-name-row">
+        <div class="coin-name">${escapeHtml(n.coin)} <span style="color:var(--text-dim2);font-weight:600;">· ${escapeHtml(n.label)}</span></div>
+        ${statusChip}
+      </div>
+      <div class="coin-sub">${escapeHtml(n.full)}</div>
+      ${metaTxt}
+    </div>
+    <div class="radio"></div>
+  </button>`;
+}
+function renderNetworks(){
+  const grid = document.getElementById('networkGrid');
+  grid.innerHTML = NETWORKS.map(networkCardTemplate).join('');
+  grid.querySelectorAll('.network-card').forEach(card=>{
+    attachInteractive(card, ()=>{
+      grid.querySelectorAll('.network-card').forEach(c=>c.classList.remove('selected'));
+      card.classList.add('selected');
+      state.network = NETWORKS.find(n=>n.id===card.dataset.network);
+      setStep(2);
+      updateContinueState();
+      collapseDetailsIfOpen();
+    });
+  });
+}
+
+/* ============================================================
+   4) render: amount buttons + manual input
+   ============================================================ */
+function renderAmounts(){
+  const grid = document.getElementById('amountGrid');
+  grid.innerHTML = PRESET_AMOUNTS.map(a=>`<button class="amount-btn" data-amount="${a}">${a.toLocaleString('en-US')}</button>`).join('');
+  grid.querySelectorAll('.amount-btn').forEach(btn=>{
+    attachInteractive(btn, ()=>{
+      grid.querySelectorAll('.amount-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      const val = Number(btn.dataset.amount);
+      document.getElementById('manualAmount').value = val;
+      setAmount(val);
+      collapseDetailsIfOpen();
+    });
+  });
+}
+function setAmount(val){
+  const errEl = document.getElementById('amountError');
+  const wrap = document.getElementById('amountInputWrap');
+  if(val == null || val === '' || isNaN(val)){
+    state.amount = null; errEl.textContent=''; wrap.classList.remove('error');
+    updateContinueState(); return;
+  }
+  const num = Number(val);
+  if(num < CONFIG.MIN_AMOUNT){
+    state.amount = null; errEl.textContent = `الحد الأدنى للإيداع هو ${CONFIG.MIN_AMOUNT} USDT`; wrap.classList.add('error');
+  } else if(num > CONFIG.MAX_AMOUNT){
+    state.amount = null; errEl.textContent = `الحد الأقصى للإيداع هو ${CONFIG.MAX_AMOUNT.toLocaleString('en-US')} USDT`; wrap.classList.add('error');
+  } else {
+    state.amount = num; errEl.textContent=''; wrap.classList.remove('error');
+  }
+  updateContinueState();
+}
+function updateContinueState(){
+  document.getElementById('btnContinue').disabled = !(state.network && state.amount);
+}
+
+/* ============================================================
+   5) deposit details (QR + address + countdown) — step 3
+   ============================================================ */
+function openDepositDetails(){
+  const n = state.network;
+  document.getElementById('ddCoinIcon').textContent = n.icon;
+  document.getElementById('ddCoinIcon').style.background = n.id==='trc20' ? 'linear-gradient(160deg,#26a17b,#0e8f76)' : n.id==='polygon' ? 'linear-gradient(160deg,#a855f7,#6b21a8)' : 'linear-gradient(160deg,#8c9eff,#5468d9)';
+  document.getElementById('ddNetworkName').textContent = `${n.coin} · ${n.label}`;
+  document.getElementById('ddNetworkInline').textContent = `${n.coin} (${n.label})`;
+  document.getElementById('ddAmount').textContent = state.amount.toLocaleString('en-US') + ' USDT';
+
+  const metaGrid = document.getElementById('metaGrid');
+  if(n.confirmationsRequired != null && n.etaMinutes != null){
+    document.getElementById('metaConfirmations').textContent = n.confirmationsRequired;
+    document.getElementById('metaEta').textContent = '~' + n.etaMinutes + ' د';
+    metaGrid.style.display = 'grid';
+  } else {
+    metaGrid.style.display = 'none';
+  }
+
+  const addrEl = document.getElementById('ddAddress');
+  if(n.address){
+    addrEl.textContent = n.address;
+    renderQr(n.address);
+  } else {
+    addrEl.textContent = 'تعذر تحميل عنوان المحفظة من الخادم';
+    document.getElementById('qrFallback').textContent = 'لا يوجد اتصال بالخادم';
+    toast('تعذر تحميل عنوان الإيداع — تحقق من اتصال الخادم', true);
+  }
+
+  const panel = document.getElementById('depositDetails');
+  panel.classList.add('open');
+  setStep(3);
+  startExpiryCountdown();
+  setTimeout(()=>panel.scrollIntoView({behavior:'smooth', block:'start'}), 120);
+}
+function collapseDetailsIfOpen(){
+  document.getElementById('depositDetails').classList.remove('open');
+  clearInterval(expiryTimer);
+  if(state.currentStep > 2) setStep(2);
+}
+function renderQr(address){
+  const box = document.getElementById('qrBox');
+  box.innerHTML = '';
+  if(typeof QRCode !== 'undefined'){
+    new QRCode(box, {
+      text: address, width:168, height:168,
+      colorDark:'#04211b', colorLight:'#ffffff',
+      correctLevel: QRCode.CorrectLevel.H
+    });
+  } else {
+    box.innerHTML = '<div class="qr-fallback">تعذر تحميل مكتبة QR<br>انسخ العنوان يدوياً</div>';
+  }
+}
+
+/* countdown ring: circumference = 2*pi*15.5 ≈ 97.4 */
+function startExpiryCountdown(){
+  clearInterval(expiryTimer);
+  let remaining = ADDRESS_VALIDITY_SECONDS;
+  const bar = document.getElementById('expiryBar');
+  const timeEl = document.getElementById('expiryTime');
+  const ring = document.getElementById('expiryProgress');
+  const CIRC = 97.4;
+  bar.classList.remove('expired');
+  function tick(){
+    const m = Math.floor(remaining/60), s = remaining%60;
+    timeEl.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    ring.setAttribute('stroke-dashoffset', (CIRC * (1 - remaining/ADDRESS_VALIDITY_SECONDS)).toFixed(1));
+    if(remaining <= 0){
+      clearInterval(expiryTimer);
+      bar.classList.add('expired');
+      timeEl.textContent = 'منتهية';
+      toast('انتهت صلاحية العنوان، يرجى تحديثه', true);
+      return;
+    }
+    remaining--;
+  }
+  tick();
+  expiryTimer = setInterval(tick, 1000);
+}
+attachInteractive(document.getElementById('btnRefreshAddress'), async ()=>{
+  toast('جاري تحديث العنوان…');
+  try{
+    const res = await fetch('/api/deposit/networks', { credentials: 'same-origin' });
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    data.forEach(remote=>{
+      const local = NETWORKS.find(n=>n.id===remote.id);
+      if(local){
+        local.address = remote.address || null;
+        local.status = remote.status || null;
+        local.confirmationsRequired = remote.confirmationsRequired ?? null;
+        local.etaMinutes = remote.etaMinutes ?? null;
+      }
+    });
+    // إعادة رسم تفاصيل الإيداع بالعنوان الجديد
+    if(state.network){
+      state.network = NETWORKS.find(n=>n.id===state.network.id) || state.network;
+      openDepositDetails();
+    }
+    toast('تم تحديث العنوان بنجاح');
+  }catch(e){
+    console.warn('refresh address failed:', e.message);
+    toast('تعذر تحديث العنوان — تحقق من الاتصال', true);
+  }
+});
+
+document.getElementById('btnCopyAddress').addEventListener('click', ()=>{
+  const address = document.getElementById('ddAddress').textContent;
+  if(!address || address.startsWith('تعذر')){ toast('لا يوجد عنوان لنسخه', true); return; }
+  const finish = (ok)=>{
+    const btn = document.getElementById('btnCopyAddress');
+    if(ok){
+      btn.classList.add('copied');
+      setTimeout(()=>btn.classList.remove('copied'), 1200);
+      toast('تم نسخ العنوان بنجاح');
+    } else {
+      toast('تعذر نسخ العنوان', true);
+    }
+  };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(address).then(()=>finish(true)).catch(()=>finish(false));
+  } else {
+    try{
+      const ta = document.createElement('textarea');
+      ta.value = address; document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); ta.remove(); finish(true);
+    }catch(e){ finish(false); }
+  }
+});
+
+attachInteractive(document.getElementById('btnShareAddress'), async ()=>{
+  const address = document.getElementById('ddAddress').textContent;
+  if(!address || address.startsWith('تعذر')){ toast('لا يوجد عنوان للمشاركة', true); return; }
+  if(navigator.share){
+    try{ await navigator.share({ title:'عنوان الإيداع', text: address }); }
+    catch(e){ /* user cancelled */ }
+  } else {
+    toast('المشاركة غير مدعومة على هذا المتصفح', true);
+  }
+});
+
+/* ============================================================
+   6) paste button for TXID
+   ============================================================ */
+attachInteractive(document.getElementById('btnPasteTxid'), async ()=>{
+  try{
+    const text = await navigator.clipboard.readText();
+    if(text){ document.getElementById('fTxid').value = text.trim(); toast('تم لصق النص'); }
+  }catch(e){ toast('يرجى لصق رقم المعاملة يدوياً', true); }
+});
+
+/* ============================================================
+   7) proof upload
+   ============================================================ */
+const uploadBox = document.getElementById('uploadBox');
+const fProof = document.getElementById('fProof');
+const MAX_PROOF_SIZE = 2 * 1024 * 1024; // 2 MB
+const ALLOWED_PROOF_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+
+fProof.addEventListener('change', ()=>{
+  const file = fProof.files[0];
+  if(!file) return;
+
+  if(!ALLOWED_PROOF_TYPES.includes(file.type)){
+    toast('يرجى إرفاق صورة بصيغة JPG أو PNG أو WebP أو GIF', true);
+    fProof.value = '';
+    return;
+  }
+  if(file.size > MAX_PROOF_SIZE){
+    toast('حجم الصورة أكبر من 2 ميغابايت — يرجى ضغطها أولاً', true);
+    fProof.value = '';
+    return;
+  }
+
+  state.proofFile = file;
+  const reader = new FileReader();
+  reader.onload = (e)=>{
+    document.getElementById('uploadPreviewImg').src = e.target.result;
+    document.getElementById('uploadFileName').textContent = file.name;
+    document.getElementById('uploadPreview').classList.add('show');
+    uploadBox.style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+});
+document.getElementById('btnRemoveUpload').addEventListener('click', ()=>{
+  state.proofFile = null;
+  fProof.value = '';
+  document.getElementById('uploadPreview').classList.remove('show');
+  uploadBox.style.display = 'block';
+});
+['dragover','dragleave','drop'].forEach(evt=>{
+  uploadBox.addEventListener(evt, (e)=>{
+    e.preventDefault();
+    uploadBox.classList.toggle('drag', evt==='dragover');
+  });
+});
+
+/* ============================================================
+   8) mandatory confirmation checkbox
+   ============================================================ */
+const confirmCheckbox = document.getElementById('confirmCheckbox');
+confirmCheckbox.addEventListener('change', ()=>{
+  state.checkboxOk = confirmCheckbox.checked;
+  document.getElementById('confirmCheckboxWrap').classList.toggle('checked', state.checkboxOk);
+  updateSubmitEnabled();
+});
+function updateSubmitEnabled(){
+  document.getElementById('btnConfirmPaid').disabled = !state.checkboxOk;
+}
+
+/* ============================================================
+   9) confirm transfer form — double confirmation before submit
+   ============================================================ */
+function validateConfirmForm(){
+  let ok = true;
+  const txid = document.getElementById('fTxid');
+  const amountSent = document.getElementById('fAmountSent');
+  document.getElementById('errTxid').textContent = '';
+  document.getElementById('errAmountSent').textContent = '';
+  txid.classList.remove('error'); amountSent.classList.remove('error');
+
+  if(!txid.value.trim()){
+    document.getElementById('errTxid').textContent = 'رقم المعاملة (TXID) مطلوب — تأكد من إتمام التحويل أولاً';
+    txid.classList.add('error'); ok = false;
+  }
+  if(!amountSent.value || Number(amountSent.value) <= 0){
+    document.getElementById('errAmountSent').textContent = 'يرجى إدخال المبلغ الذي تم إرساله';
+    amountSent.classList.add('error'); ok = false;
+  }
+  if(!state.checkboxOk){
+    toast('يرجى تأكيد إتمام التحويل عبر مربع الإقرار أولاً', true); ok = false;
+  }
+  return ok;
+}
+
+let pendingPayload = null;
+document.getElementById('confirmForm').addEventListener('submit', (e)=>{
+  e.preventDefault();
+  if(!validateConfirmForm()) return;
+  if(!state.network || !state.amount){ toast('يرجى اختيار الشبكة والمبلغ أولاً', true); return; }
+  pendingPayload = {
+    network: state.network.id,
+    address: state.network.address,
+    amount: state.amount,
+    txid: document.getElementById('fTxid').value.trim(),
+    hash: document.getElementById('fHash').value.trim(),
+    amountSent: Number(document.getElementById('fAmountSent').value),
+    notes: document.getElementById('fNotes').value.trim()
+  };
+  document.getElementById('preSubmitModal').classList.add('show');
+});
+document.getElementById('btnPreSubmitCancel').addEventListener('click', ()=>{
+  document.getElementById('preSubmitModal').classList.remove('show');
+  toast('حسناً — أكمل التحويل ثم عد للتأكيد');
+});
+document.getElementById('btnPreSubmitConfirm').addEventListener('click', async ()=>{
+  document.getElementById('preSubmitModal').classList.remove('show');
+  await submitDeposit(pendingPayload);
+});
+
+async function submitDeposit(payload){
+  const btn = document.getElementById('btnConfirmPaid');
+  const originalText = btn.innerHTML;
+  btn.innerHTML = '<span>جاري الإرسال…</span>';
+  btn.disabled = true;
+  setStep(4);
+
+  const idemKey = 'dep_' + Date.now() + '_' + Math.random().toString(36).slice(2, 10);
+
+  try{
+    let res;
+    if(state.proofFile){
+      const fd = new FormData();
+      Object.entries(payload).forEach(([k,v])=>fd.append(k, v));
+      fd.append('proof', state.proofFile);
+      res = await fetch('/api/deposit/confirm', {
+        method:'POST',
+        credentials:'same-origin',
+        headers:{ 'x-idempotency-key': idemKey },
+        body: fd
+      });
+    } else {
+      res = await fetch('/api/deposit/confirm', {
+        method:'POST',
+        credentials:'same-origin',
+        headers:{ 'Content-Type':'application/json', 'x-idempotency-key': idemKey },
+        body: JSON.stringify(payload)
+      });
+    }
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.message || ('HTTP ' + res.status));
+    showSuccessModal(data.depositId || '—');
+    prependHistoryEntry({
+      amount: state.amount,
+      network: state.network.id,
+      date: new Date().toISOString(),
+      status: 'pending',
+      verification_status: 'pending'
+    });
+    resetAfterSubmit();
+  }catch(err){
+    console.warn('deposit confirm failed:', err.message);
+    toast(err.message || 'تعذر إرسال طلب الإيداع — تحقق من الاتصال بالخادم', true);
+    setStep(3);
+  }finally{
+    btn.innerHTML = originalText;
+    updateSubmitEnabled();
+  }
+}
+function resetAfterSubmit(){
+  document.getElementById('confirmForm').reset();
+  state.proofFile = null;
+  document.getElementById('uploadPreview').classList.remove('show');
+  uploadBox.style.display = 'block';
+  state.checkboxOk = false;
+  document.getElementById('confirmCheckboxWrap').classList.remove('checked');
+  // تصفير الشبكة والمبلغ (حتى لا يبقى زر "متابعة" مُفعَّلاً بعد الإرسال)
+  state.network = null;
+  state.amount = null;
+  document.querySelectorAll('.network-card').forEach(c=>c.classList.remove('selected'));
+  document.querySelectorAll('.amount-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('manualAmount').value = '';
+  document.getElementById('amountError').textContent = '';
+  document.getElementById('amountInputWrap').classList.remove('error');
+  updateContinueState();
+  updateSubmitEnabled();
+  collapseDetailsIfOpen();
+}
+
+/* ============================================================
+   10) success modal
+   ============================================================ */
+function showSuccessModal(depId){
+  document.getElementById('modalDepId').textContent = depId;
+  document.getElementById('successModal').classList.add('show');
+}
+document.getElementById('btnModalClose').addEventListener('click', ()=>{
+  document.getElementById('successModal').classList.remove('show');
+});
+
+/* ============================================================
+   11) deposit history
+   ============================================================ */
+const STATUS_LABEL = { pending:'قيد المراجعة', approved:'مقبول', rejected:'مرفوض' };
+
+// ============================================================
+// مراحل معالجة الإيداع (زمنية)
+// ============================================================
+const STAGE_AUTO_MS = 2 * 60 * 60 * 1000;       // ساعتان
+const STAGE_OVERDUE_MS = 24 * 60 * 60 * 1000;   // 24 ساعة
+
+
+function getStageInfo(createdAt, status){
+  if(status === 'approved' || status === 'rejected') return null;
+  const age = Date.now() - new Date(createdAt).getTime();
+  if(age < STAGE_AUTO_MS){
+    return { key:'auto', label:'قيد الانتظار', color:'var(--gold)', bg:'rgba(232,163,61,0.14)' };
+  }
+  if(age < STAGE_OVERDUE_MS){
+    return { key:'manual', label:'انتظار الدعم', color:'var(--gold)', bg:'rgba(232,163,61,0.14)' };
+  }
+  return { key:'overdue', label:'عاجل', color:'var(--red)', bg:'rgba(239,74,74,0.14)' };
+}
+const NETWORK_LABEL = { trc20:'USDT · TRC20', polygon:'USDT · Polygon', erc20:'Ethereum · ERC20' };
+const NETWORK_ICON  = { trc20:'T', polygon:'P', erc20:'E' };
+const NETWORK_BG    = { trc20:'linear-gradient(160deg,#26a17b,#0e8f76)', polygon:'linear-gradient(160deg,#a855f7,#6b21a8)', erc20:'linear-gradient(160deg,#8c9eff,#5468d9)' };
+
+function historyCardTemplate(h){
+  const d = new Date(h.date);
+  const dateStr = isNaN(d) ? String(h.date) : d.toLocaleDateString('ar-EG', { day:'2-digit', month:'short', year:'numeric' });
+  const stage = getStageInfo(h.date, h.status);
+  const badgeHTML = stage
+    ? `<span class="status-badge" style="background:${stage.bg};color:${stage.color};">${escapeHtml(stage.label)}</span>`
+    : `<span class="status-badge ${escapeHtml(h.status)}">${escapeHtml(STATUS_LABEL[h.status] || h.status)}</span>`;
+  return `
+  <div class="history-card">
+    <div class="hc-icon" style="background:${NETWORK_BG[h.network] || 'var(--panel-2)'}">${NETWORK_ICON[h.network] || '?'}</div>
+    <div class="hc-info">
+      <div class="hc-amount">${Number(h.amount).toLocaleString('en-US')} USDT</div>
+      <div class="hc-meta">${NETWORK_LABEL[h.network] || escapeHtml(h.network)} · ${escapeHtml(dateStr)}</div>
+    </div>
+    ${badgeHTML}
+  </div>`;
+}
+function renderHistory(list){
+  const container = document.getElementById('historyList');
+  const countEl = document.getElementById('historyCount');
+  if(!list || list.length === 0){
+    countEl.textContent = '';
+    container.innerHTML = `
+      <div class="empty-state">
+        <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="7" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" stroke="currentColor" stroke-width="1.5"/></svg>
+        <div>لا توجد عمليات إيداع بعد</div>
+      </div>`;
+    return;
+  }
+  countEl.textContent = `${list.length} عملية`;
+  container.innerHTML = list.map(historyCardTemplate).join('');
+}
+function prependHistoryEntry(entry){
+  const container = document.getElementById('historyList');
+  if(container.querySelector('.empty-state')){ container.innerHTML = ''; }
+  container.insertAdjacentHTML('afterbegin', historyCardTemplate(entry));
+  document.getElementById('historyCount').textContent = container.querySelectorAll('.history-card').length + ' عملية';
+}
+async function loadHistory(){
+  try{
+    const res = await fetch('/api/deposit/history', { credentials: 'same-origin' });
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.message || ('HTTP ' + res.status));
+    renderHistory(Array.isArray(data) ? data : []);
+  }catch(err){
+    console.warn('history load failed:', err.message);
+    renderHistory([]);
+  }
+}
+
+/* ============================================================
+   12) balance + networks (real data from server)
+   ============================================================ */
+async function loadBalance(){
+  try{
+    const res = await fetch('/api/user/balance', { credentials: 'same-origin' });
+    if(res.status === 401){
+      toast('انتهت الجلسة — جاري تحويلك لتسجيل الدخول...', true);
+      setTimeout(()=>{ window.location.href = '/'; }, 800);
+      return;
+    }
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    document.getElementById('totalBalance').innerHTML = `<span class="cur">$</span>${Number(data.balance).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
+    document.getElementById('accountRef').textContent = data.accountRef || '—';
+    document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});
+  }catch(err){
+    console.warn('balance load failed:', err.message);
+    toast('تعذر تحميل الرصيد — تحقق من الاتصال بالخادم', true);
+  }
+}
+async function loadNetworks(){
+  try{
+    const res = await fetch('/api/deposit/networks', { credentials: 'same-origin' });
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    data.forEach(remote=>{
+      const local = NETWORKS.find(n=>n.id===remote.id);
+      if(local){
+        local.address = remote.address || null;
+        local.status = remote.status || null;
+        local.confirmationsRequired = remote.confirmationsRequired ?? null;
+        local.etaMinutes = remote.etaMinutes ?? null;
+        if(remote.minAmount) CONFIG.MIN_AMOUNT = remote.minAmount;
+        if(remote.maxAmount) CONFIG.MAX_AMOUNT = remote.maxAmount;
+      }
+    });
+    renderNetworks();
+    // تحديث نص الحد الأدنى/الأقصى المعروض
+    const hintEl = document.getElementById('amountLimitsHint');
+    if(hintEl){
+      hintEl.textContent = `${CONFIG.MIN_AMOUNT.toLocaleString('en-US')} – ${CONFIG.MAX_AMOUNT.toLocaleString('en-US')} USDT`;
+    }
+    // إعادة تقييم أزرار المبالغ بعد تحديث الحدود
+    document.querySelectorAll('.amount-btn').forEach(btn=>{
+      const val = Number(btn.dataset.amount);
+      btn.disabled = val < CONFIG.MIN_AMOUNT || val > CONFIG.MAX_AMOUNT;
+    });
+  }catch(err){
+    console.warn('networks load failed:', err.message);
+  }
+}
+
+/* ============================================================
+   13) FAQ accordion (static help content)
+   ============================================================ */
+const FAQS = [
+  { q:'كم تستغرق عملية اعتماد الإيداع؟', a:'مدة الاعتماد تتراوح من 0 إلى ساعتين. في حالات الازدحام الشديد على الشبكة أو حدوث مشكلة تقنية، قد تستغرق وقتاً أطول قليلاً.' },
+  { q:'ماذا أفعل إذا تجاوز طلبي ساعتين؟', a:'تواصل مع فريق الدعم عبر زر الدعم في الأسفل، وأرفق رقم الطلب ورقم TXID الخاص بك، وسيتم متابعة طلبك على الفور.' },
+  { q:'ماذا يحدث إذا أرسلت عبر شبكة خاطئة؟', a:'إرسال الأموال عبر شبكة مختلفة عن الشبكة المحددة في الطلب قد يؤدي إلى فقدانها بشكل نهائي ولا يمكن استرجاعها. تأكد دائماً من مطابقة الشبكة قبل الإرسال.' },
+  { q:'هل يمكنني تعديل الطلب بعد إرساله؟', a:'لا يمكن تعديل بيانات الطلب بعد إرساله. إذا أدخلت بيانات خاطئة، تواصل مع الدعم فوراً لمساعدتك قبل مراجعة الطلب.' }
+];
+function renderFaq(){
+  const list = document.getElementById('faqList');
+  list.innerHTML = FAQS.map((f,i)=>`
+    <div class="faq-item" data-i="${i}">
+      <button class="faq-q" type="button">
+        <span>${f.q}</span>
+        <svg class="chev" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="faq-a"><p>${f.a}</p></div>
+    </div>`).join('');
+  list.querySelectorAll('.faq-item').forEach(item=>{
+    item.querySelector('.faq-q').addEventListener('click', ()=>{
+      const wasOpen = item.classList.contains('open');
+      list.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+      if(!wasOpen) item.classList.add('open');
+    });
+  });
+}
+
+/* ============================================================
+   14) wire up static controls
+   ============================================================ */
+document.getElementById('manualAmount').addEventListener('input', (e)=>{
+  document.querySelectorAll('.amount-btn').forEach(b=>b.classList.remove('active'));
+  setAmount(e.target.value);
+});
+document.getElementById('manualAmount').addEventListener('focus', ()=>document.getElementById('amountInputWrap').classList.add('focus'));
+document.getElementById('manualAmount').addEventListener('blur', ()=>document.getElementById('amountInputWrap').classList.remove('focus'));
+
+attachInteractive(document.getElementById('btnContinue'), ()=>{
+  if(!state.network){ toast('يرجى اختيار الشبكة أولاً', true); return; }
+  if(!state.amount){ toast('يرجى إدخال مبلغ صحيح', true); return; }
+  openDepositDetails();
+});
+attachInteractive(document.getElementById('btnBack'), ()=>{ window.location.href = '/account'; });
+attachInteractive(document.getElementById('btnMenu'), ()=> openSideDrawer());
+
+async function openSideDrawer(){
+  let drawer = document.getElementById('sideDrawerEl');
+  if(drawer){
+    drawer.classList.add('show');
+    document.getElementById('sideDrawerBg').classList.add('show');
+    return;
+  }
+
+  let uName = 'مستخدم', uEmail = '—';
+  try{
+    const res = await fetch('/api/account/profile', { credentials: 'same-origin' });
+    if(res.ok){
+      const d = await res.json();
+      uName = d.name || d.fullname || 'مستخدم';
+      uEmail = d.email || '—';
+    }
+  }catch(e){}
+  const initial = (uName.charAt(0) || 'E').toUpperCase();
+
+  const style = document.createElement('style');
+  style.id = 'sideDrawerStyles';
+  style.textContent = `
+    .side-drawer-bg{ position:fixed; inset:0; background:rgba(0,0,0,0.65); backdrop-filter:blur(4px); z-index:100; opacity:0; pointer-events:none; transition:opacity .25s; }
+    .side-drawer-bg.show{ opacity:1; pointer-events:auto; }
+    .side-drawer{ position:fixed; top:0; bottom:0; right:0; z-index:110; width:min(300px,82vw);
+      background:var(--panel,#0d1615); border-left:1px solid var(--teal-dim,#0e8f76); border-radius:26px 0 0 26px;
+      padding:22px 18px; transform:translateX(105%); transition:transform .35s cubic-bezier(.22,1,.36,1);
+      display:flex; flex-direction:column; box-shadow:-20px 0 60px rgba(0,0,0,.5); color:var(--text,#eef4f2); }
+    .side-drawer.show{ transform:none; }
+    .side-drawer-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+    .side-drawer-logo .w1{ font-family:'Rajdhani',sans-serif; font-weight:700; font-size:22px; letter-spacing:2px;
+      background:linear-gradient(180deg,#fff,#b9c3c1); -webkit-background-clip:text; background-clip:text; color:transparent; font-style:italic; }
+    .side-drawer-logo .w2{ font-family:'Rajdhani',sans-serif; font-size:7px; letter-spacing:4px; color:var(--teal,#17f0c3); margin-top:2px; }
+    .side-drawer-close{ width:34px; height:34px; border-radius:50%; border:1px solid var(--border,#1c2b28);
+      display:flex; align-items:center; justify-content:center; color:var(--text-dim,#8fa39e); background:none; cursor:pointer; font-size:14px; }
+    .side-drawer-user{ display:flex; align-items:center; gap:12px; background:var(--panel-2,#0f1a18);
+      border:1px solid var(--border,#1c2b28); border-radius:16px; padding:11px 12px; margin-bottom:16px; }
+    .side-drawer-avatar{ width:44px; height:44px; border-radius:13px; display:flex; align-items:center; justify-content:center;
+      font-family:'Rajdhani',sans-serif; font-size:20px; font-weight:700; color:var(--teal,#17f0c3);
+      background:radial-gradient(circle at 30% 25%, rgba(23,240,195,.2), transparent 70%), var(--panel,#0d1615);
+      border:1px solid var(--teal-dim,#0e8f76); flex-shrink:0; }
+    .side-drawer-user b{ font-size:13.5px; display:block; color:var(--text,#eef4f2); }
+    .side-drawer-user span{ font-size:10.5px; color:var(--text-dim,#8fa39e); direction:ltr; display:block; text-align:right; }
+    .side-drawer-links{ display:flex; flex-direction:column; gap:6px; flex:1; }
+    .side-drawer-links a, .side-drawer-links button{ display:flex; align-items:center; gap:12px; padding:12px 14px;
+      border-radius:14px; font-size:13.5px; font-weight:700; color:var(--text-dim,#8fa39e); text-align:right;
+      width:100%; border:1px solid transparent; transition:.2s; text-decoration:none; background:none; cursor:pointer; font-family:inherit; }
+    .side-drawer-links a:hover, .side-drawer-links button:hover{ background:rgba(23,240,195,.06); color:var(--text,#eef4f2); }
+    .side-drawer-links button.logout{ color:var(--red,#ef4a4a); background:rgba(239,74,74,.07); border:1px solid rgba(239,74,74,.3); margin-top:auto; }
+    .side-drawer-links svg{ width:19px; height:19px; flex-shrink:0; }
+  `;
+  document.head.appendChild(style);
+
+  const bg = document.createElement('div');
+  bg.className = 'side-drawer-bg';
+  bg.id = 'sideDrawerBg';
+
+  drawer = document.createElement('aside');
+  drawer.className = 'side-drawer';
+  drawer.id = 'sideDrawerEl';
+  drawer.innerHTML = `
+    <div class="side-drawer-head">
+      <div class="side-drawer-logo"><div class="w1">ELITE</div><div class="w2">TRADING</div></div>
+      <button class="side-drawer-close" id="sideDrawerClose">✕</button>
+    </div>
+    <div class="side-drawer-user">
+      <div class="side-drawer-avatar">${escapeHtml(initial)}</div>
+      <div><b>${escapeHtml(uName)}</b><span>${escapeHtml(uEmail)}</span></div>
+    </div>
+    <nav class="side-drawer-links">
+      <a href="/home"><svg viewBox="0 0 24 24" fill="none"><path d="M3 12l2-2 5 5L20 5l2 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 20h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>الرئيسية</a>
+      <a href="/work"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="7" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" stroke="currentColor" stroke-width="1.6"/></svg>العمل</a>
+      <a href="/trade"><svg viewBox="0 0 24 24" fill="none"><path d="M2 12h4l2.5-7L13 19l2.5-7H22" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>تداول</a>
+      <a href="/friends"><svg viewBox="0 0 24 24" fill="none"><circle cx="8" cy="8" r="3.2" stroke="currentColor" stroke-width="1.6"/><circle cx="16" cy="8" r="3.2" stroke="currentColor" stroke-width="1.6"/><path d="M2 20c0-3.3 2.8-5.5 6-5.5s6 2.2 6 5.5M12 20c0-3.3 2.8-5.5 6-5.5s6 2.2 6 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>الأصدقاء</a>
+      <a href="/account"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.7"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>حسابي</a>
+      <button class="logout" id="sideDrawerLogout"><svg viewBox="0 0 24 24" fill="none"><path d="M15 4h4a1.5 1.5 0 0 1 1.5 1.5v13A1.5 1.5 0 0 1 19 20h-4M10 8l-4 4 4 4M6 12h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>تسجيل الخروج</button>
+    </nav>
+  `;
+
+  document.body.appendChild(bg);
+  document.body.appendChild(drawer);
+
+  bg.addEventListener('click', closeSideDrawer);
+  document.getElementById('sideDrawerClose').addEventListener('click', closeSideDrawer);
+  document.getElementById('sideDrawerLogout').addEventListener('click', async ()=>{
+    try{ await fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' }); }catch(e){}
+    window.location.href = '/';
+  });
+
+  drawer.classList.add('show');
+  bg.classList.add('show');
+}
+
+function closeSideDrawer(){
+  const drawer = document.getElementById('sideDrawerEl');
+  const bg = document.getElementById('sideDrawerBg');
+  if(drawer) drawer.classList.remove('show');
+  if(bg) bg.classList.remove('show');
+}
+/* btnBell: related listener removed (handled by notifications.js) */
+attachInteractive(document.getElementById('btnSupportFab'), ()=> openSupportModal());
+
+/* ============================================================ */
+/* نافذة الدعم — مع قناة التلغرام والدعم المباشر                */
+/* ============================================================ */
+let supportContacts = null;
+
+async function loadSupportContacts(){
+  if(supportContacts) return supportContacts;
+  try{
+    const res = await fetch('/api/settings/contact', { credentials: 'same-origin' });
+    if(res.ok) supportContacts = await res.json();
+  }catch(e){ /* صامت */ }
+  return supportContacts || { telegram_channel:'', telegram_support:'' };
+}
+
+function updateSupportButtons(){
+  const modal = document.getElementById('supportModal');
+  if(!modal || !supportContacts) return;
+  const chanBtn   = modal.querySelector('#supportChannelBtn');
+  const directBtn = modal.querySelector('#supportDirectBtn');
+  if(chanBtn)   chanBtn.disabled   = !supportContacts.telegram_channel;
+  if(directBtn) directBtn.disabled = !supportContacts.telegram_support;
+}
+
+function openSupportModal(){
+  const EMAIL = 'elitetrading4433@gmail.com';
+  let modal = document.getElementById('supportModal');
+
+  if(!modal){
+    const style = document.createElement('style');
+    style.textContent = `
+      .support-modal-bg{ position:fixed; inset:0; background:rgba(0,0,0,0.72); backdrop-filter:blur(4px); z-index:9999; display:none; align-items:center; justify-content:center; padding:20px; }
+      .support-modal-bg.show{ display:flex; }
+      .support-modal-card{ background:var(--panel); border:1px solid var(--teal-dim); border-radius:22px; padding:22px 20px; max-width:360px; width:100%; box-shadow:0 0 40px rgba(23,240,195,0.2); }
+      .support-modal-card h3{ font-size:17px; font-weight:800; margin-bottom:16px; color:var(--text); text-align:center; }
+      .support-option{ background:var(--panel-2); border:1px solid var(--border); border-radius:14px; padding:12px; margin-bottom:10px; }
+      .support-option .so-head{ display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+      .support-option .so-icon{ width:38px; height:38px; border-radius:50%; background:rgba(23,240,195,0.12); border:1.5px solid var(--teal-dim); display:flex; align-items:center; justify-content:center; flex-shrink:0; color:var(--teal); }
+      .support-option .so-icon svg{ width:19px; height:19px; }
+      .support-option .so-title{ font-size:13.5px; font-weight:800; color:var(--text); }
+      .support-option .so-desc{ font-size:11px; color:var(--text-dim); margin-top:2px; direction:ltr; text-align:right; }
+      .support-option .so-btn{ width:100%; display:flex; align-items:center; justify-content:center; gap:7px; background:var(--teal); color:#04211b; border:none; padding:10px 14px; border-radius:11px; font-weight:800; font-size:13px; cursor:pointer; font-family:inherit; transition:transform .15s; }
+      .support-option .so-btn svg{ width:14px; height:14px; }
+      .support-option .so-btn:active{ transform:scale(0.97); }
+      .support-option .so-btn[disabled]{ opacity:.45; cursor:not-allowed; }
+      .support-close-btn{ width:100%; background:var(--panel-2); color:var(--text); border:1px solid var(--border); border-radius:12px; padding:11px; font-weight:700; font-size:13.5px; cursor:pointer; margin-top:4px; font-family:inherit; }
+    `;
+    document.head.appendChild(style);
+
+    modal = document.createElement('div');
+    modal.id = 'supportModal';
+    modal.className = 'support-modal-bg';
+    modal.innerHTML = `
+      <div class="support-modal-card">
+        <h3>التواصل مع الدعم</h3>
+
+        <div class="support-option">
+          <div class="so-head">
+            <div class="so-icon">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div>
+              <div class="so-title">قناة التلغرام</div>
+              <div class="so-desc">تعرض كل جديد حول المنصة</div>
+            </div>
+          </div>
+          <button class="so-btn" id="supportChannelBtn" disabled>
+            فتح القناة
+            <svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+
+        <div class="support-option">
+          <div class="so-head">
+            <div class="so-icon">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+            </div>
+            <div>
+              <div class="so-title">الدعم المباشر</div>
+              <div class="so-desc">تحدث مع إنسان</div>
+            </div>
+          </div>
+          <button class="so-btn" id="supportDirectBtn" disabled>
+            بدء المحادثة
+            <svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+
+        <div class="support-option">
+          <div class="so-head">
+            <div class="so-icon">
+              <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2.5" stroke="currentColor" stroke-width="1.7"/><path d="M3 8l9 6 9-6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div>
+              <div class="so-title">راسلنا</div>
+              <div class="so-desc">${EMAIL}</div>
+            </div>
+          </div>
+          <button class="so-btn" id="supportCopyBtn">
+            نسخ البريد
+            <svg viewBox="0 0 24 24" fill="none"><rect x="9" y="9" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M5 15V5a2 2 0 0 1 2-2h10" stroke="currentColor" stroke-width="1.8"/></svg>
+          </button>
+        </div>
+
+        <button class="support-close-btn" id="supportCloseBtn">إغلاق</button>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    modal.querySelector('#supportCloseBtn').addEventListener('click', ()=> modal.classList.remove('show'));
+    modal.addEventListener('click', (e)=>{ if(e.target === modal) modal.classList.remove('show'); });
+
+    modal.querySelector('#supportCopyBtn').addEventListener('click', async ()=>{
+      try{
+        await navigator.clipboard.writeText(EMAIL);
+        toast('تم نسخ البريد الإلكتروني');
+      }catch(e){
+        toast('انسخ البريد يدوياً', true);
+      }
+    });
+
+    modal.querySelector('#supportChannelBtn').addEventListener('click', ()=>{
+      if(!supportContacts || !supportContacts.telegram_channel){ toast('الرابط غير متوفر', true); return; }
+      window.open(supportContacts.telegram_channel, '_blank');
+    });
+
+    modal.querySelector('#supportDirectBtn').addEventListener('click', ()=>{
+      if(!supportContacts || !supportContacts.telegram_support){ toast('الرابط غير متوفر', true); return; }
+      let url = String(supportContacts.telegram_support).trim();
+      if(!url.startsWith('http')){ url = 'https://t.me/' + url.replace('@',''); }
+      window.open(url, '_blank');
+    });
+  }
+
+  modal.classList.add('show');
+
+  loadSupportContacts().then(()=> updateSupportButtons());
+}
+
+document.querySelectorAll('.nav-item').forEach(navEl=>{
+  attachInteractive(navEl, ()=>{
+    const page = navEl.dataset.page;
+    if(page === 'account') window.location.href = '/account';
+    else if(page === 'friends') window.location.href = '/friends';
+    else if(page === 'work') window.location.href = '/work';
+    else if(page === 'trade') window.location.href = '/trade';
+    else if(page === 'home') window.location.href = '/home';
+  });
+});
+
+/* ============================================================
+   15) init
+   ============================================================ */
+renderAmounts();
+renderFaq();
+loadBalance();
+loadNetworks();
+loadHistory();
+</script>
+  <script src="/notifications.js"></script>
+</body>
+</html>

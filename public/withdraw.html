@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>سحب الأرباح | Elite Trading</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #060a09;
+    --panel: #0d1615;
+    --panel-2: #0f1a18;
+    --border: #1c2b28;
+    --teal: #17f0c3;
+    --teal-dim: #0e8f76;
+    --gold: #e8a33d;
+    --red: #ef4a4a;
+    --text: #eef4f2;
+    --text-dim: #8fa39e;
+    --text-dim2: #5d726c;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+  html,body{ background:#000; }
+  body{ display:flex; justify-content:center; font-family:'Tajawal', sans-serif; min-height:100vh; }
+  button{ font-family:inherit; border:none; background:none; color:inherit; cursor:pointer; }
+  input, textarea{ font-family:inherit; }
+
+  .device{
+    width:100%; max-width:430px; min-height:100vh;
+    background: radial-gradient(ellipse 500px 300px at 80% 0%, rgba(23,240,195,0.08), transparent 60%), var(--bg);
+    color:var(--text); position:relative; overflow:hidden; padding-bottom:110px;
+  }
+  @media (min-width:480px){
+    body{ padding:24px 0; }
+    .device{ min-height:844px; border-radius:36px; box-shadow:0 0 0 1px #1c2b28, 0 30px 80px rgba(0,0,0,.6); }
+    .bottom-nav{ border-radius:0 0 36px 36px; }
+  }
+
+  /* ---------- topbar (matches home / deposit) ---------- */
+  .topbar{ display:flex; align-items:center; justify-content:space-between; padding:22px 20px 18px; gap:10px; }
+  .menu-btn, .bell{ width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--text); }
+  .logo{ display:flex; flex-direction:column; align-items:center; line-height:1; }
+  .logo .word1{ font-family:'Rajdhani',sans-serif; font-weight:700; font-size:26px; letter-spacing:2px; background:linear-gradient(180deg,#fff,#b9c3c1); -webkit-background-clip:text; background-clip:text; color:transparent; font-style:italic; }
+  .logo .word2{ font-family:'Rajdhani',sans-serif; font-size:8px; letter-spacing:5px; color:var(--teal); margin-top:2px; }
+  .logo .rule{ width:70px; height:1px; background:linear-gradient(90deg,transparent,var(--teal-dim),transparent); margin-top:3px; }
+  .header-right{ display:flex; align-items:center; gap:10px; }
+  .bell{ position:relative; }
+  .bell::after{ content:''; position:absolute; top:7px; right:9px; width:8px; height:8px; border-radius:50%; background:var(--teal); box-shadow:0 0 6px var(--teal); }
+
+  /* ---------- page title row ---------- */
+  .page-title-row{ display:flex; align-items:center; gap:12px; padding:4px 20px 18px; }
+  .back-btn{ width:38px; height:38px; border-radius:12px; background:var(--panel-2); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--text); flex-shrink:0; }
+  .page-title-row h1{ font-size:20px; font-weight:800; }
+  .page-title-row .sub{ font-size:11.5px; color:var(--text-dim2); margin-top:2px; }
+
+  /* ---------- balance hero card ---------- */
+  .balance-hero{
+    margin:0 20px 26px; border-radius:22px; padding:22px 20px;
+    background: radial-gradient(ellipse 220px 140px at 15% -10%, rgba(23,240,195,0.16), transparent 60%), linear-gradient(160deg, var(--panel-2), var(--panel));
+    border:1px solid var(--teal-dim); position:relative; overflow:hidden;
+    box-shadow: 0 0 0 1px rgba(23,240,195,0.05), 0 18px 40px rgba(0,0,0,0.45), 0 0 30px rgba(23,240,195,0.08) inset;
+  }
+  .balance-hero::before{
+    content:''; position:absolute; top:-40px; left:-40px; width:140px; height:140px; border-radius:50%;
+    background:radial-gradient(circle, rgba(23,240,195,0.22), transparent 70%); filter:blur(2px);
+  }
+  .balance-hero .top-row{ display:flex; align-items:center; justify-content:space-between; position:relative; z-index:1; }
+  .balance-hero .live-tag{ display:inline-flex; align-items:center; gap:5px; background:rgba(23,240,195,0.12); color:var(--teal); font-size:9.5px; font-weight:800; letter-spacing:1px; padding:4px 10px; border-radius:8px; }
+  .balance-hero .live-tag .dot{ width:6px; height:6px; border-radius:50%; background:var(--teal); box-shadow:0 0 6px var(--teal); animation:blink 1.6s ease-in-out infinite; }
+  @keyframes blink{ 0%,100%{opacity:1;} 50%{opacity:.35;} }
+  .balance-hero .wallet-icon{ width:34px; height:34px; border-radius:50%; background:var(--panel-2); border:1px solid var(--teal-dim); display:flex; align-items:center; justify-content:center; color:var(--teal); }
+  .balance-hero .wallet-icon svg{ width:17px; height:17px; }
+  .balance-hero .label-en{ font-size:10px; letter-spacing:3px; color:var(--text-dim2); margin-top:18px; font-weight:700; }
+  .balance-hero .label-ar{ font-size:13px; color:var(--text-dim); margin-top:2px; }
+  .balance-hero .amount{
+    font-family:'Rajdhani',sans-serif; font-weight:700; font-size:40px; direction:ltr; text-align:left;
+    margin-top:8px; color:#eafff9; text-shadow:0 0 22px rgba(23,240,195,0.45); position:relative; z-index:1;
+  }
+  .balance-hero .amount .cur{ font-size:18px; color:var(--teal); margin-right:6px; }
+  .balance-hero .foot-row{ display:flex; justify-content:space-between; align-items:center; margin-top:16px; position:relative; z-index:1; }
+  .balance-hero .foot-item{ font-size:11px; color:var(--text-dim2); }
+  .balance-hero .foot-item b{ color:var(--text-dim); font-weight:700; }
+
+  /* ---------- section headers ---------- */
+  .section-title{ display:flex; justify-content:space-between; align-items:baseline; padding:10px 20px 14px; }
+  .section-title h2{ font-size:18px; font-weight:800; }
+  .section-title .hint{ font-size:11px; color:var(--text-dim2); }
+
+  /* ---------- network cards ---------- */
+  .network-grid{ display:grid; grid-template-columns:1fr; gap:12px; padding:0 20px 8px; }
+  .network-card{
+    display:flex; align-items:center; gap:14px; background:var(--panel); border:1.5px solid var(--border);
+    border-radius:18px; padding:16px; text-align:right; position:relative; transition:all .25s ease;
+  }
+  .network-card .coin-icon{
+    width:46px; height:46px; border-radius:14px; display:flex; align-items:center; justify-content:center;
+    font-family:'Rajdhani',sans-serif; font-weight:700; font-size:15px; flex-shrink:0; color:#04211b;
+  }
+  .network-card[data-network="trc20"] .coin-icon{ background:linear-gradient(160deg,#26a17b,#0e8f76); }
+  .network-card[data-network="polygon"] .coin-icon{ background:linear-gradient(160deg,#a855f7,#6b21a8); }
+  .network-card[data-network="erc20"] .coin-icon{ background:linear-gradient(160deg,#8c9eff,#5468d9); }
+  .network-card .info{ flex:1; min-width:0; }
+  .network-card .coin-name{ font-size:15.5px; font-weight:800; }
+  .network-card .coin-sub{ font-size:12px; color:var(--text-dim2); margin-top:2px; }
+  .network-card .fee-tag{ font-size:10.5px; color:var(--text-dim2); margin-top:4px; }
+  .network-card .fee-tag b{ color:var(--gold); font-weight:700; }
+  .network-card .radio{ width:22px; height:22px; border-radius:50%; border:1.5px solid var(--border); flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:all .25s ease; }
+  .network-card .radio::after{ content:''; width:10px; height:10px; border-radius:50%; background:var(--teal); transform:scale(0); transition:transform .2s ease; }
+  .network-card.selected{
+    border-color:var(--teal); background:linear-gradient(180deg, rgba(23,240,195,0.10), var(--panel));
+    box-shadow:0 0 0 1px rgba(23,240,195,0.25), 0 0 24px rgba(23,240,195,0.22);
+  }
+  .network-card.selected .radio{ border-color:var(--teal); }
+  .network-card.selected .radio::after{ transform:scale(1); }
+  .network-card:active{ transform:scale(0.98); }
+
+  /* ---------- wallet address field ---------- */
+  .field-block{ padding:0 20px 6px; }
+  .field-block label{ font-size:12.5px; color:var(--text-dim); display:block; margin-bottom:8px; }
+  .field-block .sub-label{ font-size:10.5px; color:var(--text-dim2); margin-bottom:8px; display:block; margin-top:-6px; }
+  .input-wrap{ position:relative; display:flex; align-items:center; background:var(--panel); border:1.5px solid var(--border); border-radius:14px; padding:4px 14px; transition:border-color .2s ease; }
+  .input-wrap.focus{ border-color:var(--teal-dim); }
+  .input-wrap.error{ border-color:var(--red); }
+  .input-wrap input{ flex:1; background:transparent; border:none; outline:none; color:var(--text); font-size:14px; padding:13px 0; }
+  .input-wrap.address-wrap input{ font-family:'Rajdhani',sans-serif; font-size:14px; direction:ltr; text-align:left; }
+  .input-wrap .cur-tag{ font-size:12.5px; color:var(--text-dim2); font-weight:700; }
+  .field-error{ color:var(--red); font-size:11.5px; margin-top:7px; min-height:14px; }
+  .field-hint{ color:var(--text-dim2); font-size:11px; margin-top:7px; }
+
+  /* ---------- amount section ---------- */
+  .amount-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; padding:0 20px 10px; }
+  .amount-btn{
+    background:var(--panel); border:1.5px solid var(--border); border-radius:13px; padding:12px 6px;
+    font-family:'Rajdhani',sans-serif; font-weight:700; font-size:15.5px; color:var(--text); text-align:center; direction:ltr;
+    transition:all .2s ease;
+  }
+  .amount-btn:active{ transform:scale(0.96); }
+  .amount-btn.active{ border-color:var(--teal); color:var(--teal); background:linear-gradient(180deg, rgba(23,240,195,0.12), transparent); box-shadow:0 0 16px rgba(23,240,195,0.2); }
+  .amount-btn[disabled]{ opacity:.35; pointer-events:none; }
+
+  .withdraw-all-btn{
+    margin:0 20px 16px; width:calc(100% - 40px); display:flex; align-items:center; justify-content:center; gap:8px;
+    border:1.5px dashed var(--gold); border-radius:13px; padding:12px; color:var(--gold); font-weight:700; font-size:13.5px;
+    background:linear-gradient(180deg, rgba(232,163,61,0.08), transparent); transition:all .2s ease;
+  }
+  .withdraw-all-btn:active{ transform:scale(0.98); }
+
+  /* ---------- fee summary ---------- */
+  .fee-card{ margin:4px 20px 18px; background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:16px 18px; }
+  .fee-row{ display:flex; justify-content:space-between; align-items:center; padding:8px 0; font-size:13px; }
+  .fee-row + .fee-row{ border-top:1px solid var(--border); }
+  .fee-row .lbl{ color:var(--text-dim); }
+  .fee-row .val{ font-family:'Rajdhani',sans-serif; font-weight:700; direction:ltr; }
+  .fee-row.total .val{ color:var(--teal); font-size:17px; text-shadow:0 0 12px rgba(23,240,195,0.3); }
+  .fee-row .val.dim{ color:var(--text-dim2); }
+
+  .cta-btn{ width:100%; margin-top:6px; display:flex; align-items:center; justify-content:center; gap:10px; border:1px solid var(--teal-dim); border-radius:14px; padding:15px; color:var(--teal); font-weight:700; font-size:14.5px; background:linear-gradient(180deg, rgba(23,240,195,0.08), transparent); transition:all .2s ease; }
+  .cta-btn:active{ transform:scale(0.98); }
+  .cta-btn.solid{ background:var(--teal); color:#04211b; border-color:var(--teal); box-shadow:0 0 22px rgba(23,240,195,0.3); }
+  .cta-btn[disabled]{ opacity:.4; pointer-events:none; }
+  .wrap-pad{ padding:6px 20px 4px; }
+  .note-line{ font-size:11px; color:var(--text-dim2); text-align:center; margin-top:10px; line-height:1.8; }
+
+  /* ---------- history ---------- */
+  .history-list{ display:flex; flex-direction:column; gap:12px; padding:0 20px; }
+  .history-card{ background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:14px 16px; }
+  .history-card .hc-top{ display:flex; align-items:center; gap:12px; }
+  .history-card .hc-icon{ width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-family:'Rajdhani',sans-serif; font-weight:700; font-size:13px; color:#04211b; }
+  .history-card .hc-info{ flex:1; min-width:0; }
+  .history-card .hc-amount{ font-family:'Rajdhani',sans-serif; font-weight:700; font-size:16px; direction:ltr; text-align:left; }
+  .history-card .hc-meta{ font-size:11.5px; color:var(--text-dim2); margin-top:3px; }
+  .history-card .hc-addr{ font-size:10.5px; color:var(--text-dim2); margin-top:8px; padding-top:8px; border-top:1px solid var(--border); direction:ltr; text-align:left; word-break:break-all; font-family:'Rajdhani',sans-serif; }
+  .status-badge{ font-size:10.5px; font-weight:800; padding:5px 11px; border-radius:8px; flex-shrink:0; white-space:nowrap; }
+  .status-badge.pending{ background:rgba(232,163,61,0.14); color:var(--gold); }
+  .status-badge.approved{ background:rgba(23,240,195,0.14); color:var(--teal); }
+  .status-badge.rejected{ background:rgba(239,74,74,0.14); color:var(--red); }
+
+  .empty-state{ text-align:center; padding:36px 20px; color:var(--text-dim2); font-size:13px; }
+  .empty-state svg{ width:40px; height:40px; color:var(--text-dim2); margin-bottom:10px; opacity:.6; }
+  .skeleton{ background:var(--panel); border:1px solid var(--border); border-radius:16px; height:66px; position:relative; overflow:hidden; }
+  .skeleton::after{ content:''; position:absolute; inset:0; background:linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent); animation:shimmer 1.4s infinite; }
+  @keyframes shimmer{ 0%{ transform:translateX(-100%);} 100%{ transform:translateX(100%);} }
+
+  /* ---------- modal (confirm + success share same base) ---------- */
+  .modal-overlay{ position:absolute; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center; z-index:80; opacity:0; pointer-events:none; transition:opacity .3s ease; padding:20px; }
+  .modal-overlay.show{ opacity:1; pointer-events:auto; }
+  .modal-card{ background:var(--panel); border:1px solid var(--teal-dim); border-radius:22px; padding:26px 24px; text-align:center; max-width:330px; width:100%; transform:scale(0.85) translateY(10px); transition:transform .35s cubic-bezier(.34,1.56,.64,1); box-shadow:0 0 40px rgba(23,240,195,0.2); }
+  .modal-overlay.show .modal-card{ transform:scale(1) translateY(0); }
+  .modal-icon{ width:60px; height:60px; border-radius:50%; background:rgba(23,240,195,0.12); border:1.5px solid var(--teal); display:flex; align-items:center; justify-content:center; margin:0 auto 16px; box-shadow:0 0 24px rgba(23,240,195,0.3); }
+  .modal-icon.warn-icon{ background:rgba(232,163,61,0.12); border-color:var(--gold); box-shadow:0 0 24px rgba(232,163,61,0.28); }
+  .modal-icon svg{ width:28px; height:28px; color:var(--teal); }
+  .modal-icon.warn-icon svg{ color:var(--gold); }
+  .modal-card h3{ font-size:17px; font-weight:800; margin-bottom:8px; }
+  .modal-card p{ font-size:13px; color:var(--text-dim); line-height:1.8; margin-bottom:18px; }
+  .modal-card .dep-id{ font-family:'Rajdhani',sans-serif; color:var(--teal); direction:ltr; display:inline-block; }
+  .confirm-summary{ background:var(--panel-2); border:1px solid var(--border); border-radius:14px; padding:12px 14px; margin-bottom:18px; text-align:right; }
+  .confirm-summary .cs-row{ display:flex; justify-content:space-between; font-size:12.5px; padding:6px 0; }
+  .confirm-summary .cs-row .l{ color:var(--text-dim); }
+  .confirm-summary .cs-row .v{ font-family:'Rajdhani',sans-serif; font-weight:700; direction:ltr; }
+  .confirm-summary .cs-row.net .v{ color:var(--teal); }
+  .modal-actions{ display:flex; gap:10px; }
+  .modal-btn{ flex:1; border-radius:13px; padding:13px; font-weight:800; font-size:13.5px; transition:all .2s ease; }
+  .modal-btn:active{ transform:scale(0.97); }
+  .modal-btn.cancel{ background:var(--panel-2); border:1px solid var(--border); color:var(--text-dim); }
+  .modal-btn.confirm{ background:var(--teal); color:#04211b; box-shadow:0 0 18px rgba(23,240,195,0.3); }
+  .modal-close{ width:100%; background:var(--teal); color:#04211b; font-weight:800; border-radius:13px; padding:13px; font-size:14px; }
+
+  /* ---------- toast ---------- */
+  .toast{ position:absolute; bottom:112px; left:50%; transform:translate(-50%,14px); background:#0f1a18; border:1px solid var(--teal); color:var(--text); padding:10px 18px; border-radius:12px; font-size:12.5px; opacity:0; transition:all .3s ease; pointer-events:none; z-index:90; white-space:nowrap; max-width:90%; text-align:center; box-shadow:0 0 20px rgba(23,240,195,0.25); }
+  .toast.show{ opacity:1; transform:translate(-50%,0); }
+  .toast.warn{ border-color:var(--red); box-shadow:0 0 20px rgba(239,74,74,0.25); }
+
+  .ripple-wrap{ position:relative; overflow:hidden; }
+  .nav-item.ripple-wrap{ overflow:visible; }
+  .ripple{ position:absolute; border-radius:50%; background:radial-gradient(circle, rgba(23,240,195,0.55), rgba(23,240,195,0) 70%); transform:scale(0); animation:rippleAnim .6s ease-out forwards; pointer-events:none; }
+  @keyframes rippleAnim{ to{ transform:scale(3.2); opacity:0; } }
+  .glow-pulse{ animation:glowPulse .55s ease; }
+  @keyframes glowPulse{ 0%{ box-shadow:0 0 0 0 rgba(23,240,195,.6); filter:brightness(1);} 40%{ filter:brightness(1.25);} 70%{ box-shadow:0 0 0 14px rgba(23,240,195,0);} 100%{ box-shadow:0 0 0 0 rgba(23,240,195,0); filter:brightness(1);} }
+
+  /* ---------- bottom nav ---------- */
+  .bottom-nav{ position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:430px; background:rgba(6,10,9,0.92); backdrop-filter:blur(10px); border-top:1px solid var(--border); display:flex; justify-content:space-around; align-items:flex-end; padding:10px 6px 24px; z-index:10; }
+  .nav-item{ display:flex; flex-direction:column; align-items:center; gap:5px; font-size:10.5px; color:var(--text-dim2); font-weight:600; width:60px; border-radius:14px; }
+  .nav-item.active{ color:var(--teal); }
+  .nav-item svg{ width:22px; height:22px; }
+  .nav-center{ width:56px; height:56px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:radial-gradient(circle, rgba(23,240,195,0.15), transparent 70%); border:1.5px solid var(--teal); margin-top:-30px; box-shadow:0 0 20px rgba(23,240,195,0.35); }
+  .nav-center svg{ width:24px; height:24px; }
+</style>
+</head>
+<body>
+<div class="device">
+
+  <div class="topbar">
+    <button class="menu-btn" id="btnMenu" aria-label="القائمة">
+      <svg width="24" height="18" viewBox="0 0 24 18" fill="none"><path d="M1 1h22M1 9h16M1 17h22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <div class="logo">
+      <div class="word1">ELITE</div>
+      <div class="word2">TRADING</div>
+      <div class="rule"></div>
+    </div>
+    <div class="header-right">
+      <button class="bell" id="btnBell" aria-label="الإشعارات">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2a6 6 0 0 0-6 6v3.5c0 .8-.3 1.6-.9 2.2L4 15h16l-1.1-1.3c-.6-.6-.9-1.4-.9-2.2V8a6 6 0 0 0-6-6z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9.5 18a2.5 2.5 0 0 0 5 0" stroke="currentColor" stroke-width="1.6"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="page-title-row">
+    <button class="back-btn" id="btnBack" aria-label="رجوع">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div>
+      <h1>سحب الأرباح</h1>
+      <div class="sub">Withdraw Funds</div>
+    </div>
+  </div>
+
+  <!-- Balance hero -->
+  <div class="balance-hero">
+    <div class="top-row">
+      <span class="live-tag"><span class="dot"></span>LIVE</span>
+      <div class="wallet-icon">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 3v13m0 0-4.5-4.5M12 16l4.5-4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 19h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </div>
+    </div>
+    <div class="label-en">AVAILABLE FOR WITHDRAWAL</div>
+    <div class="label-ar">الرصيد المتاح للسحب</div>
+    <div class="amount" id="availableBalance">—<span class="cur">USDT</span></div>
+    <div class="foot-row">
+      <div class="foot-item">الحساب: <b id="accountRef">—</b></div>
+      <div class="foot-item">آخر تحديث: <b id="lastUpdate">—</b></div>
+    </div>
+  </div>
+
+  <!-- Step 1: network -->
+  <div class="section-title">
+    <span class="hint">اختر شبكة واحدة</span>
+    <h2>1. اختر الشبكة</h2>
+  </div>
+  <div class="network-grid" id="networkGrid"></div>
+
+  <!-- Step 2: wallet address -->
+  <div class="section-title">
+    <span class="hint"></span>
+    <h2>2. عنوان المحفظة</h2>
+  </div>
+  <div class="field-block">
+    <label for="walletAddress">Wallet Address</label>
+    <div class="input-wrap address-wrap" id="addressWrap">
+      <input type="text" id="walletAddress" placeholder="أدخل عنوان محفظتك بدقة">
+    </div>
+    <div class="field-error" id="addressError"></div>
+    <div class="field-hint">تأكد من صحة العنوان ومطابقته للشبكة المختارة — لا يمكن التراجع بعد التأكيد.</div>
+  </div>
+
+  <!-- Step 3: amount -->
+  <div class="section-title">
+    <span class="hint" id="amountLimitsHint">الحد الأدنى 10 USDT</span>
+    <h2>3. المبلغ</h2>
+  </div>
+  <div class="amount-grid" id="amountGrid"></div>
+  <button class="withdraw-all-btn" id="btnWithdrawAll">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 3v18M5 10l7-7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span>سحب كامل الرصيد · Withdraw All</span>
+  </button>
+  <div class="field-block">
+    <div class="input-wrap" id="amountInputWrap">
+      <input type="number" id="manualAmount" placeholder="0.00" inputmode="decimal">
+      <span class="cur-tag">USDT</span>
+    </div>
+    <div class="field-error" id="amountError"></div>
+  </div>
+
+  <!-- Fee summary -->
+  <div class="fee-card" id="feeCard">
+    <div class="fee-row">
+      <span class="lbl">المبلغ المطلوب</span>
+      <span class="val" id="feeAmount">— USDT</span>
+    </div>
+    <div class="fee-row">
+      <span class="lbl">رسوم الشبكة</span>
+      <span class="val dim" id="feeFee">— USDT</span>
+    </div>
+    <div class="fee-row total">
+      <span class="lbl">سيصل إليك</span>
+      <span class="val" id="feeNet">— USDT</span>
+    </div>
+  </div>
+
+  <div class="wrap-pad">
+    <button class="cta-btn solid" id="btnSubmitWithdraw" disabled>
+      <span>Submit Withdrawal · تأكيد السحب</span>
+    </button>
+    <div class="note-line">سيُخصم المبلغ من رصيدك فوراً، وإذا رُفض الطلب يُعاد المبلغ تلقائياً إلى رصيدك.</div>
+  </div>
+
+  <!-- History -->
+  <div class="section-title" style="margin-top:10px;">
+    <span class="hint" id="historyCount"></span>
+    <h2>سجل السحوبات</h2>
+  </div>
+  <div class="history-list" id="historyList">
+    <div class="skeleton"></div>
+    <div class="skeleton"></div>
+  </div>
+
+  <div class="bottom-nav" id="bottomNav">
+    <button class="nav-item" data-page="account">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.7"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+      <span>حسابي</span>
+    </button>
+    <button class="nav-item" data-page="friends">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="8" cy="8" r="3.2" stroke="currentColor" stroke-width="1.6"/><circle cx="16" cy="8" r="3.2" stroke="currentColor" stroke-width="1.6"/><path d="M2 20c0-3.3 2.8-5.5 6-5.5s6 2.2 6 5.5M12 20c0-3.3 2.8-5.5 6-5.5s6 2.2 6 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <span>الأصدقاء</span>
+    </button>
+    <button class="nav-item" data-page="trade">
+      <div class="nav-center"><svg viewBox="0 0 24 24" fill="none"><path d="M2 12h4l2.5-7L13 19l2.5-7H22" stroke="#17f0c3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span style="margin-top:2px;">تداول</span>
+    </button>
+    <button class="nav-item" data-page="work">
+      <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="7" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" stroke="currentColor" stroke-width="1.6"/></svg>
+      <span>العمل</span>
+    </button>
+    <button class="nav-item" data-page="home">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M3 12l2-2 5 5L20 5l2 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 20h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <span>الرئيسية</span>
+    </button>
+  </div>
+
+  <!-- Confirm modal -->
+  <div class="modal-overlay" id="confirmModal">
+    <div class="modal-card">
+      <div class="modal-icon warn-icon">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 9v4M12 17h.01" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+      </div>
+      <h3>هل أنت متأكد؟</h3>
+      <p>هل أنت متأكد من تنفيذ عملية السحب؟ لا يمكن التراجع عن هذا الطلب بعد الإرسال.</p>
+      <div class="confirm-summary">
+        <div class="cs-row"><span class="l">الشبكة</span><span class="v" id="csNetwork">—</span></div>
+        <div class="cs-row"><span class="l">العنوان</span><span class="v" id="csAddress" style="max-width:170px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">—</span></div>
+        <div class="cs-row"><span class="l">المبلغ</span><span class="v" id="csAmount">—</span></div>
+        <div class="cs-row"><span class="l">الرسوم</span><span class="v" id="csFee">—</span></div>
+        <div class="cs-row net"><span class="l">سيصل إليك</span><span class="v" id="csNet">—</span></div>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-btn cancel" id="btnCancelWithdraw">إلغاء</button>
+        <button class="modal-btn confirm" id="btnConfirmWithdraw">تأكيد</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success modal -->
+  <div class="modal-overlay" id="successModal">
+    <div class="modal-card">
+      <div class="modal-icon">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <h3>تم إنشاء طلب السحب</h3>
+  <p>طلبك الآن قيد المراجعة من فريق العمليات. تم خصم المبلغ من رصيدك، وإذا رُفض الطلب سيُعاد تلقائياً.<br>رقم الطلب: <span class="dep-id" id="modalReqId">—</span></p>
+      <button class="modal-close" id="btnModalClose">تم</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+/* ============================================================
+   0) shared helpers (same pattern as home.html / deposit.html)
+   ============================================================ */
+function toast(msg, isWarn){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.toggle('warn', !!isWarn);
+  t.classList.remove('show'); void t.offsetWidth; t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(()=>t.classList.remove('show'), 2400);
+}
+function attachInteractive(el, onClick){
+  if(!el) return;
+  el.classList.add('ripple-wrap');
+  el.addEventListener('click', (e)=>{
+    const rect = el.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const ripple = document.createElement('span');
+    ripple.className = 'ripple';
+    ripple.style.width = ripple.style.height = size + 'px';
+    ripple.style.left = (e.clientX - rect.left - size/2) + 'px';
+    ripple.style.top  = (e.clientY - rect.top - size/2) + 'px';
+    el.appendChild(ripple);
+    setTimeout(()=>ripple.remove(), 650);
+    el.classList.remove('glow-pulse'); void el.offsetWidth; el.classList.add('glow-pulse');
+    setTimeout(()=>el.classList.remove('glow-pulse'), 550);
+    if(onClick) onClick(e);
+  });
+}
+const escapeHtml = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* ============================================================
+   1) config — backend integration points
+   ------------------------------------------------------------
+   No hard-coded balances, fees, or withdrawal history. Wire:
+
+     GET  /api/user/balance
+          -> { balance, mainBalance, workBalance, withdrawable, capital, accountRef }
+
+     GET  /api/withdraw/networks
+          -> [{ id:'trc20'|'bep20'|'erc20',
+                feeFixed: number, minAmount: number }]
+
+     GET  /api/withdraw/history
+          -> [{ id, amount, network, address, date, status:
+                'pending'|'approved'|'rejected' }]
+
+     POST /api/withdraw/submit
+          body: { network, address, amount, fee, netAmount }
+          -> { success: true, requestId: string }
+   ============================================================ */
+const CONFIG = { MIN_AMOUNT: 10, availableBalance: null };
+const PRESET_AMOUNTS = [50,100,500,1000,3000,5000];
+
+const NETWORKS = [
+  { id:'trc20',   coin:'USDT',     label:'TRC20',   full:'Tron Network',     icon:'T', feeFixed:null },
+  { id:'polygon', coin:'USDT',     label:'Polygon', full:'Polygon Network',  icon:'P', feeFixed:null },
+  { id:'erc20',   coin:'Ethereum', label:'ERC20',   full:'Ethereum Network', icon:'E', feeFixed:null }
+];
+
+const state = { network:null, amount:null, address:'' };
+
+/* ============================================================
+   2) render: network cards
+   ============================================================ */
+function networkCardTemplate(n){
+  const feeTxt = n.feeFixed != null ? `رسوم السحب: <b>${n.feeFixed} USDT</b>` : 'رسوم السحب: —';
+  return `
+  <button class="network-card" data-network="${n.id}">
+    <div class="coin-icon">${n.icon}</div>
+    <div class="info">
+      <div class="coin-name">${n.coin} <span style="color:var(--text-dim2);font-weight:600;">· ${n.label}</span></div>
+      <div class="coin-sub">${n.full}</div>
+      <div class="fee-tag">${feeTxt}</div>
+    </div>
+    <div class="radio"></div>
+  </button>`;
+}
+function renderNetworks(){
+  const grid = document.getElementById('networkGrid');
+  grid.innerHTML = NETWORKS.map(networkCardTemplate).join('');
+  grid.querySelectorAll('.network-card').forEach(card=>{
+    attachInteractive(card, ()=>{
+      grid.querySelectorAll('.network-card').forEach(c=>c.classList.remove('selected'));
+      card.classList.add('selected');
+      state.network = NETWORKS.find(n=>n.id===card.dataset.network);
+      updateFeeSummary();
+      updateSubmitState();
+    });
+  });
+}
+
+/* ============================================================
+   3) wallet address
+   ============================================================ */
+const addrInput = document.getElementById('walletAddress');
+addrInput.addEventListener('input', ()=>{
+  state.address = addrInput.value.trim();
+  document.getElementById('addressError').textContent = '';
+  document.getElementById('addressWrap').classList.remove('error');
+  updateSubmitState();
+});
+addrInput.addEventListener('focus', ()=>document.getElementById('addressWrap').classList.add('focus'));
+addrInput.addEventListener('blur', ()=>document.getElementById('addressWrap').classList.remove('focus'));
+
+/* ============================================================
+   4) amount section
+   ============================================================ */
+function renderAmounts(){
+  const grid = document.getElementById('amountGrid');
+  grid.innerHTML = PRESET_AMOUNTS.map(a=>`<button class="amount-btn" data-amount="${a}">${a.toLocaleString('en-US')}</button>`).join('');
+  grid.querySelectorAll('.amount-btn').forEach(btn=>{
+    attachInteractive(btn, ()=>{
+      grid.querySelectorAll('.amount-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      const val = Number(btn.dataset.amount);
+      document.getElementById('manualAmount').value = val;
+      setAmount(val);
+    });
+  });
+  refreshAmountButtonAvailability();
+}
+function refreshAmountButtonAvailability(){
+  document.querySelectorAll('.amount-btn').forEach(btn=>{
+    const val = Number(btn.dataset.amount);
+    const aboveBalance = CONFIG.availableBalance != null && val > CONFIG.availableBalance;
+    const belowMin = val < CONFIG.MIN_AMOUNT;
+    btn.disabled = aboveBalance || belowMin;
+  });
+}
+function setAmount(val){
+  const errEl = document.getElementById('amountError');
+  const wrap = document.getElementById('amountInputWrap');
+  if(val == null || val === '' || isNaN(val)){
+    state.amount = null; errEl.textContent=''; wrap.classList.remove('error');
+    updateFeeSummary(); updateSubmitState(); return;
+  }
+  const num = Number(val);
+  const max = CONFIG.availableBalance;
+  if(num < CONFIG.MIN_AMOUNT){
+    state.amount = null; errEl.textContent = `الحد الأدنى للسحب هو ${CONFIG.MIN_AMOUNT} USDT`; wrap.classList.add('error');
+  } else if(max != null && num > max){
+    state.amount = null; errEl.textContent = `المبلغ يتجاوز رصيدك المتاح (${max.toLocaleString('en-US',{maximumFractionDigits:2})} USDT)`; wrap.classList.add('error');
+  } else if(max == null){
+    state.amount = null; errEl.textContent = 'يتعذر التحقق من الرصيد المتاح حالياً'; wrap.classList.add('error');
+  } else {
+    state.amount = num; errEl.textContent=''; wrap.classList.remove('error');
+  }
+  updateFeeSummary();
+  updateSubmitState();
+}
+document.getElementById('manualAmount').addEventListener('input', (e)=>{
+  document.querySelectorAll('.amount-btn').forEach(b=>b.classList.remove('active'));
+  setAmount(e.target.value);
+});
+attachInteractive(document.getElementById('btnWithdrawAll'), ()=>{
+  if(CONFIG.availableBalance == null){ toast('يتعذر تحميل الرصيد المتاح حالياً', true); return; }
+  document.querySelectorAll('.amount-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('manualAmount').value = CONFIG.availableBalance;
+  setAmount(CONFIG.availableBalance);
+});
+
+/* ============================================================
+   5) fee summary — computed from the selected network's real fee
+   ============================================================ */
+function updateFeeSummary(){
+  const amountEl = document.getElementById('feeAmount');
+  const feeEl = document.getElementById('feeFee');
+  const netEl = document.getElementById('feeNet');
+  if(!state.network || state.network.feeFixed == null){
+    amountEl.textContent = state.amount != null ? `${state.amount.toLocaleString('en-US')} USDT` : '— USDT';
+    feeEl.textContent = '— USDT';
+    netEl.textContent = '— USDT';
+    return;
+  }
+  if(state.amount == null){
+    amountEl.textContent = '— USDT'; feeEl.textContent = `${state.network.feeFixed} USDT`; netEl.textContent = '— USDT';
+    return;
+  }
+  const fee = state.network.feeFixed;
+  const net = Math.max(state.amount - fee, 0);
+  amountEl.textContent = `${state.amount.toLocaleString('en-US')} USDT`;
+  feeEl.textContent = `${fee.toLocaleString('en-US')} USDT`;
+  netEl.textContent = `${net.toLocaleString('en-US',{minimumFractionDigits:1,maximumFractionDigits:4})} USDT`;
+}
+
+/* ============================================================
+   6) submit button state + validation
+   ============================================================ */
+function updateSubmitState(){
+  const ok = state.network && state.amount && state.address && state.address.length >= 8;
+  document.getElementById('btnSubmitWithdraw').disabled = !ok;
+}
+function validateBeforeConfirm(){
+  let ok = true;
+  if(!state.network){ toast('يرجى اختيار الشبكة', true); ok = false; }
+  if(!state.address || state.address.length < 8){
+    document.getElementById('addressError').textContent = 'يرجى إدخال عنوان محفظة صحيح';
+    document.getElementById('addressWrap').classList.add('error');
+    ok = false;
+  }
+  if(!state.amount){ toast('يرجى إدخال مبلغ صحيح', true); ok = false; }
+  return ok;
+}
+
+/* ============================================================
+   7) confirmation modal -> submit
+   ============================================================ */
+attachInteractive(document.getElementById('btnSubmitWithdraw'), ()=>{
+  if(!validateBeforeConfirm()) return;
+  const fee = state.network.feeFixed != null ? state.network.feeFixed : 0;
+  const net = Math.max(state.amount - fee, 0);
+  document.getElementById('csNetwork').textContent = `${state.network.coin} · ${state.network.label}`;
+  document.getElementById('csAddress').textContent = state.address;
+  document.getElementById('csAmount').textContent = `${state.amount.toLocaleString('en-US')} USDT`;
+  document.getElementById('csFee').textContent = `${fee.toLocaleString('en-US')} USDT`;
+  document.getElementById('csNet').textContent = `${net.toLocaleString('en-US',{maximumFractionDigits:4})} USDT`;
+  document.getElementById('confirmModal').classList.add('show');
+});
+document.getElementById('btnCancelWithdraw').addEventListener('click', ()=>{
+  document.getElementById('confirmModal').classList.remove('show');
+});
+document.getElementById('btnConfirmWithdraw').addEventListener('click', async ()=>{
+  const btn = document.getElementById('btnConfirmWithdraw');
+  const original = btn.textContent;
+  btn.textContent = 'جاري الإرسال…';
+  btn.disabled = true;
+
+  const fee = state.network.feeFixed != null ? state.network.feeFixed : 0;
+  const net = Math.max(state.amount - fee, 0);
+  const payload = { network: state.network.id, address: state.address, amount: state.amount };
+
+  try{
+    const res = await fetch('/api/withdraw/submit', {
+      method:'POST', credentials:'same-origin', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)
+    });
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    document.getElementById('confirmModal').classList.remove('show');
+    document.getElementById('modalReqId').textContent = data.requestId || '—';
+    document.getElementById('successModal').classList.add('show');
+    prependHistoryEntry({ amount: state.amount, network: state.network.id, address: state.address, date: new Date().toISOString(), status:'pending' });
+    resetForm();
+    loadBalance();
+  }catch(err){
+    console.warn('withdraw submit failed:', err.message);
+    document.getElementById('confirmModal').classList.remove('show');
+    toast('تعذر إرسال طلب السحب — تحقق من الاتصال بالخادم', true);
+  }finally{
+    btn.textContent = original;
+    btn.disabled = false;
+  }
+});
+document.getElementById('btnModalClose').addEventListener('click', ()=>{
+  document.getElementById('successModal').classList.remove('show');
+});
+function resetForm(){
+  state.network = null; state.amount = null; state.address = '';
+  document.querySelectorAll('.network-card').forEach(c=>c.classList.remove('selected'));
+  document.querySelectorAll('.amount-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('walletAddress').value = '';
+  document.getElementById('manualAmount').value = '';
+  updateFeeSummary();
+  updateSubmitState();
+}
+
+/* ============================================================
+   8) history
+   ============================================================ */
+const STATUS_LABEL = { pending:'قيد المراجعة', approved:'مقبول', rejected:'مرفوض' };
+const NETWORK_LABEL = { trc20:'USDT · TRC20', polygon:'USDT · Polygon', erc20:'Ethereum · ERC20' };
+const NETWORK_ICON  = { trc20:'T', polygon:'P', erc20:'E' };
+const NETWORK_BG    = { trc20:'linear-gradient(160deg,#26a17b,#0e8f76)', polygon:'linear-gradient(160deg,#a855f7,#6b21a8)', erc20:'linear-gradient(160deg,#8c9eff,#5468d9)' };
+
+function historyCardTemplate(h){
+  const d = new Date(h.date);
+  const dateStr = isNaN(d) ? String(h.date) : d.toLocaleDateString('ar-EG', { day:'2-digit', month:'short', year:'numeric' });
+  return `
+  <div class="history-card">
+    <div class="hc-top">
+      <div class="hc-icon" style="background:${NETWORK_BG[h.network] || 'var(--panel-2)'}">${NETWORK_ICON[h.network] || '?'}</div>
+      <div class="hc-info">
+        <div class="hc-amount">${Number(h.amount).toLocaleString('en-US')} USDT</div>
+        <div class="hc-meta">${NETWORK_LABEL[h.network] || escapeHtml(h.network)} · ${escapeHtml(dateStr)}</div>
+      </div>
+      <span class="status-badge ${h.status}">${STATUS_LABEL[h.status] || escapeHtml(h.status)}</span>
+    </div>
+    <div class="hc-addr">${escapeHtml(h.address || '—')}</div>
+  </div>`;
+}
+function renderHistory(list){
+  const container = document.getElementById('historyList');
+  const countEl = document.getElementById('historyCount');
+  if(!list || list.length === 0){
+    countEl.textContent = '';
+    container.innerHTML = `
+      <div class="empty-state">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 3v13m0 0-4.5-4.5M12 16l4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 19h16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <div>لا توجد عمليات سحب بعد</div>
+      </div>`;
+    return;
+  }
+  countEl.textContent = `${list.length} عملية`;
+  container.innerHTML = list.map(historyCardTemplate).join('');
+}
+function prependHistoryEntry(entry){
+  const container = document.getElementById('historyList');
+  if(container.querySelector('.empty-state')){ container.innerHTML = ''; }
+  container.insertAdjacentHTML('afterbegin', historyCardTemplate(entry));
+  document.getElementById('historyCount').textContent = container.querySelectorAll('.history-card').length + ' عملية';
+}
+async function loadHistory(){
+  try{
+    const res = await fetch('/api/withdraw/history', { credentials: 'same-origin' });
+    if(res.status === 401){
+      window.location.href = '/';
+      return;
+    }
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    renderHistory(Array.isArray(data) ? data : []);
+  }catch(err){
+    console.warn('history load failed:', err.message);
+    renderHistory([]);
+  }
+}
+
+/* ============================================================
+   9) balance + network fees (real data from server)
+   ============================================================ */
+async function loadBalance(){
+  try{
+    const res = await fetch('/api/user/balance', { credentials: 'same-origin' });
+    if(res.status === 401){
+      toast('انتهت الجلسة — جاري تحويلك لتسجيل الدخول...', true);
+      setTimeout(()=>{ window.location.href = '/'; }, 800);
+      return;
+    }
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    CONFIG.availableBalance = Number(data.withdrawable || 0);
+    document.getElementById('availableBalance').innerHTML = `${CONFIG.availableBalance.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}<span class="cur">USDT</span>`;
+    document.getElementById('accountRef').textContent = data.accountRef || '—';
+    document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});
+    document.getElementById('amountLimitsHint').textContent = `${CONFIG.MIN_AMOUNT} – ${CONFIG.availableBalance.toLocaleString('en-US',{maximumFractionDigits:0})} USDT`;
+    refreshAmountButtonAvailability();
+  }catch(err){
+    console.warn('balance load failed:', err.message);
+    toast('تعذر تحميل الرصيد المتاح — تحقق من الاتصال بالخادم', true);
+  }
+}
+async function loadNetworkFees(){
+  try{
+    const res = await fetch('/api/withdraw/networks', { credentials: 'same-origin' });
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    data.forEach(remote=>{
+      const local = NETWORKS.find(n=>n.id===remote.id);
+      if(local){
+        local.feeFixed = remote.feeFixed != null ? Number(remote.feeFixed) : null;
+        if(remote.minAmount) CONFIG.MIN_AMOUNT = remote.minAmount;
+      }
+    });
+    renderNetworks();
+    refreshAmountButtonAvailability();
+  }catch(err){
+    console.warn('network fees load failed:', err.message);
+  }
+}
+
+/* ============================================================
+   10) wire up static controls
+   ============================================================ */
+attachInteractive(document.getElementById('btnBack'), ()=>{ window.location.href = '/account'; });
+attachInteractive(document.getElementById('btnMenu'), ()=> openSideDrawer());
+
+async function openSideDrawer(){
+  let drawer = document.getElementById('sideDrawerEl');
+  if(drawer){
+    drawer.classList.add('show');
+    document.getElementById('sideDrawerBg').classList.add('show');
+    return;
+  }
+
+  let uName = 'مستخدم', uEmail = '—';
+  try{
+    const res = await fetch('/api/account/profile', { credentials: 'same-origin' });
+    if(res.ok){
+      const d = await res.json();
+      uName = d.name || d.fullname || 'مستخدم';
+      uEmail = d.email || '—';
+    }
+  }catch(e){}
+  const initial = (uName.charAt(0) || 'E').toUpperCase();
+
+  const style = document.createElement('style');
+  style.id = 'sideDrawerStyles';
+  style.textContent = `
+    .side-drawer-bg{ position:fixed; inset:0; background:rgba(0,0,0,0.65); backdrop-filter:blur(4px); z-index:100; opacity:0; pointer-events:none; transition:opacity .25s; }
+    .side-drawer-bg.show{ opacity:1; pointer-events:auto; }
+    .side-drawer{ position:fixed; top:0; bottom:0; right:0; z-index:110; width:min(300px,82vw);
+      background:var(--panel,#0d1615); border-left:1px solid var(--teal-dim,#0e8f76); border-radius:26px 0 0 26px;
+      padding:22px 18px; transform:translateX(105%); transition:transform .35s cubic-bezier(.22,1,.36,1);
+      display:flex; flex-direction:column; box-shadow:-20px 0 60px rgba(0,0,0,.5); color:var(--text,#eef4f2); }
+    .side-drawer.show{ transform:none; }
+    .side-drawer-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+    .side-drawer-logo .w1{ font-family:'Rajdhani',sans-serif; font-weight:700; font-size:22px; letter-spacing:2px;
+      background:linear-gradient(180deg,#fff,#b9c3c1); -webkit-background-clip:text; background-clip:text; color:transparent; font-style:italic; }
+    .side-drawer-logo .w2{ font-family:'Rajdhani',sans-serif; font-size:7px; letter-spacing:4px; color:var(--teal,#17f0c3); margin-top:2px; }
+    .side-drawer-close{ width:34px; height:34px; border-radius:50%; border:1px solid var(--border,#1c2b28);
+      display:flex; align-items:center; justify-content:center; color:var(--text-dim,#8fa39e); background:none; cursor:pointer; font-size:14px; }
+    .side-drawer-user{ display:flex; align-items:center; gap:12px; background:var(--panel-2,#0f1a18);
+      border:1px solid var(--border,#1c2b28); border-radius:16px; padding:11px 12px; margin-bottom:16px; }
+    .side-drawer-avatar{ width:44px; height:44px; border-radius:13px; display:flex; align-items:center; justify-content:center;
+      font-family:'Rajdhani',sans-serif; font-size:20px; font-weight:700; color:var(--teal,#17f0c3);
+      background:radial-gradient(circle at 30% 25%, rgba(23,240,195,.2), transparent 70%), var(--panel,#0d1615);
+      border:1px solid var(--teal-dim,#0e8f76); flex-shrink:0; }
+    .side-drawer-user b{ font-size:13.5px; display:block; color:var(--text,#eef4f2); }
+    .side-drawer-user span{ font-size:10.5px; color:var(--text-dim,#8fa39e); direction:ltr; display:block; text-align:right; }
+    .side-drawer-links{ display:flex; flex-direction:column; gap:6px; flex:1; }
+    .side-drawer-links a, .side-drawer-links button{ display:flex; align-items:center; gap:12px; padding:12px 14px;
+      border-radius:14px; font-size:13.5px; font-weight:700; color:var(--text-dim,#8fa39e); text-align:right;
+      width:100%; border:1px solid transparent; transition:.2s; text-decoration:none; background:none; cursor:pointer; font-family:inherit; }
+    .side-drawer-links a:hover, .side-drawer-links button:hover{ background:rgba(23,240,195,.06); color:var(--text,#eef4f2); }
+    .side-drawer-links button.logout{ color:var(--red,#ef4a4a); background:rgba(239,74,74,.07); border:1px solid rgba(239,74,74,.3); margin-top:auto; }
+    .side-drawer-links svg{ width:19px; height:19px; flex-shrink:0; }
+  `;
+  document.head.appendChild(style);
+
+  const bg = document.createElement('div');
+  bg.className = 'side-drawer-bg';
+  bg.id = 'sideDrawerBg';
+
+  drawer = document.createElement('aside');
+  drawer.className = 'side-drawer';
+  drawer.id = 'sideDrawerEl';
+  drawer.innerHTML = `
+    <div class="side-drawer-head">
+      <div class="side-drawer-logo"><div class="w1">ELITE</div><div class="w2">TRADING</div></div>
+      <button class="side-drawer-close" id="sideDrawerClose">✕</button>
+    </div>
+    <div class="side-drawer-user">
+      <div class="side-drawer-avatar">${escapeHtml(initial)}</div>
+      <div><b>${escapeHtml(uName)}</b><span>${escapeHtml(uEmail)}</span></div>
+    </div>
+    <nav class="side-drawer-links">
+      <a href="/home"><svg viewBox="0 0 24 24" fill="none"><path d="M3 12l2-2 5 5L20 5l2 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 20h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>الرئيسية</a>
+      <a href="/work"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="7" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" stroke="currentColor" stroke-width="1.6"/></svg>العمل</a>
+      <a href="/trade"><svg viewBox="0 0 24 24" fill="none"><path d="M2 12h4l2.5-7L13 19l2.5-7H22" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>تداول</a>
+      <a href="/friends"><svg viewBox="0 0 24 24" fill="none"><circle cx="8" cy="8" r="3.2" stroke="currentColor" stroke-width="1.6"/><circle cx="16" cy="8" r="3.2" stroke="currentColor" stroke-width="1.6"/><path d="M2 20c0-3.3 2.8-5.5 6-5.5s6 2.2 6 5.5M12 20c0-3.3 2.8-5.5 6-5.5s6 2.2 6 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>الأصدقاء</a>
+      <a href="/account"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.7"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>حسابي</a>
+      <button class="logout" id="sideDrawerLogout"><svg viewBox="0 0 24 24" fill="none"><path d="M15 4h4a1.5 1.5 0 0 1 1.5 1.5v13A1.5 1.5 0 0 1 19 20h-4M10 8l-4 4 4 4M6 12h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>تسجيل الخروج</button>
+    </nav>
+  `;
+
+  document.body.appendChild(bg);
+  document.body.appendChild(drawer);
+
+  bg.addEventListener('click', closeSideDrawer);
+  document.getElementById('sideDrawerClose').addEventListener('click', closeSideDrawer);
+  document.getElementById('sideDrawerLogout').addEventListener('click', async ()=>{
+    try{ await fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' }); }catch(e){}
+    window.location.href = '/';
+  });
+
+  drawer.classList.add('show');
+  bg.classList.add('show');
+}
+
+function closeSideDrawer(){
+  const drawer = document.getElementById('sideDrawerEl');
+  const bg = document.getElementById('sideDrawerBg');
+  if(drawer) drawer.classList.remove('show');
+  if(bg) bg.classList.remove('show');
+}
+/* btnBell: related listener removed (handled by notifications.js) */
+
+document.querySelectorAll('.nav-item').forEach(navEl=>{
+  attachInteractive(navEl, ()=>{
+    const page = navEl.dataset.page;
+    if(page === 'account') window.location.href = '/account';
+    else if(page === 'friends') window.location.href = '/friends';
+    else if(page === 'work') window.location.href = '/work';
+    else if(page === 'trade') window.location.href = '/trade';
+    else if(page === 'home') window.location.href = '/home';
+  });
+});
+
+/* ============================================================
+   11) init
+   ============================================================ */
+renderAmounts();
+loadBalance();
+loadNetworkFees();
+loadHistory();
+</script>
+  <script src="/notifications.js"></script>
+</body>
+</html>

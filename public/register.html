@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>إنشاء حساب</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root{
+    --bg:#050b0a;
+    --surface:#0d1715;
+    --surface-2:#0a1210;
+    --border:#1e302c;
+    --input-border:#243a35;
+    --primary:#14d9ae;
+    --primary-2:#0eae91;
+    --text:#ffffff;
+    --muted:#7d8b87;
+    --muted-2:#586460;
+  }
+
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(circle at 50% -10%, rgba(20,217,174,0.10), transparent 40%),
+      var(--bg);
+    color:var(--text);
+    font-family:'Segoe UI', Tahoma, Arial, sans-serif;
+    display:flex;
+    justify-content:center;
+    padding:24px 18px 40px;
+  }
+
+  .phone{ width:100%; max-width:420px; }
+
+  .topbar{ display:flex; align-items:center; margin-bottom:8px; }
+
+  .back-btn{
+    width:38px; height:38px;
+    display:flex; align-items:center; justify-content:center;
+    border-radius:50%;
+    background:var(--surface);
+    border:1px solid var(--border);
+    color:var(--text);
+    cursor:pointer;
+    font-size:18px;
+  }
+
+  .brand{ text-align:center; margin:26px 0 30px; }
+
+  .brand-name{
+    font-size:34px;
+    font-weight:900;
+    letter-spacing:1px;
+    font-style:italic;
+    background:linear-gradient(180deg,#ffffff, #b9c4c1);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    text-shadow:0 0 25px rgba(20,217,174,0.15);
+  }
+
+  .brand-sub{
+    margin-top:4px;
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    color:var(--primary);
+    font-size:13px;
+    letter-spacing:5px;
+    font-weight:600;
+  }
+  .brand-sub::before, .brand-sub::after{
+    content:"";
+    width:26px; height:1px;
+    background:linear-gradient(90deg, transparent, var(--primary));
+  }
+  .brand-sub::after{ background:linear-gradient(90deg, var(--primary), transparent); }
+
+  .header-row{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    margin-bottom:24px;
+  }
+
+  .header-row h1{ font-size:24px; margin-bottom:6px; }
+
+  .header-row p{
+    color:var(--muted);
+    font-size:13px;
+    max-width:230px;
+    line-height:1.5;
+  }
+
+  .icon-badge{
+    width:56px; height:56px;
+    border-radius:50%;
+    border:1px solid rgba(20,217,174,0.35);
+    background:radial-gradient(circle at 50% 40%, rgba(20,217,174,0.18), transparent 70%);
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+    position:relative;
+  }
+  .icon-badge svg{ width:24px; height:24px; }
+  .icon-badge .plus{
+    position:absolute;
+    bottom:-2px; left:-2px;
+    width:18px; height:18px;
+    border-radius:50%;
+    background:var(--primary);
+    display:flex; align-items:center; justify-content:center;
+    font-size:12px; font-weight:900; color:#03110d;
+    border:2px solid var(--bg);
+  }
+
+  .message{
+    display:none;
+    padding:12px 14px;
+    margin-bottom:16px;
+    border-radius:12px;
+    font-size:13px;
+    line-height:1.5;
+  }
+
+  .field{ margin-bottom:14px; position:relative; }
+
+  .field .input-wrap{
+    display:flex;
+    align-items:center;
+    height:52px;
+    border:1px solid var(--input-border);
+    border-radius:14px;
+    background:var(--surface-2);
+    padding:0 14px;
+    gap:10px;
+    transition:border-color .2s, box-shadow .2s;
+  }
+  .field .input-wrap:focus-within{
+    border-color:var(--primary);
+    box-shadow:0 0 0 3px rgba(20,217,174,0.10);
+  }
+
+  .field svg.icon{ width:18px; height:18px; color:var(--muted); flex-shrink:0; }
+
+  .field input, .field select{
+    flex:1;
+    background:transparent;
+    border:none;
+    outline:none;
+    color:var(--text);
+    font-size:14px;
+    text-align:right;
+  }
+
+  .field input::placeholder{ color:var(--muted-2); }
+
+  .toggle-eye{
+    background:none; border:none; cursor:pointer;
+    color:var(--muted);
+    display:flex; align-items:center;
+  }
+  .toggle-eye svg{ width:19px; height:19px; }
+
+  .phone-code{
+    display:flex; align-items:center; gap:4px;
+    color:var(--muted);
+    font-size:13px;
+    padding-left:10px;
+    border-left:1px solid var(--input-border);
+    flex-shrink:0;
+    cursor:pointer;
+  }
+
+  .country-select{
+    display:flex; align-items:center; gap:6px;
+    background:transparent;
+    border:none;
+    outline:none;
+    color:var(--muted);
+    font-size:13px;
+    padding-left:10px;
+    border-left:1px solid var(--input-border);
+    flex-shrink:0;
+    cursor:pointer;
+    direction:ltr;
+    max-width:110px;
+  }
+  .country-select option{
+    background:var(--surface-2);
+    color:var(--text);
+    direction:ltr;
+  }
+  
+  /* ---------- Custom Country Dropdown ---------- */
+  .country-select-wrap{ position:relative; flex-shrink:0; }
+  .country-select-native{ display:none !important; }
+
+  .country-dd-trigger{
+    display:flex; align-items:center; gap:6px;
+    background:transparent; border:none; outline:none;
+    border-left:1px solid var(--input-border);
+    padding:0 10px 0 8px; height:100%;
+    cursor:pointer; color:var(--muted);
+    direction:ltr; font-family:inherit;
+    max-width:160px;
+  }
+  .country-dd-trigger:hover{ color:var(--text); }
+  .cdd-flag{ display:inline-flex; width:22px; height:15px; flex-shrink:0; }
+  .cdd-flag img{ width:100%; height:100%; object-fit:cover; border-radius:2px; display:block; }
+  .cdd-name{ font-size:12px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:70px; }
+  .cdd-code{ font-size:12px; color:var(--text); font-weight:600; font-family:'Rajdhani',sans-serif; }
+  .cdd-chev{ width:12px; height:12px; color:var(--muted); flex-shrink:0; }
+
+  .country-dd-menu{
+    display:none; position:absolute; top:calc(100% + 6px); left:0;
+    min-width:240px; max-height:320px; overflow-y:auto;
+    background:#0d1715; border:1px solid var(--input-border);
+    border-radius:12px; z-index:200;
+    box-shadow:0 12px 32px rgba(0,0,0,0.6);
+    padding:6px;
+  }
+  .country-dd-menu::-webkit-scrollbar{ width:6px; }
+  .country-dd-menu::-webkit-scrollbar-thumb{ background:#1e302c; border-radius:3px; }
+
+  .country-dd.open .country-dd-menu{ display:block; }
+
+  .country-dd-item{
+    display:flex; align-items:center; gap:9px;
+    padding:9px 11px; cursor:pointer;
+    font-size:13px; color:var(--text);
+    direction:ltr; border-radius:8px;
+    transition:background .15s;
+  }
+  .country-dd-item:hover{ background:rgba(20,217,174,0.08); }
+  .country-dd-item.active{ background:rgba(20,217,174,0.14); color:var(--primary); }
+  .country-dd-item img{
+    width:22px; height:15px; border-radius:2px;
+    object-fit:cover; flex-shrink:0;
+    box-shadow:0 0 0 1px rgba(255,255,255,0.06);
+  }
+  .cdd-item-name{
+    flex:1; text-align:right; direction:rtl;
+    font-size:12.5px; color:var(--text);
+  }
+  .country-dd-item.active .cdd-item-name{ color:var(--primary); font-weight:700; }
+  .cdd-item-code{
+    color:var(--muted); font-size:11.5px;
+    font-family:'Rajdhani',sans-serif; font-weight:600;
+  }
+
+  .field-hint{
+    font-size:11px;
+    color:var(--muted-2);
+    margin-top:6px;
+    padding:0 4px;
+  }
+
+  .terms{
+    display:flex;
+    align-items:flex-start;
+    gap:8px;
+    background:var(--surface-2);
+    border:1px solid var(--input-border);
+    border-radius:12px;
+    padding:12px 14px;
+    margin:6px 0 18px;
+  }
+  .terms input{
+    margin-top:3px;
+    width:16px; height:16px;
+    accent-color:var(--primary);
+    flex-shrink:0;
+  }
+  .terms label{
+    font-size:12px;
+    color:var(--muted);
+    line-height:1.6;
+  }
+  .terms a{ color:var(--primary); text-decoration:none; }
+
+  .btn{
+    width:100%;
+    height:52px;
+    border:none;
+    border-radius:14px;
+    font-size:15px;
+    font-weight:800;
+    cursor:pointer;
+    transition:transform .15s, box-shadow .15s, opacity .2s;
+  }
+
+  .btn-primary{
+    background:linear-gradient(135deg, var(--primary), var(--primary-2));
+    color:#03110d;
+    box-shadow:0 14px 30px rgba(20,217,174,0.18);
+  }
+  .btn-primary:hover{ transform:translateY(-2px); }
+  .btn-primary:disabled{ opacity:.6; cursor:not-allowed; transform:none; }
+
+  .have-account{
+    text-align:center;
+    margin-top:18px;
+    font-size:13px;
+    color:var(--muted);
+  }
+  .have-account a{ color:var(--primary); font-weight:700; text-decoration:none; }
+
+  .logo-art{ margin-top:40px; display:flex; justify-content:center; }
+
+  .e-mark{ position:relative; width:180px; height:180px; display:flex; align-items:center; justify-content:center; }
+  .e-ring{ position:absolute; border-radius:50%; border:1px solid rgba(20,217,174,0.22); }
+  .r1{ width:180px; height:180px; }
+  .r2{ width:138px; height:138px; }
+  .r3{ width:96px; height:96px; }
+  .e-glow{
+    position:absolute; width:66px; height:66px; border-radius:50%;
+    background:radial-gradient(circle, rgba(20,217,174,0.55), transparent 70%);
+    filter:blur(6px);
+  }
+  .e-letter{
+    position:relative;
+    font-size:72px;
+    font-weight:900;
+    font-style:italic;
+    background:linear-gradient(180deg,#7cf5da,#0eae91);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    text-shadow:0 0 30px rgba(20,217,174,0.5);
+  }
+
+</style>
+</head>
+<body>
+
+<div class="phone">
+
+  <div class="topbar">
+    <button class="back-btn" onclick="history.back()">‹</button>
+  </div>
+
+  <div class="brand">
+    <div class="brand-name">ELITE</div>
+    <div class="brand-sub">TRADING</div>
+  </div>
+
+  <div class="header-row">
+    <div>
+      <h1>إنشاء حساب</h1>
+      <p>أنشئ حسابك وابدأ رحلتك معنا</p>
+    </div>
+    <div class="icon-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#14d9ae" stroke-width="1.8">
+        <circle cx="12" cy="8" r="4"/>
+        <path d="M4 21c0-4.4 3.6-8 8-8"/>
+      </svg>
+      <div class="plus">+</div>
+    </div>
+  </div>
+
+  <div id="message" class="message"></div>
+
+  <form id="registerForm">
+
+    <div class="field">
+      <div class="input-wrap">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <rect x="3" y="5" width="18" height="14" rx="2"/>
+          <path d="M3 7l9 6 9-6"/>
+        </svg>
+        <input id="email" type="email" placeholder="البريد الإلكتروني" autocomplete="email" required>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="input-wrap">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <rect x="6" y="2" width="12" height="20" rx="2"/>
+          <path d="M11 18h2"/>
+        </svg>
+        <input id="phone" type="tel" placeholder="رقم الهاتف" autocomplete="tel" inputmode="numeric">
+        <div class="country-select-wrap">
+          <!-- الـ select الأصلي مخفي — يُبقي كل الكود الحالي يعمل -->
+          <select id="countryCode" class="country-select-native" tabindex="-1" aria-hidden="true">
+            <option value="966" data-len="9" data-name="السعودية" data-iso="sa">السعودية +966</option>
+            <option value="971" data-len="9" data-name="الإمارات" data-iso="ae">الإمارات +971</option>
+            <option value="20"  data-len="10" data-name="مصر" data-iso="eg">مصر +20</option>
+            <option value="962" data-len="9" data-name="الأردن" data-iso="jo">الأردن +962</option>
+            <option value="965" data-len="8" data-name="الكويت" data-iso="kw">الكويت +965</option>
+            <option value="974" data-len="8" data-name="قطر" data-iso="qa">قطر +974</option>
+            <option value="973" data-len="8" data-name="البحرين" data-iso="bh">البحرين +973</option>
+            <option value="968" data-len="8" data-name="عمان" data-iso="om">عمان +968</option>
+            <option value="964" data-len="10" data-name="العراق" data-iso="iq">العراق +964</option>
+            <option value="963" data-len="9" data-name="سوريا" data-iso="sy">سوريا +963</option>
+            <option value="961" data-len="8" data-name="لبنان" data-iso="lb">لبنان +961</option>
+            <option value="970" data-len="9" data-name="فلسطين" data-iso="ps">فلسطين +970</option>
+            <option value="967" data-len="9" data-name="اليمن" data-iso="ye">اليمن +967</option>
+            <option value="213" data-len="9" data-name="الجزائر" data-iso="dz" selected>الجزائر +213</option>
+            <option value="212" data-len="9" data-name="المغرب" data-iso="ma">المغرب +212</option>
+            <option value="216" data-len="8" data-name="تونس" data-iso="tn">تونس +216</option>
+            <option value="218" data-len="9" data-name="ليبيا" data-iso="ly">ليبيا +218</option>
+            <option value="249" data-len="9" data-name="السودان" data-iso="sd">السودان +249</option>
+            <option value="252" data-len="8" data-name="الصومال" data-iso="so">الصومال +252</option>
+            <option value="222" data-len="8" data-name="موريتانيا" data-iso="mr">موريتانيا +222</option>
+            <option value="253" data-len="8" data-name="جيبوتي" data-iso="dj">جيبوتي +253</option>
+            <option value="269" data-len="7" data-name="جزر القمر" data-iso="km">جزر القمر +269</option>
+            <option value="90"  data-len="10" data-name="تركيا" data-iso="tr">تركيا +90</option>
+            <option value="98"  data-len="10" data-name="إيران" data-iso="ir">إيران +98</option>
+            <option value="357" data-len="8" data-name="قبرص" data-iso="cy">قبرص +357</option>
+            <option value="92"  data-len="10" data-name="باكستان" data-iso="pk">باكستان +92</option>
+            <option value="93"  data-len="9" data-name="أفغانستان" data-iso="af">أفغانستان +93</option>
+            <option value="994" data-len="9" data-name="أذربيجان" data-iso="az">أذربيجان +994</option>
+            <option value="7"   data-len="10" data-name="كازاخستان" data-iso="kz">كازاخستان +7</option>
+            <option value="998" data-len="9" data-name="أوزبكستان" data-iso="uz">أوزبكستان +998</option>
+            <option value="993" data-len="8" data-name="تركمانستان" data-iso="tm">تركمانستان +993</option>
+            <option value="996" data-len="9" data-name="قيرغيزستان" data-iso="kg">قيرغيزستان +996</option>
+            <option value="992" data-len="9" data-name="طاجيكستان" data-iso="tj">طاجيكستان +992</option>
+          </select>
+
+          <!-- القائمة المرئية مع الأعلام الحقيقية -->
+          <div class="country-dd" id="countryDd">
+            <button type="button" class="country-dd-trigger" id="countryDdTrigger" aria-haspopup="listbox">
+              <span class="cdd-flag" id="cddFlag"></span>
+              <span class="cdd-name" id="cddName">—</span>
+              <span class="cdd-code" id="cddCode">—</span>
+              <svg class="cdd-chev" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="country-dd-menu" id="countryDdMenu" role="listbox"></div>
+          </div>
+        </div>
+      </div>
+      <div class="field-hint" id="phoneHint">أدخل الرقم بدون الصفر في البداية — عدد الأرقام المطلوب: 9</div>
+    </div>
+
+    <div class="field">
+      <div class="input-wrap">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <circle cx="12" cy="8" r="4"/>
+          <path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/>
+        </svg>
+        <input id="fullname" type="text" placeholder="الاسم الكامل" autocomplete="name" required>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="input-wrap">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <rect x="5" y="11" width="14" height="9" rx="2"/>
+          <path d="M8 11V8a4 4 0 0 1 8 0v3"/>
+        </svg>
+        <input id="password" type="password" placeholder="كلمة المرور" autocomplete="new-password" required>
+        <button type="button" class="toggle-eye" id="showPassword">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="input-wrap">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <rect x="5" y="11" width="14" height="9" rx="2"/>
+          <path d="M8 11V8a4 4 0 0 1 8 0v3"/>
+        </svg>
+        <input id="confirmPassword" type="password" placeholder="تأكيد كلمة المرور" autocomplete="new-password" required>
+        <button type="button" class="toggle-eye" id="showConfirmPassword">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="input-wrap">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M20 12v9H4v-9"/>
+          <path d="M2 7h20v5H2z"/>
+          <path d="M12 22V7"/>
+          <path d="M12 7S9 3 6.5 4.5C4.5 5.7 5.5 8 8 8h4z"/>
+          <path d="M12 7s3-4 5.5-2.5C19.5 5.7 18.5 8 16 8h-4z"/>
+        </svg>
+        <input id="referral" type="text" placeholder="رمز الإحالة (اختياري)">
+      </div>
+    </div>
+
+    <div class="terms">
+      <input type="checkbox" id="agree" required>
+      <label for="agree">بإنشاء حساب، أنت توافق على <a href="#">شروط الاستخدام</a> و<a href="#">سياسة الخصوصية</a></label>
+    </div>
+
+    <button type="submit" class="btn btn-primary" id="registerButton">إنشاء حساب</button>
+
+  </form>
+
+  <div class="have-account">
+    لديك حساب بالفعل؟ <a href="/">تسجيل دخول</a>
+  </div>
+
+  <div class="logo-art">
+    <div class="e-mark">
+      <div class="e-ring r1"></div>
+      <div class="e-ring r2"></div>
+      <div class="e-ring r3"></div>
+      <div class="e-glow"></div>
+      <div class="e-letter">E</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const registerForm = document.getElementById("registerForm");
+  const passwordInput = document.getElementById("password");
+  const confirmPasswordInput = document.getElementById("confirmPassword");
+  const showPassword = document.getElementById("showPassword");
+  const showConfirmPassword = document.getElementById("showConfirmPassword");
+  const registerButton = document.getElementById("registerButton");
+  const message = document.getElementById("message");
+  const countryCodeSelect = document.getElementById("countryCode");
+  const phoneInput = document.getElementById("phone");
+  const phoneHint = document.getElementById("phoneHint");
+
+  // قراءة رمز الإحالة من رابط URL (?ref=XXXXX) وتعبئته تلقائياً
+  const urlParams = new URLSearchParams(window.location.search);
+  const refFromUrl = urlParams.get("ref");
+  if (refFromUrl) {
+    document.getElementById("referral").value = refFromUrl.trim();
+  }
+
+  function updatePhoneHint(){
+    const opt = countryCodeSelect.selectedOptions[0];
+    const len = opt.dataset.len;
+    phoneHint.textContent = `أدخل الرقم بدون الصفر في البداية — عدد الأرقام المطلوب: ${len}`;
+    phoneInput.setAttribute("maxlength", len);
+  }
+  countryCodeSelect.addEventListener("change", updatePhoneHint);
+  updatePhoneHint();
+  
+  /* ============================================================
+     Custom Country Dropdown with real flag images
+     ============================================================ */
+  (function initCountryDropdown(){
+    const native = document.getElementById('countryCode');
+    const dd = document.getElementById('countryDd');
+    const trigger = document.getElementById('countryDdTrigger');
+    const menu = document.getElementById('countryDdMenu');
+    const flagEl = document.getElementById('cddFlag');
+    const nameEl = document.getElementById('cddName');
+    const codeEl = document.getElementById('cddCode');
+
+    if(!native || !dd || !trigger || !menu) return;
+
+    const countries = Array.from(native.options).map(opt => ({
+      value: opt.value,
+      name: opt.dataset.name,
+      iso: opt.dataset.iso
+    }));
+
+    const flagURL = iso => `https://flagcdn.com/w40/${iso}.png`;
+
+    menu.innerHTML = countries.map(c => `
+      <div class="country-dd-item" data-value="${c.value}" role="option">
+        <img src="${flagURL(c.iso)}" alt="${c.name}" loading="lazy">
+        <span class="cdd-item-name">${c.name}</span>
+        <span class="cdd-item-code">+${c.value}</span>
+      </div>
+    `).join('');
+
+    function updateTrigger(){
+      const v = native.value;
+      const c = countries.find(x => x.value === v);
+      if(!c) return;
+      flagEl.innerHTML = `<img src="${flagURL(c.iso)}" alt="${c.name}">`;
+      nameEl.textContent = c.name;
+      codeEl.textContent = '+' + c.value;
+      menu.querySelectorAll('.country-dd-item').forEach(el => {
+        el.classList.toggle('active', el.dataset.value === v);
+      });
+    }
+
+    trigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      dd.classList.toggle('open');
+    });
+
+    menu.addEventListener('click', (e) => {
+      const item = e.target.closest('.country-dd-item');
+      if(!item) return;
+      native.value = item.dataset.value;
+      native.dispatchEvent(new Event('change'));
+      dd.classList.remove('open');
+      updateTrigger();
+    });
+
+    document.addEventListener('click', (e) => {
+      if(!dd.contains(e.target)) dd.classList.remove('open');
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if(e.key === 'Escape') dd.classList.remove('open');
+    });
+
+    updateTrigger();
+  })();
+
+  phoneInput.addEventListener("input", () => {
+    phoneInput.value = phoneInput.value.replace(/[^0-9]/g, "");
+  });
+
+  showPassword.addEventListener("click", () => {
+    passwordInput.type = passwordInput.type === "password" ? "text" : "password";
+  });
+  showConfirmPassword.addEventListener("click", () => {
+    confirmPasswordInput.type = confirmPasswordInput.type === "password" ? "text" : "password";
+  });
+
+   function showMessage(text, success = false){
+  message.style.display = "block";
+  message.style.background = success ? "rgba(20,217,174,0.10)" : "rgba(255,70,70,0.10)";
+  message.style.color = success ? "#14d9ae" : "#ff7777";
+  message.textContent = text;
+}
+
+  registerForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById("email").value.trim();
+    const rawPhone = phoneInput.value.trim();
+    const selectedCountry = countryCodeSelect.selectedOptions[0];
+    const dialCode = selectedCountry.value;
+    const expectedLen = parseInt(selectedCountry.dataset.len, 10);
+    const fullname = document.getElementById("fullname").value.trim();
+    const password = passwordInput.value;
+    const confirmPassword = confirmPasswordInput.value;
+    const agree = document.getElementById("agree").checked;
+    const referral = document.getElementById("referral").value.trim(); // <-- أضف هذا
+
+    if(!email || !fullname || !password || !confirmPassword){
+      showMessage("يرجى ملء جميع الحقول المطلوبة");
+      return;
+    }
+    if(rawPhone && rawPhone.length !== expectedLen){
+      showMessage(`رقم الهاتف يجب أن يتكون من ${expectedLen} أرقام لدولة ${selectedCountry.dataset.name}`);
+      return;
+    }
+    const phone = rawPhone ? `+${dialCode}${rawPhone}` : "";
+    if(password.length < 6){
+      showMessage("كلمة المرور يجب أن تكون 6 أحرف على الأقل");
+      return;
+    }
+    if(password !== confirmPassword){
+      showMessage("كلمتا المرور غير متطابقتين");
+      return;
+    }
+    if(!agree){
+      showMessage("يجب الموافقة على الشروط وسياسة الخصوصية");
+      return;
+    }
+
+    registerButton.disabled = true;
+    registerButton.textContent = "جارٍ إنشاء الحساب...";
+
+    try{
+      const response = await fetch("/register", {
+        method:"POST",
+        credentials:"same-origin",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({ email, phone, fullname, password, referral })
+      });
+      const data = await response.json();
+      if(data.status === "success"){
+        showMessage("تم إنشاء الحساب بنجاح ✓", true);
+        setTimeout(() => window.location.href =  "/", 800);
+      } else {
+        showMessage(data.message || "تعذر إنشاء الحساب");
+        registerButton.disabled = false;
+        registerButton.textContent = "إنشاء حساب";
+      }
+    } catch(err){
+      console.error(err);
+      showMessage("تعذر الاتصال بالخادم");
+      registerButton.disabled = false;
+      registerButton.textContent = "إنشاء حساب";
+    }
+  });
+</script>
+
+</body>
+</html>

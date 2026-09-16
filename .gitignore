@@ -1,0 +1,12 @@
+node_modules/
+.env
+elon-trader.db
+*.db-journal
+public/uploads/*
+!public/uploads/.gitkeep
+*.bak
+*.backup
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
