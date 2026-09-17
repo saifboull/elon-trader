@@ -120,13 +120,29 @@ app.use(express.static(path.join(__dirname, "public")));
 // ===============================
 // إعداد إرسال البريد عبر Gmail
 // ===============================
-const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_APP_PASSWORD
+// إرسال البريد عبر Resend (HTTP API — لا يستخدم SMTP)
+async function sendEmail({ to, subject, html }) {
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey) {
+        throw new Error("RESEND_API_KEY غير موجود في المتغيرات");
     }
-});
+    const from = process.env.EMAIL_FROM || "ELITE TRADING <onboarding@resend.dev>";
+
+    const res = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+            "Authorization": "Bearer " + apiKey,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ from, to: [to], subject, html })
+    });
+
+    if (!res.ok) {
+        const errText = await res.text();
+        throw new Error("Resend error (" + res.status + "): " + errText);
+    }
+    return await res.json();
+}
 
 // ===============================
 // دوال التحقق من المدخلات
@@ -425,11 +441,10 @@ app.post("/forgot-password", (req, res) => {
                     }
 
                     try {
-                        await transporter.sendMail({
-                            from: `"ELITE TRADING" <${process.env.GMAIL_USER}>`,
-                            to: normalizedEmail,
-                            subject: "رمز استعادة كلمة المرور - ELITE TRADING",
-                            html: `
+                        await sendEmail({
+    to: normalizedEmail,
+    subject: "رمز استعادة كلمة المرور - ELITE TRADING",
+    html: `
                                 <div style="font-family: Arial; text-align: center; padding: 20px;">
                                     <h2 style="color:#0eae91;">ELITE TRADING</h2>
                                     <p>رمز استعادة كلمة المرور الخاص بك هو:</p>
@@ -1939,36 +1954,35 @@ app.post("/api/admin/forgot-password", (req, res) => {
                     return res.status(500).json({ status: "error", message: "حدث خطأ أثناء إنشاء الرمز" });
                 }
 
-                try {
-                    await transporter.sendMail({
-                        from: `"ELITE TRADING ADMIN" <${process.env.GMAIL_USER}>`,
-                        to: normalizedEmail,
-                        subject: "رمز استعادة كلمة مرور المدير - ELITE TRADING",
-                        html: `
-                            <div style="font-family: Arial; text-align: center; padding: 20px;">
-                                <h2 style="color:#0eae91;">ELITE TRADING</h2>
-                                <p style="color:#e8a33d;font-weight:bold;">رمز استعادة كلمة مرور لوحة الإدارة</p>
-                                <p>رمز التحقق الخاص بك هو:</p>
-                                <h1 style="letter-spacing: 6px;color:#0a1412;">${code}</h1>
-                                <p style="color:#888;">صالح لمدة 15 دقيقة فقط.</p>
-                                <p style="color:#888;font-size:12px;">إذا لم تطلب هذا الرمز، تجاهل هذه الرسالة.</p>
-                            </div>
-                        `
-                    });
+                                   try {
+                        await sendEmail({
+                            to: normalizedEmail,
+                            subject: "رمز استعادة كلمة مرور المدير - ELITE TRADING",
+                            html: `
+                                <div style="font-family: Arial; text-align: center; padding: 20px;">
+                                    <h2 style="color:#0eae91;">ELITE TRADING</h2>
+                                    <p style="color:#e8a33d;font-weight:bold;">رمز استعادة كلمة مرور لوحة الإدارة</p>
+                                    <p>رمز التحقق الخاص بك هو:</p>
+                                    <h1 style="letter-spacing: 6px;color:#0a1412;">${code}</h1>
+                                    <p style="color:#888;">صالح لمدة 15 دقيقة فقط.</p>
+                                    <p style="color:#888;font-size:12px;">إذا لم تطلب هذا الرمز، تجاهل هذه الرسالة.</p>
+                                </div>
+                            `
+                        });
 
-                    console.log("ADMIN RESET CODE SENT to " + normalizedEmail);
+                        console.log("ADMIN RESET CODE SENT to " + normalizedEmail);
 
-                    res.json({
-                        status: "success",
-                        message: "تم إرسال رمز التحقق إلى بريدك الإلكتروني"
-                    });
-                } catch (mailErr) {
-                    console.error("ADMIN FORGOT MAIL ERROR:", mailErr);
-                    res.status(500).json({
-                        status: "error",
-                        message: "تعذر إرسال البريد الإلكتروني"
-                    });
-                }
+                        res.json({
+                            status: "success",
+                            message: "تم إرسال رمز التحقق إلى بريدك الإلكتروني"
+                        });
+                    } catch (mailErr) {
+                        console.error("ADMIN FORGOT MAIL ERROR:", mailErr);
+                        res.status(500).json({
+                            status: "error",
+                            message: "تعذر إرسال البريد الإلكتروني"
+                        });
+                    }
             }
         );
     });
