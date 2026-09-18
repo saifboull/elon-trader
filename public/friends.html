@@ -219,6 +219,53 @@
   .logic li{ font-size:12.5px; color:var(--text-dim); line-height:1.8; display:flex; gap:8px; }
   .logic li::before{ content:'✦'; color:var(--teal); font-size:10px; margin-top:5px; }
   .logic li b{ color:var(--text); }
+  
+  /* ===== نافذة تفاصيل الإحالة — توحيد تصميم مع home.html ===== */
+  .modal .ref-examples{ display:flex; flex-direction:column; gap:10px; margin:10px 0 14px; }
+  .modal .ref-example{
+    background:linear-gradient(160deg,rgba(23,240,195,.05),transparent);
+    border:1px solid var(--border);
+    border-right:3px solid var(--teal-dim);
+    border-radius:12px;
+    padding:11px 13px;
+  }
+  .modal .ref-example-head{
+    display:flex; align-items:center; justify-content:space-between;
+    font-size:12.5px; font-weight:800; color:var(--text);
+  }
+  .modal .ref-example-head .dep{
+    color:var(--teal); font-family:'Rajdhani',sans-serif;
+    font-size:15px; direction:ltr; font-weight:700;
+  }
+  .modal .ref-example-rows{
+    margin-top:8px; padding-top:8px;
+    border-top:1px dashed var(--border);
+    display:flex; flex-direction:column; gap:5px;
+  }
+  .modal .ref-example-rows .row{
+    display:flex; justify-content:space-between; align-items:center;
+    font-size:11.5px; color:var(--text-dim);
+  }
+  .modal .ref-example-rows .row .l{
+    font-family:'Rajdhani',sans-serif; direction:ltr; color:var(--text-dim);
+  }
+  .modal .ref-example-rows .row .v{
+    font-family:'Rajdhani',sans-serif; font-weight:700;
+    color:var(--teal); direction:ltr;
+  }
+  .modal .ref-example-foot{
+    display:flex; align-items:center; justify-content:space-between;
+    margin-top:8px; padding-top:8px;
+    border-top:1px solid var(--teal-dim);
+  }
+  .modal .ref-example-foot .k{
+    font-size:12px; font-weight:700; color:var(--text-dim);
+  }
+  .modal .ref-example-foot .total{
+    font-family:'Rajdhani',sans-serif; font-size:17px; font-weight:700;
+    color:var(--gold); direction:ltr;
+    text-shadow:0 0 12px rgba(232,163,61,.4);
+  }
 </style>
 </head>
 <body>
