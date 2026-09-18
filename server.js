@@ -2591,10 +2591,20 @@ const REFERRAL_TIERS = [
 ];
 const REFERRAL_WITHDRAW_RATE = 1.0;
 
+// تحديد فهرس الشريحة التي يقع فيها المبلغ
+// $500 → 0 | $1,000 → 1 | $3,000 → 1 | $10,000 → 2 | $30,000 → 3 | $100,000 → 4
+function getReferralTierIndex(amount) {
+    for (let i = 0; i < REFERRAL_TIERS.length; i++) {
+        const t = REFERRAL_TIERS[i];
+        if (amount >= t.min && amount <= t.max) return i;
+    }
+    return REFERRAL_TIERS.length - 1;
+}
+
 function creditReferral(referrerId, amount, referredId, isWithdraw) {
     if (!referrerId || !amount || amount <= 0) return;
 
-    // ★ عمولة السحب: 1% دائماً
+    // ★ عمولة السحب: 1% دائماً (بدون تغيير)
     if (isWithdraw) {
         const commission = Math.round(amount * REFERRAL_WITHDRAW_RATE) / 100;
         if (commission <= 0) return;
@@ -2602,30 +2612,29 @@ function creditReferral(referrerId, amount, referredId, isWithdraw) {
         return;
     }
 
-    // ★ عمولة الإيداع: تقسيم الإيداع الجديد على النطاقات
-    let remaining = amount;
+    // ★ عمولة الإيداع: نظام تراكمي
+    //   - الشرائح المكتملة (قبل الشريحة الحالية): نسبتها × عرضها الكامل
+    //   - الشريحة الحالية: نسبتها × كامل مبلغ الإيداع
+    const idx = getReferralTierIndex(amount);
     let totalCommission = 0;
     const parts = [];
 
-    for (const t of REFERRAL_TIERS) {
-        if (remaining <= 0) break;
+    // الشرائح المكتملة
+    for (let i = 0; i < idx; i++) {
+        const t = REFERRAL_TIERS[i];
         const width = t.max - t.min;
-        const portion = Math.min(remaining, width);
-        if (portion > 0) {
-            const amt = Math.round(portion * t.rate) / 100;
+        if (width > 0) {
+            const amt = Math.round(width * t.rate) / 100;
             totalCommission += amt;
-            parts.push(`$${portion}×${t.rate}%`);
-            remaining -= portion;
+            parts.push(`$${width}×${t.rate}%`);
         }
     }
 
-    // فوق 100,000 → نفس نسبة خطة 5
-    if (remaining > 0) {
-        const lastRate = REFERRAL_TIERS[REFERRAL_TIERS.length - 1].rate;
-        const amt = Math.round(remaining * lastRate) / 100;
-        totalCommission += amt;
-        parts.push(`$${remaining}×${lastRate}%`);
-    }
+    // الشريحة الحالية: نسبة × كامل المبلغ
+    const current = REFERRAL_TIERS[idx];
+    const currentAmt = Math.round(amount * current.rate) / 100;
+    totalCommission += currentAmt;
+    parts.push(`$${amount}×${current.rate}%`);
 
     if (totalCommission <= 0) return;
     payReferral(referrerId, totalCommission, referredId, `إيداع (${parts.join(' + ')})`);
