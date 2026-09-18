@@ -755,11 +755,11 @@ async function loadFriendsCard(){
     if(res.status === 401) return;
     if(!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
-
-    const count = Number(data.friendsCount || 0);
     const count = Number(data.friendsCount || 0) + Number(data.pendingCount || 0);
-    
+    const profit = Number(data.referralProfit || 0);
+
     const tFriendsEl = document.getElementById('tFriends');
+
     const tRefEarnEl = document.getElementById('tRefEarn');
     if(tFriendsEl) tFriendsEl.textContent = String(count);
     if(tRefEarnEl) tRefEarnEl.textContent = '$' + fmt2(profit);
