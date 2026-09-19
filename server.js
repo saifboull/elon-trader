@@ -2,6 +2,7 @@ require("dotenv").config();
 
 const express = require("express");
 const session = require("express-session");
+const SQLiteStore = require("connect-sqlite3")(session);
 const path = require("path");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
@@ -52,6 +53,21 @@ if (!process.env.SESSION_SECRET) {
     console.error("SESSION_SECRET غير موجود في .env — لن يعمل الخادم");
     process.exit(1);
 }
+// ========== متجر الجلسات (SQLite) ==========
+const sessionsDir = process.env.DB_PATH
+    ? path.dirname(process.env.DB_PATH)
+    : path.join(__dirname, "data");
+
+if (!fs.existsSync(sessionsDir)) {
+    fs.mkdirSync(sessionsDir, { recursive: true });
+}
+
+const sessionStore = new SQLiteStore({
+    db: "sessions.db",
+    dir: sessionsDir,
+    concurrentDB: true
+});
+// ==========================================
 
 // إعدادات الكوكي المشتركة
 const isProduction = process.env.NODE_ENV === 'production';
@@ -65,6 +81,7 @@ const cookieOpts = {
 
 // جلسة الأدمن — كوكي منفصل، تُطبق فقط على /admin و /api/admin
 const adminSession = session({
+        store: sessionStore,
     name: 'elite.admin.sid',
     secret: process.env.SESSION_SECRET,
     resave: false,
@@ -76,6 +93,7 @@ app.use(['/admin', '/admin-login', '/api/admin'], adminSession);
 // جلسة المستخدم العادي — كوكي منفصل
 app.use(
     session({
+                store: sessionStore,
         name: 'elite.sid',
         secret: process.env.SESSION_SECRET,
         resave: false,
