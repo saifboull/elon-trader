@@ -722,8 +722,8 @@ function renderServerWallet(){
 
   // الوجه الأمامي: محفظة السحب
   setT('wWithdrawable', '$' + fmt2(withdrawable));
-  setT('wWork', '$' + fmt2(Math.min(workProfit, withdrawable)));
-  setT('wRef', '$' + fmt2(Math.min(refProfit, withdrawable)));
+   setT('wWork', '$' + fmt2(workProfit));
+  setT('wRef', '$' + fmt2(refProfit));
 
   // الوجه الخلفي: محفظة العمل — رأس المال الكلي (إيداعات + تحويلات)
   setT('wCapital', '$' + fmt2(invested));
