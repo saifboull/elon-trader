@@ -700,10 +700,8 @@ app.get("/api/user/earnings", (req, res) => {
 
     db.get(
         `SELECT
-            COALESCE(SUM(CASE WHEN type = 'profit' THEN amount ELSE 0 END), 0) 
-            + COALESCE(SUM(CASE WHEN type IN ('transfer_out_work', 'transfer_out', 'withdraw') THEN amount ELSE 0 END), 0) AS profit,
-            COALESCE(SUM(CASE WHEN type = 'referral' THEN amount ELSE 0 END), 0)
-            + COALESCE(SUM(CASE WHEN type = 'transfer_out_ref' THEN amount ELSE 0 END), 0) AS referral
+            COALESCE(SUM(CASE WHEN type = 'profit' THEN amount ELSE 0 END), 0) AS profit,
+            COALESCE(SUM(CASE WHEN type = 'referral' THEN amount ELSE 0 END), 0) AS referral
          FROM earnings WHERE user_id = ?`,
         [req.session.userId],
         (err, row) => {
@@ -719,7 +717,6 @@ app.get("/api/user/earnings", (req, res) => {
         }
     );
 });
-
 // ===============================
 // API: إشعارات المستخدم
 // ===============================
